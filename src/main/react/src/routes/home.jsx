@@ -13,7 +13,7 @@ import MyBarChart from '../components/bar-chart';
 const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
-  padding-top: 220px;
+  padding-top: 120px;
   gap: 50px;
   `;
 
@@ -29,11 +29,21 @@ const WrapperBox = styled.div`
 
 const Content = styled.div`
   width: 100%;
-  max-width: 1400px;
+  /* max-width: 1400px; */
   height: auto;
   display: flex;
   justify-content: center;
   `;
+
+const Main = styled.div`
+  width: 100%;
+  height: 100vh;
+  padding-bottom: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #E7AA22;
+`;
 
 const MainBox = styled.div`
   width: 100%;
@@ -236,6 +246,7 @@ const GraphBtn = styled.div`
 
 const BoardBox = styled.div`
   width: 100%;
+  max-width: 1400px;
   height: 1220px;
   padding: 0 50px;
   display: flex;
@@ -249,6 +260,7 @@ const MainBoxBottom = styled.div`
   width: 100%;
   height: 800px;
   display: flex;
+  justify-content: center;
   flex-direction: row;
 `;
 
@@ -431,6 +443,7 @@ export default function Home() {
       <Header></Header>
       <WrapperBox>
         <Content>
+          <Main>
           <MainBox>
             <MainNewsImage></MainNewsImage>
             <MainNewsBox>
@@ -453,6 +466,7 @@ export default function Home() {
               </MainNewsContent>
             </MainNewsBox>
           </MainBox>
+          </Main>
         </Content>
         <Content>
           <TrendBox>
