@@ -6,7 +6,9 @@ import reset from "styled-reset";
 import styled, { createGlobalStyle } from 'styled-components';
 import Profile from './routes/profile';
 import Login from './routes/login';
-import CreateAccount from './routes/create-account';
+import Board from './routes/board';
+import CategoryNews from './routes/category-news';
+import DailyNews from './routes/daily-news';
 
 // 초기 시작페이지를 잡아주기
 const router = createBrowserRouter([
@@ -27,8 +29,16 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "create-account",
-        element: <CreateAccount />,
+        path: "daily-news",
+        element: <DailyNews />,
+      },
+      {
+        path: "category-news",
+        element: <CategoryNews />,
+      },
+      {
+        path: "board",
+        element: <Board />,
       },
     ],
   },

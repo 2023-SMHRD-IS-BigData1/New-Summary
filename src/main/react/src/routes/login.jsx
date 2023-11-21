@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import LoginImage from '../assets/image/Login.jpg';
 import SignupImage from '../assets/image/Sign-up.jpg';
+import backLogo from '../assets/back-logo.svg'
+import { Link } from 'react-router-dom';
 
 const Body = styled.div`
   width: 100%;
@@ -61,6 +63,7 @@ const RightBox = styled.div`
   width: 600px;
   height: 1200px;
   background: #fff;
+  position: relative;
   display: flex;
   flex-direction: column;
   transition: 1s;
@@ -158,6 +161,19 @@ const LinkBox = styled.a`
     color: #a6c9dd;
   }
 `;
+const BackButton = styled.img`
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  &:hover{
+    border-radius: 50%;
+    background-color: white;
+    transition: 0.5s;
+  }
+`;
 
 export default function Login() {
   const [data, setData] = useState('');
@@ -224,6 +240,9 @@ export default function Login() {
             </BottomText>
           </LoginBox>
         </RightBox>
+        <Link to="/">
+          <BackButton src={backLogo} />
+        </Link>
       </Wrapper>
     </Body>
   )
