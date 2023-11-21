@@ -1,37 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Pagination from "react-js-pagination";
 import styled from "styled-components";
 
 const MypagePaging = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const [items, setItems] = useState(5);
+  const [items, setItems] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const getClick = () => {
+  const fetchData = () => {
     axios.get('https://jsonplaceholder.typicode.com/posts')
-      .then(res => setData(res.data))
+      .then(res => {
+        setData(res.data)
+        calculateTotalPages(res.data.length);
+        console.log(res);
+        console.log(res.data);
+      })
   }
 
   const handlePageChange = (page) => { setPage(page); };
   const itemChange = (e) => {
     setItems(Number(e.target.value))
-
+    calculateTotalPages(data.length);
   }
 
-console.log(items*(page-1), items*(page-1)+items)
+  const calculateTotalPages = (totalItems) => {
+    const totalPages = Math.ceil(totalItems / items);
+    setTotalPages(totalPages);
+  }
 
+  
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
+  console.log(items*(page-1), items*(page-1)+items)
+  
   return (
     <div>
-      <h2>API 연습</h2>
-      <div>
-        <button onClick={getClick}>Get</button>
-        <select name="items" onChange={itemChange}>
-          <option value="5">5개</option>
-          <option value="10">10개</option>
-          <option value="15">15개</option>
-          <option value="20">20개</option>
-        </select>
-      </div>
       {data.slice(
         items*(page-1),
         items*(page-1)+items
