@@ -22,13 +22,24 @@ spring:
     password: news1
     
   # JPA 설정
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#         format_sql:true #sql 보기 편하게 해줌
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+         format_sql:true #sql 보기 편하게 해줌
 #         show-sql: true
-
-#logging.level:
-#  org.hibernate.SQL: debug
+  profiles:
+    include: oauth
+ # OAuth 로그인
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 386273532123-3bljq9l3e9i2gvlb6ht5bqjt953i21j6.apps.googleusercontent.com
+            client-secret: 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
+            scope: email, profile
+            redirect-uri: http://localhost:8081/login/oauth2/code/google
+logging.level:  #띄어쓰기 없음
+  '[org.hibernate.SQL]': debug   
