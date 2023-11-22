@@ -49,6 +49,9 @@ dependencies {
 
 	// Hibernate5Module
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+	
+	// kakao parse 위한 json
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
 	// Querydsl 추가
 //	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
