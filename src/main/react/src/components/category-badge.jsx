@@ -12,7 +12,7 @@ import styled from "styled-components";
 // 부정적 negative
 
 
-const EntertainmentBadge = styled.div`
+const CategoryBadge = styled.div`
     width: 100px;
     height: 30px;
     display: flex;
@@ -20,7 +20,7 @@ const EntertainmentBadge = styled.div`
     align-items: center;
     font-size: 18px;
     color: #ffffff;
-    background-color: #f0e54d;
+    background-color: #F0BE4D;
 `;
 
 
@@ -36,9 +36,9 @@ const PositiveBadge = styled.div`
 `;
 
 
-export function Entertainments() {
+export function CategoryBadgeBox() {
     return (
-        <EntertainmentBadge>연예</EntertainmentBadge>
+        <CategoryBadge>연예</CategoryBadge>
     );
 }
 
