@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import WordcloudResult from '../components/wordcloud';
 import ArrowLeft from '../assets/arrow-left-circle.svg';
 import ArrowRight from '../assets/arrow-right-circle.svg';
-import { Entertainments } from '../components/category-badge';
+import { CategoryBadgeBox } from '../components/category-badge';
 import MyBarChart from '../components/bar-chart';
 import Bookmark from '../assets/bookmark.svg';
 import BookmarkOn from '../assets/bookmark-on.svg';
@@ -13,108 +13,118 @@ import Pagination from "react-js-pagination";
 // -- Home Main news component -- //
 const Main = styled.div`
   width: 100%;
-  height: 100vh;
-  padding-bottom: 150px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #E7AA22;
-`;
-
-const MainBox = styled.div`
-  width: 100%;
   max-width: 1400px;
-  height: 600px;
-  padding: 0 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  padding: 50px 0 150px 0;
 `;
 
-const MainNewsImageBox = styled.div`
-  width: 100%;
-  max-width: 850px;
-  height: 600px;
-  position: absolute;
-  right: 0;
-  overflow: hidden;
-`;
-
-const MainNewsImage = styled.img`
+const MainHeader = styled.div`
     width: 100%;
+    height: 50px;
+    font-size: 32px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
 `;
+
+const MainDailyBox = styled.div`
+    width: 100%;
+    height: 300px;
+    padding: 20px 40px;
+    gap: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid #99999944;
+    box-shadow: 5px 5px 5px 2px #99999944;
+`;
+/*
+const DailyHoverAni = keyframes`
+  0% {}
+  20% {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  0% {}
+`;
+
+const DailyHoverStyles = css`
+    animation: ${DailyHoverAni} 1s ease-in-out;
+`;
+*/
+
+const MainDailyNews = styled.div`
+    width: 300px;
+    height: 260px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: aqua;
+    &.dailynews-box1:hover {
+        width: 200%;
+        display: flex;
+        justify-content: space-between;
+        + .dailynews-box2,
+        + .dailynews-box3,
+        + .dailynews-box4 {
+            display: none;
+        }
+        .dailynews-area1 {
+            display: flex;
+        }
+    }
+    &.dailynews-box2:hover {
+        transform: translateX(calc(-100% - 40px));
+        transition: 0.4s;
+    }
+    &.dailynews-box3:hover {
+        transform: translateX(calc(-200% - 80px));
+        transition: 0.6s;
+    }
+    &.dailynews-box4:hover {
+        transform: translateX(calc(-300% - 120px));
+        transition: 0.9s;
+    }
+`;
+
+const MainDailyIamgeBox = styled.div`
+    width: 300px;
+`;
+
+const MainDailyImage = styled.img`
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+`;
+
+const MainDailyTextArea = styled.div`
+    width: 100%;
+    height: 260px;
+    position: absolute;
+    left: 300px;
+    background-color: aqua;
+    display: none;
+`;
+
+const MainDailyMedia = styled.div``;
+
+const MainDailyDate = styled.div``;
+
+const MainDailyTitle = styled.div``;
+
+const MainDailyContent = styled.div``;
 
 const MainNewsBox = styled.div`
-  width: 100%;
-  max-width: 650px;
-  height: 100%;
-  max-height: 450px;
-  padding: 30px;
-  position: absolute;
-  left: 0;
-  z-index: 10;
-  background-color: #ffffff;
-  box-shadow: 5px 5px 5px 5px #99999944;
+    width: 100%;
+    height: 300px;
+    gap: 30px;
+    background-color: #ffffff;
+    border: 1px solid #99999944;
+    box-shadow: 5px 5px 5px 2px #99999944;
 `;
-
-const NewsBoxTop = styled.div`
-  width: 100%;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const TopText = styled.div`
-  width: 100%;
-  max-width: 370px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-`;
-
-const TopBadge = styled.div`
-  width: 100%;
-  width: 200px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: right;
-`;
-
-const TopMedia = styled.div`
-  width: auto;
-  height: 25px;
-  font-size: 16px;
-  color: #999999;
-  display: flex;
-  align-items: center;
-`;
-
-const TopDate = styled.div`
-  width: auto;
-  height: 25px;
-  font-size: 14px;
-  padding-left: 30px;
-  color: #999999;
-  display: flex;
-  align-items: center;
-`;
-
-const MainNewsTitle = styled.div`
-  width: 100%;
-  max-width: 570px;
-  font-size: 32px;
-  margin: 20px 0;
-  `;
-
-const MainNewsContent = styled.div`
-  width: 100%;
-  max-width: 570px;
-  line-height: 1.8;
-`;
-
 
 
 // -- Home Trend news component -- //
@@ -122,71 +132,17 @@ const MainNewsContent = styled.div`
 const TrendBox = styled.div`
   width: 100%;
   max-width: 1400px;
-  height: 1000px;
-  padding-top: 150px;
-  display: flex;
-  background-color: #E7AA22;
-  position: relative;
-`;
-
-const TrendBoxHead = styled.div`
-  width: 100%;
-  height: 150px;
-  padding: 30px 50px;
-  background-color: #F0BE4D;
-  position: absolute;
-  top: 0;
-`;
-
-const TrendHeadText = styled.div`
-  color: #ffffff;
-  font-size: 32px;
-`;
-
-const TrendHeadBtn = styled.div`
-  width: 130px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding-top: 15px;
-  padding-left: 150px;
-  gap: 20px;
+  height: 800px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #99999944;
+  box-shadow: 5px 5px 5px 2px #99999944;
 `;
 
 const ArrowButton = styled.img`
   width: 50px;
   height: 50px;
   cursor: pointer;
-`;
-
-const TrendNewsBox = styled.div`
-  width: 100%;
-  max-width: 1000px;
-  height: 150px;
-  padding: 20px 30px;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  box-shadow: 2px 2px 2px 2px #99999944;
-  border-radius: 5px;
-  position: absolute;
-  top: 50px;
-  left: 350px;
-`;
-
-const TrendNewsTitle = styled.div`
-  width: 100%;
-  height: 75px;
-  padding-top: 5px;
-  font-size: 28px;
-  line-height: 1.3;
-  overflow: hidden;
-  position: relative;
-  white-space: normal;
-  word-wrap: break-word;
-  display: -webkit-box;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 `;
 
 const NewsMediaBottom = styled.div`
@@ -213,49 +169,45 @@ const NewsHeaderItem = styled.div`
 // -- Home Trend Graph & WordCloud component -- //
 
 const WordCloudBox = styled.div`
-  width: 800px;
-  height: 850px;
-  padding: 150px 0 100px 0;
+  width: 600px;
+  height: 800px;
 `;
 
 const GraphBox = styled.div`
-  width: 600px;
+  width: 100%;
   height: 850px;
-  padding: 100px 50px 100px 0;
+  padding-right: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const GraphHeader = styled.div`
   width: 500px;
   height: 100px;
-  padding-left: 80px;
+  padding: 20px 0 0 80px  ;
   display: flex;
-  justify-content: space-between;
+  gap: 50px;
 `;
 
 const GraphContent = styled.div`
-  width: 500px;
-  height: 550px;
-  padding-top: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  width: 600px;
+  height: 800px;
 `;
 
 const GraphTextBox = styled.div`
   width: 60%;
   height: 100px;
-  text-align: right;
 `;
 
 const GraphTitle = styled.div`
+  white-space: nowrap;
   padding-bottom: 20px;
   font-size: 36px;
-  color: #ffffff;
 `;
 
 const GraphText = styled.div`
   font-size: 24px;
-  color: #ffffff;
 `;
 
 const GraphBtn = styled.div`
@@ -273,10 +225,15 @@ const GraphBtn = styled.div`
 
 const MainBoxBottom = styled.div`
   width: 100%;
-  height: 800px;
+  max-width: 1400px;
+  height: 850px;
+  padding: 20px;
   display: flex;
   justify-content: center;
   flex-direction: row;
+  background-color: #ffffff;
+  border: 1px solid #99999944;
+  box-shadow: 5px 5px 5px 2px #99999944;
 `;
 
 const BottomSubList = styled.div`
@@ -792,7 +749,7 @@ const PaginationBox = styled.div`
 `
 
 const CategoryData = [
-    { id: "value1", name: "사회" }, 
+    { id: "value1", name: "사회" },
     { id: "value2", name: "정치" },
     { id: "value3", name: "경제" },
     { id: "value4", name: "국제" },
@@ -806,30 +763,37 @@ const CategoryData = [
 export function HomeMainNews() {
     return (
         <Main>
-            <MainBox>
-                <MainNewsImageBox>
-                    <MainNewsImage src='https://cdn.spotvnews.co.kr/news/photo/202311/643707_950816_2934.jpg' />
-                </MainNewsImageBox>
-                <MainNewsBox>
-                    <NewsBoxTop>
-                        <TopText>
-                            <TopMedia>SPOTVNEWS</TopMedia>
-                            <TopDate>2023.11.14 15:34</TopDate>
-                        </TopText>
-                        <TopBadge>
-                            <Entertainments></Entertainments>
-                        </TopBadge>
-                    </NewsBoxTop>
-                    <MainNewsTitle>곽튜브, 1000만원 걸고 빠니보틀 찾는다…'나는 솔로' 찍은 사연('서치미')</MainNewsTitle>
-                    <MainNewsContent>
-                        16일 방송되는 U+모바일tv, KBS2 '서치미'에서는 곽튜브가 자신의 '찐친'인 여행 크리에이터 빠니보틀(박재한) 찾기에 도전한다.<br /><br />
+            <MainHeader>1분뉴스</MainHeader>
+            <MainDailyBox>
+                <MainDailyNews className='dailynews-box1'>
+                    <MainDailyIamgeBox>
+                        <MainDailyImage className='dailynews-img1' src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
+                    </MainDailyIamgeBox>
+                    <MainDailyTextArea className='dailynews-area1'>
 
-                        MC 전현무는 곽튜브에게 전화로 "5명의 빠니보틀이 있다. 이 중 1명만이 진짜 빠니보틀"이라고 룰을 설명한다. 곽튜브가 진짜 빠니보틀을 찾아내면 1000만 원은 곽튜브의 것이 된다.<br /><br />
+                    </MainDailyTextArea>
+                </MainDailyNews>
+                <MainDailyNews className='dailynews-box2'>
+                    <MainDailyIamgeBox>
+                        <MainDailyImage className='dailynews-img2' src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
+                    </MainDailyIamgeBox>
+                    <MainDailyTextArea>
 
-                        곽튜브를 속이기 위해 두 사람의 또 다른 지인 채코제(박재일)와 '시치미단' 이은지, 곽범, 손동표가 나선다.<br /><br />
-                    </MainNewsContent>
-                </MainNewsBox>
-            </MainBox>
+                    </MainDailyTextArea>
+                </MainDailyNews>
+                <MainDailyNews className='dailynews-box3'>
+                    <MainDailyIamgeBox>
+                        <MainDailyImage className='dailynews-img3' src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
+                    </MainDailyIamgeBox>
+                </MainDailyNews>
+                <MainDailyNews className='dailynews-box4'>
+                    <MainDailyIamgeBox>
+                        <MainDailyImage className='dailynews-img4' src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
+                    </MainDailyIamgeBox>
+                </MainDailyNews>
+            </MainDailyBox>
+            <MainHeader>오늘의 뉴스</MainHeader>
+            <MainNewsBox></MainNewsBox>
         </Main>
     )
 }
@@ -837,34 +801,20 @@ export function HomeMainNews() {
 export function HomeTrendNews() {
     return (
         <TrendBox>
-            <TrendBoxHead>
-                <TrendHeadText>인기뉴스</TrendHeadText>
-                <TrendHeadBtn>
+            <GraphHeader>
+                <GraphTextBox>
+                    <GraphTitle>오늘의 트렌드</GraphTitle>
+                    <GraphText>연예 트렌드</GraphText>
+                </GraphTextBox>
+                <GraphBtn>
                     <ArrowButton src={ArrowLeft} />
                     <ArrowButton src={ArrowRight} />
-                </TrendHeadBtn>
-            </TrendBoxHead>
-            <TrendNewsBox>
-                <NewsHeaderItem>
-                    <NewsMediaBottom>아시아경제</NewsMediaBottom>
-                    <NewsDateBottom>2023.11.17 09:11</NewsDateBottom>
-                </NewsHeaderItem>
-                <TrendNewsTitle>"수건이 115만원? 우린 9900원"…발렌시아가 저격한 이케아"수건이 115만원? 우린 9900원"…발렌시아가 저격한 이케아이케아이케아이케아이케아이케아이케아이케아이케아이케아</TrendNewsTitle>
-            </TrendNewsBox>
-            <WordCloudBox>
-                <WordcloudResult></WordcloudResult>
-            </WordCloudBox>
+                </GraphBtn>
+            </GraphHeader>
             <GraphBox>
-                <GraphHeader>
-                    <GraphBtn>
-                        <ArrowButton src={ArrowLeft} />
-                        <ArrowButton src={ArrowRight} />
-                    </GraphBtn>
-                    <GraphTextBox>
-                        <GraphTitle>오늘의 트렌드</GraphTitle>
-                        <GraphText>연예 트렌드</GraphText>
-                    </GraphTextBox>
-                </GraphHeader>
+                <WordCloudBox>
+                    <WordcloudResult />
+                </WordCloudBox>
                 <GraphContent>
                     <MyBarChart />
                 </GraphContent>
@@ -1068,6 +1018,7 @@ export function CategoriNewsComponent() {
                                     id={name}
                                     type='checkbox'
                                     onChange={handleCheckBox}
+                                    checked
                                 />
                                 <CategorySideItemLabel htmlFor={name}>
                                     <CategorySideItemText>

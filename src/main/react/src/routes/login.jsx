@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import LoginImage from '../assets/image/Login.jpg';
 import SignupImage from '../assets/image/Sign-up.jpg';
 import backLogo from '../assets/back-logo.svg'
+import Kakao from '../assets/kakaotalk-logo.svg'
+import Google from '../assets/google-logo.svg'
+import Naver from '../assets/naver-logo.png'
+import Github from '../assets/github-mark-white.svg'
 import { Link } from 'react-router-dom';
 
 const Body = styled.div`
@@ -175,6 +179,63 @@ const BackButton = styled.img`
   }
 `;
 
+const SocialBox = styled.div`
+  width: 100%;
+  height: 50px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 30px;
+`;
+
+const SocialButtonKakao = styled.div`
+  width: 50px;
+  height: 50px;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #FFE812;
+  cursor: pointer;
+  `;
+
+const SocialButtonGoogle = styled.div`
+  width: 50px;
+  height: 50px;
+  padding: 5px;
+  border-radius: 50%;
+  border: 1px solid #99999944;
+  background-color: #ffffff;
+  cursor: pointer;
+  `;
+
+const SocialButtonNaver = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #99999944;
+  background-color: #03c75a;
+  cursor: pointer;
+  `;
+
+const SocialButtonGithub = styled.div`
+  width: 50px;
+  height: 50px;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #010409;
+  cursor: pointer;
+  `;
+
+const SocialButtonImage = styled.img`
+  width: 100%;
+  border-radius: 50%;
+`;
+
+
+
+
+
 export default function Login() {
   const [data, setData] = useState('');
   const [isActive, setIsActive] = useState(false);
@@ -238,6 +299,20 @@ export default function Login() {
               가입한 아이디가 없으신가요?  
               <LinkBox href="#" onClick={() => toggle()}>회원가입</LinkBox>
             </BottomText>
+            <SocialBox>
+              <SocialButtonGoogle>
+                <SocialButtonImage src={Google} />
+              </SocialButtonGoogle>
+              <SocialButtonKakao>
+                <SocialButtonImage src={Kakao} />
+              </SocialButtonKakao>
+              <SocialButtonNaver>
+                <SocialButtonImage src={Naver} />
+              </SocialButtonNaver>
+              <SocialButtonGithub>
+                <SocialButtonImage src={Github} />
+              </SocialButtonGithub>
+            </SocialBox>
           </LoginBox>
         </RightBox>
         <Link to="/">

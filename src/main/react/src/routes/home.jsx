@@ -34,7 +34,6 @@ const BoardBox = styled.div`
   width: 100%;
   max-width: 1400px;
   height: 1220px;
-  padding: 0 50px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -70,15 +69,15 @@ export default function Home() {
           <HomeMainNews />
         </Content>
         <Content>
+            <HomeSubNews />
+        </Content>
+        <Content>
           <HomeTrendNews />
         </Content>
         <Content>
           <BoardBox>
             <BoardMain></BoardMain>
           </BoardBox>
-        </Content>
-        <Content>
-            <HomeSubNews />
         </Content>
       </WrapperBox>
       <Footer></Footer>
