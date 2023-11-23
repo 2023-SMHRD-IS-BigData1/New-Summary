@@ -52,8 +52,9 @@ const Title = styled.div`
 const LoginBox = styled.div`
     width: 300px;
     height: 80px;
+    padding-right: 50px;
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
 `;
 
@@ -138,27 +139,33 @@ export default function Header({ ...props }) {
                     <Title>News Summary</Title>
                 </Link>
                 <LoginBox>
-                    <Link to="/profile" style={{ textDecoration: "none", color: "black" }}>
+                    {/* <Link to="/profile" style={{ textDecoration: "none", color: "black" }}>
                         <UserButton>마이페이지</UserButton>
-                    </Link>
+                    </Link> */}
                     <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
                         <UserButton>로그인</UserButton>
                     </Link>
+                    {/* <a href="https://kauth.kakao.com/oauth/logout?client_id=a5336752ae75dfa19b52019c374a13c6&logout_redirect_uri=http://localhost:8081/member/do">
+                        <UserButton>카카오로그아웃</UserButton>
+                    </a> */}
                 </LoginBox>
             </WrapperTop>
             <WrapperBottom>
                 <MenuBox>
                     <Link to="/" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem {...props} onPage>메인화면</MenuItem>
+                        <MenuItem {...props} onPage>메인페이지</MenuItem>
                     </Link>
-                    <Link to="/daily-news" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem>일간뉴스</MenuItem>
-                    </Link>
+                    {/* <Link to="/daily-news" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
+                        <MenuItem>뉴스 모아보기</MenuItem>
+                    </Link> */}
                     <Link to="/category-news" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem>카테고리</MenuItem>
+                        <MenuItem>뉴스 모아보기</MenuItem>
                     </Link>
                     <Link to="/board" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
                         <MenuItem>커뮤니티</MenuItem>
+                    </Link>
+                    <Link to="/profile" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
+                        <MenuItem>마이페이지</MenuItem>
                     </Link>
                 </MenuBox>
                 <InputBox>

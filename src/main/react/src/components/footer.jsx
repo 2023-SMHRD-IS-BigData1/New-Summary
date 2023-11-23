@@ -27,7 +27,6 @@ const MenuItem = styled.div`
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 20px;
 `;
 
 const GithubBox = styled.a`
