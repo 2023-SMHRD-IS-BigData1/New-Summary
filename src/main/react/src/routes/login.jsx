@@ -235,33 +235,59 @@ const SocialButtonImage = styled.img`
 
 
 
-
 export default function Login() {
   const [data, setData] = useState('');
   const [isActive, setIsActive] = useState(false);
+
+  // 각각의 폼에 대한 데이터 상태 추가
+  const [signupFormData, setSignupFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+
+  const [loginFormData, setLoginFormData] = useState({
+    email: '',
+    password: '',
+  });
 
   const toggle = () => {
     setIsActive((prevIsActive) => !prevIsActive);
   };
 
-  useEffect(() => {
-    //java에서 데이터 가져오기
-    axios.get('/api/data')
-      .then(res => setData(res.data))
-      .catch(error => {
-        if (error.response) {
-          // 서버에서 응답이 왔으나 응답 코드가 2xx가 아닌 경우
-          console.error('에러 응답:', error.response.data);
-          console.error('에러 상태 코드:', error.response.status);
-        } else if (error.request) {
-          // 요청이 서버에 도달하지 않은 경우
-          console.error('요청이 서버에 도달하지 않음:', error.request);
-        } else {
-          // 요청을 보내기 전에 발생한 에러
-          console.error('에러 설정:', error.config);
-        }
+  // 로그인 폼을 제출할 때 실행되는 함수
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+
+    // axios를 사용하여 로그인 데이터를 백엔드로 보냅니다.
+    axios.post('/api/login', loginFormData)
+      .then(response => {
+        // 성공적으로 응답을 받았을 때 수행할 작업을 여기에 추가합니다.
+        console.log('로그인 응답 받음:', response.data);
+        history.push('/');
       })
-  }, []);
+      .catch(error => {
+        // 요청이 실패했을 때 수행할 작업을 여기에 추가합니다.
+        console.error('로그인 에러 발생:', error);
+        // history.push('/login');
+      });
+  };
+
+  // 회원가입 폼을 제출할 때 실행되는 함수
+  const handleSignupSubmit = (e) => {
+    e.preventDefault();
+
+    // axios를 사용하여 회원가입 데이터를 백엔드로 보냅니다.
+    axios.post('/api/signup', signupFormData)
+      .then(response => {
+        console.log('회원가입 응답 받음:', response.data);
+      })
+      .catch(error => {
+        console.error('회원가입 에러 발생:', error);
+      });
+      history.push('/login')
+  };
+
   return (
     <Body>
       <Wrapper className={isActive ? 'active' : ''}>
@@ -269,17 +295,41 @@ export default function Login() {
           <ImageBox className="inputImage" src={LoginImage} alt="" />
           <SignupBox className="sign-up">
             <BoxTextHead>Create An Account</BoxTextHead>
-            <FormBox action="">
-              <InputBox type="text" placeholder="Username" />
-              <InputBox type="email" placeholder="Email Address" />
-              <InputBox type="password" placeholder="Create Password" />
-              <InputBox type="password" placeholder="Confirm Password" />
+            <FormBox action="" onSubmit={handleSignupSubmit}>
+              <InputBox
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={signupFormData.username}
+                onChange={(e) => setSignupFormData({ ...signupFormData, username: e.target.value })}
+              />
+              <InputBox
+                type="email"
+                placeholder="Email Address"
+                name="email"
+                value={signupFormData.email}
+                onChange={(e) => setSignupFormData({ ...signupFormData, email: e.target.value })}
+              />
+              <InputBox
+                type="password"
+                placeholder="Create Password"
+                name="password"
+                value={signupFormData.password}
+                onChange={(e) => setSignupFormData({ ...signupFormData, password: e.target.value })}
+              />
+              <InputBox
+                type="password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                value={signupFormData.confirmPassword}
+                onChange={(e) => setSignupFormData({ ...signupFormData, confirmPassword: e.target.value })}
+              />
               <SubmitBox>
                 <SubmitButton type="submit" value="Sign Up" />
               </SubmitBox>
             </FormBox>
             <BottomText>
-              가입한 아이디가 있으신가요? 
+              가입한 아이디가 있으신가요?
               <LinkBox href="#" id="sign-in" onClick={() => toggle()}>로그인</LinkBox>
             </BottomText>
           </SignupBox>
@@ -288,24 +338,38 @@ export default function Login() {
           <ImageBox className="inputImage" src={SignupImage} />
           <LoginBox className="login">
             <BoxTextHead>Log In</BoxTextHead>
-            <FormBox action="">
-              <InputBox type="email" placeholder="Email Address" />
-              <InputBox type="password" placeholder="Password" />
+            <FormBox action="" onSubmit={handleLoginSubmit}>
+              <InputBox
+                type="email"
+                placeholder="Email Address"
+                name="email"
+                value={loginFormData.email}
+                onChange={(e) => setLoginFormData({ ...loginFormData, email: e.target.value })}
+              />
+              <InputBox
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={loginFormData.password}
+                onChange={(e) => setLoginFormData({ ...loginFormData, password: e.target.value })}
+              />
               <SubmitBox>
                 <SubmitButton type="submit" value="Login" />
               </SubmitBox>
             </FormBox>
             <BottomText>
-              가입한 아이디가 없으신가요?  
+              가입한 아이디가 없으신가요?
               <LinkBox href="#" onClick={() => toggle()}>회원가입</LinkBox>
             </BottomText>
             <SocialBox>
               <SocialButtonGoogle>
                 <SocialButtonImage src={Google} />
               </SocialButtonGoogle>
-              <SocialButtonKakao>
-                <SocialButtonImage src={Kakao} />
-              </SocialButtonKakao>
+              <a href='https://kauth.kakao.com/oauth/authorize?client_id=a5336752ae75dfa19b52019c374a13c6&redirect_uri=http://localhost:8081/member/kakao&response_type=code'>
+                <SocialButtonKakao>
+                  <SocialButtonImage src={Kakao} />
+                </SocialButtonKakao>
+              </a>
               <SocialButtonNaver>
                 <SocialButtonImage src={Naver} />
               </SocialButtonNaver>
@@ -320,5 +384,5 @@ export default function Login() {
         </Link>
       </Wrapper>
     </Body>
-  )
+  );
 }

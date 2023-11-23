@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled, { css, keyframes } from 'styled-components';
 import WordcloudResult from '../components/wordcloud';
+import AutoPlayCarousel from '../components/carousel';
 import ArrowLeft from '../assets/arrow-left-circle.svg';
 import ArrowRight from '../assets/arrow-right-circle.svg';
-import { CategoryBadgeBox } from '../components/category-badge';
 import MyBarChart from '../components/bar-chart';
 import Bookmark from '../assets/bookmark.svg';
 import BookmarkOn from '../assets/bookmark-on.svg';
@@ -19,74 +19,111 @@ const Main = styled.div`
 
 const MainHeader = styled.div`
     width: 100%;
-    height: 50px;
-    font-size: 32px;
-    padding: 30px;
+    font-size: 28px;
+    padding: 30px 30px 0 30px;
     display: flex;
     align-items: center;
+    background-color: #ffffff;
 `;
 
+
+
+// -- Home Trend badge component -- //
+const MainTrendBox = styled.div`
+    width: 100%;
+    padding: 30px 40px;
+    gap: 20px 40px;
+    margin-bottom: 100px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex-wrap: wrap;
+    background-color: #ffffff;
+    box-shadow: 5px 5px 5px 2px #99999944;
+`;
+
+const MainTrendBadge = styled.div`
+    height: 36px;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: 1px solid #99999944;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    cursor: pointer;
+    &:hover {
+        color: #ffffff;
+        background-color: #f0be4d;
+        border: 1px solid #99999900;
+        transition: 0.5s;
+    }
+`;
+
+
+
+// -- Home 1second news component -- //
 const MainDailyBox = styled.div`
     width: 100%;
-    height: 300px;
-    padding: 20px 40px;
+    height: 320px;
+    padding: 30px 40px;
     gap: 40px;
+    margin-bottom: 100px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
     background-color: #ffffff;
-    border: 1px solid #99999944;
     box-shadow: 5px 5px 5px 2px #99999944;
 `;
-/*
-const DailyHoverAni = keyframes`
-  0% {}
-  20% {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  0% {}
-`;
-
-const DailyHoverStyles = css`
-    animation: ${DailyHoverAni} 1s ease-in-out;
-`;
-*/
 
 const MainDailyNews = styled.div`
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     height: 260px;
     position: relative;
     display: flex;
     align-items: center;
-    background-color: aqua;
+    border: 1px solid #99999944;
+    box-shadow: 5px 5px 5px 2px #99999944;
     &.dailynews-box1:hover {
-        width: 200%;
-        display: flex;
-        justify-content: space-between;
-        + .dailynews-box2,
-        + .dailynews-box3,
-        + .dailynews-box4 {
-            display: none;
-        }
+        z-index: 100;
         .dailynews-area1 {
-            display: flex;
+            transform: translateY(0);
+            transition: 0.8s;
         }
     }
     &.dailynews-box2:hover {
+        z-index: 100;
         transform: translateX(calc(-100% - 40px));
         transition: 0.4s;
+        .dailynews-area2 {
+            transform: translateY(0);
+            transition: 0.8s;
+            transition-delay: 0.4s;
+        }
     }
     &.dailynews-box3:hover {
+        z-index: 100;
         transform: translateX(calc(-200% - 80px));
         transition: 0.6s;
+        .dailynews-area3 {
+            transform: translateY(0);
+            transition: 0.8s;
+            transition-delay: 0.6s;
+        }
     }
     &.dailynews-box4:hover {
+        z-index: 100;
         transform: translateX(calc(-300% - 120px));
         transition: 0.9s;
+        .dailynews-area4 {
+            transform: translateY(0);
+            transition: 0.8s;
+            transition-delay: 0.9s;
+        }
     }
 `;
 
@@ -101,30 +138,46 @@ const MainDailyImage = styled.img`
 `;
 
 const MainDailyTextArea = styled.div`
-    width: 100%;
-    height: 260px;
+    width: 340%;
+    height: 270px;
     position: absolute;
-    left: 300px;
-    background-color: aqua;
-    display: none;
+    left: 310px;
+    padding: 20px 20px;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #99999944;
+    transform: translateY(120%);
 `;
 
-const MainDailyMedia = styled.div``;
+const MainDailyTitle = styled.div`
+    width: 100%;
+    padding: 10px;
+    font-size: 32px;
+    font-weight: 600;
+`;
 
-const MainDailyDate = styled.div``;
+const MainDailyContent = styled.div`
+    width: 100%;
+    height: 210px;
+    padding: 20px;
+    font-size: 20px;
+    line-height: 1.3;
+`;
 
-const MainDailyTitle = styled.div``;
 
-const MainDailyContent = styled.div``;
 
+// -- Home Main news carousel component -- //
 const MainNewsBox = styled.div`
     width: 100%;
-    height: 300px;
+    height: 560px;
     gap: 30px;
+    padding: 30px 10px;
+    display: flex;
+    align-items: center;
     background-color: #ffffff;
-    border: 1px solid #99999944;
     box-shadow: 5px 5px 5px 2px #99999944;
 `;
+
 
 
 // -- Home Trend news component -- //
@@ -737,6 +790,7 @@ const PaginationBox = styled.div`
     justify-content: center;
     align-items: center;
     font-size: 1rem; 
+    background-color: #ffffff;
   }
   ul.pagination li:first-child{ border-radius: 5px 0 0 5px; }
   ul.pagination li:last-child{ border-radius: 0 5px 5px 0; }
@@ -763,6 +817,17 @@ const CategoryData = [
 export function HomeMainNews() {
     return (
         <Main>
+            <MainHeader>오늘 뜨는 뉴스</MainHeader>
+            <MainTrendBox>
+                <MainTrendBadge>국정원 정찰위성 보고</MainTrendBadge>
+                <MainTrendBadge>조달청 전산망 먹통</MainTrendBadge>
+                <MainTrendBadge>네덜란드 총선</MainTrendBadge>
+                <MainTrendBadge>폴리코노미</MainTrendBadge>
+                <MainTrendBadge>슈링크플레이션 신고</MainTrendBadge>
+                <MainTrendBadge>친일파 부당이득 반환</MainTrendBadge>
+                <MainTrendBadge>초록낙엽</MainTrendBadge>
+                <MainTrendBadge>갤럭시 마르지엘라 에디션</MainTrendBadge>
+            </MainTrendBox>
             <MainHeader>1분뉴스</MainHeader>
             <MainDailyBox>
                 <MainDailyNews className='dailynews-box1'>
@@ -770,30 +835,43 @@ export function HomeMainNews() {
                         <MainDailyImage className='dailynews-img1' src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
                     </MainDailyIamgeBox>
                     <MainDailyTextArea className='dailynews-area1'>
-
+                        <MainDailyTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainDailyTitle>
+                        <MainDailyContent>'스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.</MainDailyContent>
                     </MainDailyTextArea>
                 </MainDailyNews>
                 <MainDailyNews className='dailynews-box2'>
                     <MainDailyIamgeBox>
                         <MainDailyImage className='dailynews-img2' src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
                     </MainDailyIamgeBox>
-                    <MainDailyTextArea>
-
+                    <MainDailyTextArea className='dailynews-area2'>
+                        <MainDailyTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainDailyTitle>
+                        <MainDailyContent>침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
+                                          최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.</MainDailyContent>
                     </MainDailyTextArea>
                 </MainDailyNews>
                 <MainDailyNews className='dailynews-box3'>
                     <MainDailyIamgeBox>
                         <MainDailyImage className='dailynews-img3' src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
                     </MainDailyIamgeBox>
+                    <MainDailyTextArea className='dailynews-area3'>
+                        <MainDailyTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainDailyTitle>
+                        <MainDailyContent>영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.</MainDailyContent>
+                    </MainDailyTextArea>
                 </MainDailyNews>
                 <MainDailyNews className='dailynews-box4'>
                     <MainDailyIamgeBox>
                         <MainDailyImage className='dailynews-img4' src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
                     </MainDailyIamgeBox>
+                    <MainDailyTextArea className='dailynews-area4'>
+                        <MainDailyTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainDailyTitle>
+                        <MainDailyContent>12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.</MainDailyContent>
+                    </MainDailyTextArea>
                 </MainDailyNews>
             </MainDailyBox>
             <MainHeader>오늘의 뉴스</MainHeader>
-            <MainNewsBox></MainNewsBox>
+            <MainNewsBox>
+                <AutoPlayCarousel />
+            </MainNewsBox>
         </Main>
     )
 }
