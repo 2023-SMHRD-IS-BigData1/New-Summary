@@ -19,8 +19,17 @@ const WrapperBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 200px;
+  gap: 100px;
   padding-bottom: 200px;
+`;
+
+const MainHeader = styled.div`
+    width: 100%;
+    font-size: 28px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
 `;
 
 const Content = styled.div`
@@ -67,12 +76,6 @@ export default function Home() {
       <WrapperBox>
         <Content>
           <HomeMainNews />
-        </Content>
-        <Content>
-            <HomeSubNews />
-        </Content>
-        <Content>
-          <HomeTrendNews />
         </Content>
         <Content>
           <BoardBox>
