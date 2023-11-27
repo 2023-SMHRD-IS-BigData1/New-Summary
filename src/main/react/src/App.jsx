@@ -9,6 +9,7 @@ import Login from './routes/login';
 import Board from './routes/board';
 import CategoryNews from './routes/category-news';
 import DailyNews from './routes/daily-news';
+import AutoPlayCarousel from './components/carousel';
 
 // 초기 시작페이지를 잡아주기
 const router = createBrowserRouter([
@@ -61,6 +62,30 @@ width: 100%;
 height: 100vh;
 display: flex;
 justify-content: center;
+position: relative;
+`;
+
+const TopButton = styled.a`
+  width: 60px;
+  height: 60px;
+  border: 1px solid #99999944;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  font-size: 32px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  color: #000000;
+  text-decoration: none;
+  &:hover {
+    background-color: #f0be4d;
+    color: #ffffff;
+    transition: 0.5s;
+  }
 `;
 
 
@@ -73,10 +98,13 @@ function App() {
     init();
   }, []);
   return (
+    <>
     <Wrapper>
       <GlobalStyles />
       {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+      <TopButton href="javascript:window.scrollTo(0,0);">&uarr;</TopButton>
     </Wrapper>
+    </>
   )
 }
 
