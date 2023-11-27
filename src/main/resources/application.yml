@@ -20,6 +20,10 @@ spring:
     url: jdbc:mysql://project-db-campus.smhrd.com:3307/BIG_news_23?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: BIG_news_23
     password: news1
+  data:
+    mongodb:
+      uri:  mongodb://bignews:news@43.201.59.116:27017/newsummary?authSource=admin&authMechanism=SCRAM-SHA-1
+      # uri : mongodb://bignews:news@43.201.59.116:27017/?authMechanism=DEFAULT
     
   # JPA 설정
   jpa:
