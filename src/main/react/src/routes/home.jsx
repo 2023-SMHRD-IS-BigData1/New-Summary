@@ -19,12 +19,12 @@ const WrapperBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 100px;
   padding-bottom: 200px;
 `;
 
 const MainHeader = styled.div`
     width: 100%;
+    max-width: 1400px;
     font-size: 28px;
     padding: 30px;
     display: flex;
@@ -42,12 +42,14 @@ const Content = styled.div`
 const BoardBox = styled.div`
   width: 100%;
   max-width: 1400px;
-  height: 1220px;
+  height: 1250px;
+  padding: 0 30px 30px 30px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 50px;
+  background-color: #ffffff;
 `;
 
 export default function Home() {
@@ -77,6 +79,7 @@ export default function Home() {
         <Content>
           <HomeMainNews />
         </Content>
+          <MainHeader>게시판 인기글</MainHeader>
         <Content>
           <BoardBox>
             <BoardMain></BoardMain>
