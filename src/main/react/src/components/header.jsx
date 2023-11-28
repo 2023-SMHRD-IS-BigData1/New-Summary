@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import '../components/font.css';
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -131,6 +132,12 @@ const InputItem = styled.input`
 
 
 export default function Header({ ...props }) {
+    const location = useLocation();
+
+    useEffect(() => {
+        console.log(location.pathname);
+    }, [location])
+    const curruntURL = location.pathname;
 
     return (
         <Wrapper>
@@ -139,9 +146,6 @@ export default function Header({ ...props }) {
                     <Title>News Summary</Title>
                 </Link>
                 <LoginBox>
-                    {/* <Link to="/profile" style={{ textDecoration: "none", color: "black" }}>
-                        <UserButton>마이페이지</UserButton>
-                    </Link> */}
                     <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
                         <UserButton>로그인</UserButton>
                     </Link>
@@ -152,20 +156,17 @@ export default function Header({ ...props }) {
             </WrapperTop>
             <WrapperBottom>
                 <MenuBox>
-                    <Link to="/" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem {...props} onPage>메인페이지</MenuItem>
+                    <Link to="/" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/" ? <MenuItem {...props} onPage>메인페이지</MenuItem> : <MenuItem>메인페이지</MenuItem>}
                     </Link>
-                    {/* <Link to="/daily-news" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem>뉴스 모아보기</MenuItem>
-                    </Link> */}
-                    <Link to="/category-news" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem>뉴스 모아보기</MenuItem>
+                    <Link to="/category-news" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/category-news" ? <MenuItem {...props} onPage>뉴스 모아보기</MenuItem> : <MenuItem>뉴스 모아보기</MenuItem>}
                     </Link>
-                    <Link to="/board" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem>커뮤니티</MenuItem>
+                    <Link to="/board" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/board" ? <MenuItem {...props} onPage>커뮤니티</MenuItem> : <MenuItem>커뮤니티</MenuItem>}
                     </Link>
-                    <Link to="/profile" style={{ textDecoration: "none", color: "black" , width: "20%" }}>
-                        <MenuItem>마이페이지</MenuItem>
+                    <Link to="/profile" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
                     </Link>
                 </MenuBox>
                 <InputBox>

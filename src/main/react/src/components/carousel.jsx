@@ -175,10 +175,10 @@ export default function AutoPlayCarousel({ newsData }) {
   const carouselItems = newsData && newsData.map((item, index) => (
     <SlideItem key={index} onClick={() => handleModal(item)}>
       <NewsImageBox>
-        <NewsImage src={item.Image} />
+        <NewsImage src={item.picture} />
       </NewsImageBox>
-      <NewsTitle>{item.Title}</NewsTitle>
-      <NewsContent>{item.Content}</NewsContent>
+      <NewsTitle>{item.title}</NewsTitle>
+      <NewsContent>{item.articleContent}</NewsContent>
     </SlideItem>
   ));
 
