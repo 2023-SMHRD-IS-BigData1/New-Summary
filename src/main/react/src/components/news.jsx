@@ -9,7 +9,7 @@ import MyBarChart from '../components/bar-chart';
 import Bookmark from '../assets/bookmark.svg';
 import BookmarkOn from '../assets/bookmark-on.svg';
 import Pagination from "react-js-pagination";
-import { AutoComponent } from '../data/news-data';
+import { AutoComponent, ViewsComponent } from '../data/news-data';
 
 // -- Home Main news component -- //
 const Main = styled.div`
@@ -910,9 +910,11 @@ export function HomeMainNews() {
                     <AutoPlayCarousel />
                 </AutoComponent>
             </MainNewsBox>
-            <MainHeader>사람들이 많이 본 뉴스</MainHeader>
+                <MainHeader>사람들이 많이 본 뉴스</MainHeader>
             <MainCategoryNewsBox>
-                <ViewsCarousel />
+                <ViewsComponent>
+                    <ViewsCarousel />
+                </ViewsComponent>
             </MainCategoryNewsBox>
         </Main>
     )
