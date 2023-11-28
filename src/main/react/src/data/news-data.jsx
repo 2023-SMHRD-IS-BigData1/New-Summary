@@ -9,7 +9,8 @@ export function AutoComponent() {
   useEffect(() => {
     const axiosData = async () => {
       try {
-        const response = await axios.get('../../NewsTestData.json');
+        // const response = await axios.get('../../NewsTestData.json');
+        const response = await axios.get('/api/news/list');
         setNewsData(response.data);
         console.log('Data has been successfully loaded:', response.data);
       } catch (error) {
