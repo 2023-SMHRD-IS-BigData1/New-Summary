@@ -19,4 +19,7 @@ public interface NewsRepository extends MongoRepository<News, String>{
 	
 	// 검색
     List<News> findByTitleRegexOrReporterRegexOrArticleContentRegexIgnoreCase(String title, String reporter, String articleContent);
+    
+    // 카테고리 내 추천 기능
+    List<News> findByCategory(String category);
 }
