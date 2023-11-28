@@ -8,7 +8,7 @@ import Profile from './routes/profile';
 import Login from './routes/login';
 import Board from './routes/board';
 import CategoryNews from './routes/category-news';
-import DailyNews from './routes/daily-news';
+import SearchNews from './routes/search';
 import AutoPlayCarousel from './components/carousel';
 
 // 초기 시작페이지를 잡아주기
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "daily-news",
-        element: <DailyNews />,
+        path: "search",
+        element: <SearchNews />,
       },
       {
         path: "category-news",

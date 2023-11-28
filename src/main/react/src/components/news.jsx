@@ -65,7 +65,7 @@ const MainTrendBadge = styled.div`
 
 
 // -- Home 1second news component -- //
-const MainDailyBox = styled.div`
+const MainSearchBox = styled.div`
     width: 100%;
     height: 320px;
     padding: 30px 40px;
@@ -80,7 +80,7 @@ const MainDailyBox = styled.div`
     box-shadow: 5px 5px 5px 2px #99999944;
 `;
 
-const MainDailyNews = styled.div`
+const MainSearchNews = styled.div`
     width: 100%;
     max-width: 300px;
     height: 260px;
@@ -132,19 +132,19 @@ const MainDailyNews = styled.div`
     }
 `;
 
-const MainDailyIamgeBox = styled.div`
+const MainSearchIamgeBox = styled.div`
     width: 100%;
     position: relative;
 `;
 
-const MainDailyImage = styled.img`
+const MainSearchImage = styled.img`
     width: 100%;
     max-width: 300px;
     height: 260px;
     object-fit: cover;
 `;
 
-const MainDailyTextArea = styled.div`
+const MainSearchTextArea = styled.div`
     width: 340%;
     height: 270px;
     position: absolute;
@@ -156,14 +156,14 @@ const MainDailyTextArea = styled.div`
     transform: translateY(20%);
 `;
 
-const MainDailyTitle = styled.div`
+const MainSearchTitle = styled.div`
     width: 100%;
     padding: 10px;
     font-size: 32px;
     font-weight: 600;
 `;
 
-const MainDailyContent = styled.div`
+const MainSearchContent = styled.div`
     width: 100%;
     height: 210px;
     padding: 20px;
@@ -442,7 +442,7 @@ const BottomCategoryItem = styled.div`
 
 
 
-// -- Daily news component -- //
+// -- Search news component -- //
 
 const WrapperBox = styled.div`
   width: 100%;
@@ -459,6 +459,7 @@ const WrapperBox = styled.div`
 
 const DateHead = styled.div`
     width: 100%;
+    margin-top: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -475,26 +476,31 @@ const DateBox = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: #F0BE4D;
-    color: #ffffff;
     font-size: 22px;
     font-weight: 600;
+    background-color: #ffffff;
+    border: 1px solid #99999944;
+    box-shadow: 5px 5px 10px 1px #99999944;
 `;
 
 const ArrowBox = styled.div`
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 30px;
+    padding-bottom: 6px;
+    border-radius: 50%;
     cursor: pointer;
     &:hover{
-        color: #000000;
+        background-color: #f0be4d;
+        color: #ffffff;
+        transition: 0.5s;
     }
 `;
 
-const DailyNewsBox = styled.div`
+const SearchNewsBox = styled.div`
     width: 100%;
     height: 300px;
     border: 1px solid #99999944;
@@ -505,30 +511,30 @@ const DailyNewsBox = styled.div`
     justify-content: space-between;
     gap: 20px;
     overflow: hidden;
-    &:hover .DailyNewsBtn{
+    &:hover .SearchNewsBtn{
         opacity: 1;
         transition: 0.5s;
         transform: translateX(0);
     }
 `;
 
-const DailyNewsContentBox = styled.div`
+const SearchNewsContentBox = styled.div`
     width: 70%;
     height: 240px;
 `;
 
-const DailyNewsImageBox = styled.div`
+const SearchNewsImageBox = styled.div`
     width: 30%;
     height: 240px;
     object-fit:cover;
     overflow: hidden;
 `;
 
-const DailyNewsImage = styled.img`
+const SearchNewsImage = styled.img`
     width: 100%;
 `;
 
-const DailyNewsDateBox = styled.div`
+const SearchNewsDateBox = styled.div`
     width: 100%;
     height: 40px;
     padding-bottom: 10px;
@@ -539,13 +545,13 @@ const DailyNewsDateBox = styled.div`
     gap: 20px;
 `;
 
-const DailyNewsMedia = styled.div`
+const SearchNewsMedia = styled.div`
     font-size: 18px;
 `;
 
-const DailyNewsDate = styled.div``;
+const SearchNewsDate = styled.div``;
 
-const DailyNewsTitle = styled.div`
+const SearchNewsTitle = styled.div`
     width: 100%;
     height: 75px;
     font-size: 28px;
@@ -561,7 +567,7 @@ const DailyNewsTitle = styled.div`
     -webkit-box-orient: vertical;
 `;
 
-const DailyNewsContent = styled.div`    
+const SearchNewsContent = styled.div`    
     width: 100%;
     height: 110px;
     font-size: 18px;
@@ -576,7 +582,7 @@ const DailyNewsContent = styled.div`
     -webkit-box-orient: vertical;
 `;
 
-const DailyNewsSideSlide = styled.div`
+const SearchNewsSideSlide = styled.div`
     width: 200px;
     height: 100%;
     padding: 20px 20px 0 0;
@@ -589,7 +595,7 @@ const DailyNewsSideSlide = styled.div`
     transform: translateX(100%);
 `;
 
-const DailyNewsSideBtn = styled.img`
+const SearchNewsSideBtn = styled.img`
     width: 50px;
     height: 50px;
     background-color: #ffffff;
@@ -635,6 +641,7 @@ const CategoryNewsBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    background-color: #ffffff;
     overflow: hidden;
     &:hover .CategoryNewsBtn{
         opacity: 1;
@@ -740,6 +747,7 @@ const CategorySideBox = styled.div`
   border: 1px solid #99999944;
   box-shadow: 5px 5px 10px 1px #99999944;
   padding-top: 80px;
+  background-color: #ffffff;
 `;
 
 const CategorySideTitle = styled.div`
@@ -769,13 +777,15 @@ const CategorySideItemText = styled.span`
 
 const CategorySideInput = styled.input`
     &:checked + label:before{
-    content:"✔";
-    color: #ffffff;
-    background-color:#f0be4d;
-    border-color:#f0be4d;
-    background-repeat: no-repeat;
-    background-position: 50%;
-}
+        width:20px;
+        padding-left: 4px;
+        content:"✔";
+        color: #ffffff;
+        background-color:#f0be4d;
+        border-color:#f0be4d;
+        background-repeat: no-repeat;
+        background-position: 50%;
+    }
 `;
 
 const CategorySideItemLabel = styled.label`
@@ -855,45 +865,45 @@ export function HomeMainNews() {
                 <MainTrendBadge>갤럭시 마르지엘라 에디션</MainTrendBadge>
             </MainTrendBox>
             <MainHeader>1분뉴스</MainHeader>
-            <MainDailyBox>
-                <MainDailyNews className='dailynews-box1'>
-                    <MainDailyIamgeBox className='dailynews-imagebox1'>
-                        <MainDailyImage className='dailynews-img1' src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
-                        <MainDailyTextArea className='dailynews-area1'>
-                            <MainDailyTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainDailyTitle>
-                            <MainDailyContent>'스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.</MainDailyContent>
-                        </MainDailyTextArea>
-                    </MainDailyIamgeBox>
-                </MainDailyNews>
-                <MainDailyNews className='dailynews-box2'>
-                    <MainDailyIamgeBox className='dailynews-imagebox2'>
-                        <MainDailyImage className='dailynews-img2' src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
-                        <MainDailyTextArea className='dailynews-area2'>
-                            <MainDailyTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainDailyTitle>
-                            <MainDailyContent>침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
-                                            최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.</MainDailyContent>
-                        </MainDailyTextArea>
-                    </MainDailyIamgeBox>
-                </MainDailyNews>
-                <MainDailyNews className='dailynews-box3'>
-                    <MainDailyIamgeBox className='dailynews-imagebox3'>
-                        <MainDailyImage className='dailynews-img3' src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
-                        <MainDailyTextArea className='dailynews-area3'>
-                            <MainDailyTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainDailyTitle>
-                            <MainDailyContent>영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.</MainDailyContent>
-                        </MainDailyTextArea>
-                    </MainDailyIamgeBox>
-                </MainDailyNews>
-                <MainDailyNews className='dailynews-box4'>
-                    <MainDailyIamgeBox className='dailynews-imagebox4'>
-                        <MainDailyImage className='dailynews-img4' src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
-                        <MainDailyTextArea className='dailynews-area4'>
-                            <MainDailyTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainDailyTitle>
-                            <MainDailyContent>12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.</MainDailyContent>
-                        </MainDailyTextArea>
-                    </MainDailyIamgeBox>
-                </MainDailyNews>
-            </MainDailyBox>
+            <MainSearchBox>
+                <MainSearchNews className='dailynews-box1'>
+                    <MainSearchIamgeBox className='dailynews-imagebox1'>
+                        <MainSearchImage className='dailynews-img1' src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
+                        <MainSearchTextArea className='dailynews-area1'>
+                            <MainSearchTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainSearchTitle>
+                            <MainSearchContent>'스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.</MainSearchContent>
+                        </MainSearchTextArea>
+                    </MainSearchIamgeBox>
+                </MainSearchNews>
+                <MainSearchNews className='dailynews-box2'>
+                    <MainSearchIamgeBox className='dailynews-imagebox2'>
+                        <MainSearchImage className='dailynews-img2' src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
+                        <MainSearchTextArea className='dailynews-area2'>
+                            <MainSearchTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainSearchTitle>
+                            <MainSearchContent>침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
+                                최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.</MainSearchContent>
+                        </MainSearchTextArea>
+                    </MainSearchIamgeBox>
+                </MainSearchNews>
+                <MainSearchNews className='dailynews-box3'>
+                    <MainSearchIamgeBox className='dailynews-imagebox3'>
+                        <MainSearchImage className='dailynews-img3' src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
+                        <MainSearchTextArea className='dailynews-area3'>
+                            <MainSearchTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainSearchTitle>
+                            <MainSearchContent>영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.</MainSearchContent>
+                        </MainSearchTextArea>
+                    </MainSearchIamgeBox>
+                </MainSearchNews>
+                <MainSearchNews className='dailynews-box4'>
+                    <MainSearchIamgeBox className='dailynews-imagebox4'>
+                        <MainSearchImage className='dailynews-img4' src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
+                        <MainSearchTextArea className='dailynews-area4'>
+                            <MainSearchTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainSearchTitle>
+                            <MainSearchContent>12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.</MainSearchContent>
+                        </MainSearchTextArea>
+                    </MainSearchIamgeBox>
+                </MainSearchNews>
+            </MainSearchBox>
             <MainHeader>오늘의 뉴스</MainHeader>
             <MainNewsBox>
                 <AutoComponent>
@@ -1007,58 +1017,51 @@ export function HomeSubNews() {
     )
 }
 
-export function DailyNewsComponent() {
+export function SearchNewsComponent() {
     return (
         <WrapperBox>
-            <DateHead>
-                <DateBox>
-                    <ArrowBox>&lt;</ArrowBox>
-                    2023. &nbsp;11. &nbsp;21
-                    <ArrowBox>&gt;</ArrowBox>
-                </DateBox>
-            </DateHead>
-            <DailyNewsBox className='DailyNewsBox'>
-                <DailyNewsSideSlide className='DailyNewsBtn'>
-                    <DailyNewsSideBtn src={BookmarkOn} />
-                    <DailyNewsSideBtn src={Bookmark} />
-                </DailyNewsSideSlide>
-                <DailyNewsContentBox>
-                    <DailyNewsDateBox>
-                        <DailyNewsMedia>마이데일리</DailyNewsMedia>
-                        <DailyNewsDate>2023.11.21. 9:02</DailyNewsDate>
-                    </DailyNewsDateBox>
-                    <DailyNewsTitle>"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)</DailyNewsTitle>
-                    <DailyNewsContent>
+            <SearchNewsBox className='SearchNewsBox'>
+                <SearchNewsSideSlide className='SearchNewsBtn'>
+                    <SearchNewsSideBtn src={BookmarkOn} />
+                    <SearchNewsSideBtn src={Bookmark} />
+                </SearchNewsSideSlide>
+                <SearchNewsContentBox>
+                    <SearchNewsDateBox>
+                        <SearchNewsMedia>마이데일리</SearchNewsMedia>
+                        <SearchNewsDate>2023.11.21. 9:02</SearchNewsDate>
+                    </SearchNewsDateBox>
+                    <SearchNewsTitle>"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)</SearchNewsTitle>
+                    <SearchNewsContent>
                         '컨티뉴엄(CONTINUUM)'은 '연속'이라는 대주제를 다양한 콘셉트로 풀어내며 '빅스'로서 끊임없이 연결된 무한한 여정을 담았다. 지난 2019년 발매된 디지털 싱글 '패럴렐(PARALLEL)' 이후 4년 2개월 만의 신보이기도 하다.
                         2012년 5월 24일 데뷔한 빅스는 올해 11주년을 맞이했다. '컨티뉴엄(CONTINUUM)'에는 지금 이 시점에서 이들이 생각한 '빅스스러움'이 담겼다. 음악, 퍼포먼스 특히 콘셉트까지 이번 앨범을 통해 담아낸 '나'의 정체성, 우리'의 정체성, '빅스'의 정체성이 궁금해졌다.
                         다양한 걸 하겠지만 빅스가 이런 걸로 색깔이 잡힐 수 있는, 강점이 있는 팀이 되면 좋겠다"고 포부를 드러냈다.
-                    </DailyNewsContent>
-                </DailyNewsContentBox>
-                <DailyNewsImageBox>
-                    <DailyNewsImage src='https://mimgnews.pstatic.net/image/117/2023/11/21/0003789283_002_20231121090208311.jpg?type=w540' />
-                </DailyNewsImageBox>
-            </DailyNewsBox>
-            <DailyNewsBox className='DailyNewsBox'>
-                <DailyNewsSideSlide className='DailyNewsBtn'>
-                    <DailyNewsSideBtn src={BookmarkOn} />
-                    <DailyNewsSideBtn src={Bookmark} />
-                </DailyNewsSideSlide>
-                <DailyNewsContentBox>
-                    <DailyNewsDateBox>
-                        <DailyNewsMedia>마이데일리</DailyNewsMedia>
-                        <DailyNewsDate>2023.11.21. 9:02</DailyNewsDate>
-                    </DailyNewsDateBox>
-                    <DailyNewsTitle>"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)</DailyNewsTitle>
-                    <DailyNewsContent>
+                    </SearchNewsContent>
+                </SearchNewsContentBox>
+                <SearchNewsImageBox>
+                    <SearchNewsImage src='https://mimgnews.pstatic.net/image/117/2023/11/21/0003789283_002_20231121090208311.jpg?type=w540' />
+                </SearchNewsImageBox>
+            </SearchNewsBox>
+            <SearchNewsBox className='SearchNewsBox'>
+                <SearchNewsSideSlide className='SearchNewsBtn'>
+                    <SearchNewsSideBtn src={BookmarkOn} />
+                    <SearchNewsSideBtn src={Bookmark} />
+                </SearchNewsSideSlide>
+                <SearchNewsContentBox>
+                    <SearchNewsDateBox>
+                        <SearchNewsMedia>마이데일리</SearchNewsMedia>
+                        <SearchNewsDate>2023.11.21. 9:02</SearchNewsDate>
+                    </SearchNewsDateBox>
+                    <SearchNewsTitle>"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)</SearchNewsTitle>
+                    <SearchNewsContent>
                         '컨티뉴엄(CONTINUUM)'은 '연속'이라는 대주제를 다양한 콘셉트로 풀어내며 '빅스'로서 끊임없이 연결된 무한한 여정을 담았다. 지난 2019년 발매된 디지털 싱글 '패럴렐(PARALLEL)' 이후 4년 2개월 만의 신보이기도 하다.
                         2012년 5월 24일 데뷔한 빅스는 올해 11주년을 맞이했다. '컨티뉴엄(CONTINUUM)'에는 지금 이 시점에서 이들이 생각한 '빅스스러움'이 담겼다. 음악, 퍼포먼스 특히 콘셉트까지 이번 앨범을 통해 담아낸 '나'의 정체성, 우리'의 정체성, '빅스'의 정체성이 궁금해졌다.
                         다양한 걸 하겠지만 빅스가 이런 걸로 색깔이 잡힐 수 있는, 강점이 있는 팀이 되면 좋겠다"고 포부를 드러냈다.
-                    </DailyNewsContent>
-                </DailyNewsContentBox>
-                <DailyNewsImageBox>
-                    <DailyNewsImage src='https://mimgnews.pstatic.net/image/117/2023/11/21/0003789283_002_20231121090208311.jpg?type=w540' />
-                </DailyNewsImageBox>
-            </DailyNewsBox>
+                    </SearchNewsContent>
+                </SearchNewsContentBox>
+                <SearchNewsImageBox>
+                    <SearchNewsImage src='https://mimgnews.pstatic.net/image/117/2023/11/21/0003789283_002_20231121090208311.jpg?type=w540' />
+                </SearchNewsImageBox>
+            </SearchNewsBox>
         </WrapperBox>
     )
 }
@@ -1118,6 +1121,13 @@ export function CategoriNewsComponent() {
 
     return (
         <>
+            <DateHead>
+                <DateBox>
+                    <ArrowBox>&lt;</ArrowBox>
+                    2023. &nbsp;11. &nbsp;21
+                    <ArrowBox>&gt;</ArrowBox>
+                </DateBox>
+            </DateHead>
             <CategoriWrapperBox>
                 <CategorySideBox>
                     <CategorySideTitle>카테고리</CategorySideTitle>
@@ -1128,7 +1138,6 @@ export function CategoriNewsComponent() {
                                     id={name}
                                     type='checkbox'
                                     onChange={handleCheckBox}
-                                    checked
                                 />
                                 <CategorySideItemLabel htmlFor={name}>
                                     <CategorySideItemText>
