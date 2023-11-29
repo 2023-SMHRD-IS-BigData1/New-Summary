@@ -2,14 +2,19 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled, { css, keyframes } from 'styled-components';
 import WordcloudResult from '../components/wordcloud';
-import AutoPlayCarousel, { ViewsCarousel } from '../components/carousel';
+import AutoPlayCarousel from '../components/carousel';
+import ViewsCarousel from '../components/views-carousel';
 import ArrowLeft from '../assets/arrow-left-circle.svg';
 import ArrowRight from '../assets/arrow-right-circle.svg';
 import MyBarChart from '../components/bar-chart';
 import Bookmark from '../assets/bookmark.svg';
 import BookmarkOn from '../assets/bookmark-on.svg';
 import Pagination from "react-js-pagination";
-import { AutoComponent, ViewsComponent } from '../data/news-data';
+import { useNewsContext } from '../data/news-data.context';
+import LoadingScreen from './loading-screen';
+import ReactPaginate from "react-paginate";
+import ModalPortal from './portal';
+import Modal from './modal';
 
 // -- Home Main news component -- //
 const Main = styled.div`
@@ -188,12 +193,13 @@ const MainNewsBox = styled.div`
 
 
 
-// -- Home Main category news carousel component -- //
-const MainCategoryNewsBox = styled.div`
+// -- Home Main news views carousel component -- //
+const MainNewsViewsBox = styled.div`
     width: 100%;
-    height: 400px;
+    height: 440px;
     gap: 30px;
     padding: 30px 10px;
+    margin-bottom: 100px;
     display: flex;
     align-items: center;
     background-color: #ffffff;
@@ -203,7 +209,6 @@ const MainCategoryNewsBox = styled.div`
 
 
 // -- Home Trend news component -- //
-
 const TrendBox = styled.div`
   width: 100%;
   max-width: 1400px;
@@ -448,9 +453,10 @@ const WrapperBox = styled.div`
   width: 100%;
   max-width: 1400px;
   height: auto;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 30px;
   padding: 50px 50px 0px 50px;
   margin: auto;
@@ -509,12 +515,16 @@ const SearchNewsBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: #ffffff;
     gap: 20px;
     overflow: hidden;
     &:hover .SearchNewsBtn{
         opacity: 1;
         transition: 0.5s;
         transform: translateX(0);
+    }
+    &:last-child {
+        margin-bottom: 300px;
     }
 `;
 
@@ -604,6 +614,40 @@ const SearchNewsSideBtn = styled.img`
     cursor: pointer;
     &:hover{
         padding: 6px;
+        transition: 0.5s;
+    }
+`;
+
+const SearchInputBox = styled.div`
+    width: 100%;
+    max-width: 1400px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    `;
+
+const SearchInputBack = styled.div`
+    width: 100%;
+    max-width: 700px;
+    height: 100px;
+    background-color: #E9C46A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+`;
+
+const SearchInput = styled.input`
+    width: 100%;
+    max-width: 600px;
+    height: 40px;
+    font-size: 20px;
+    padding: 0 30px;
+    &:focus {
+	    outline: none;  
+        border: none;
+        box-shadow: 0 0 20px #F4A261;
         transition: 0.5s;
     }
 `;
@@ -845,12 +889,8 @@ const CategoryData = [
     { id: "value8", name: "스포츠" },
 ]
 
-
-
-
-
 export function HomeMainNews() {
-
+    const { newsData, loading } = useNewsContext();
     return (
         <Main>
             <MainHeader>오늘 뜨는 뉴스</MainHeader>
@@ -906,16 +946,20 @@ export function HomeMainNews() {
             </MainSearchBox>
             <MainHeader>오늘의 뉴스</MainHeader>
             <MainNewsBox>
-                <AutoComponent>
-                    <AutoPlayCarousel />
-                </AutoComponent>
+                {loading ? (
+                    <LoadingScreen />
+                ) : (
+                    <AutoPlayCarousel newsData={newsData} />
+                )}
             </MainNewsBox>
-                <MainHeader>사람들이 많이 본 뉴스</MainHeader>
-            <MainCategoryNewsBox>
-                <ViewsComponent>
-                    <ViewsCarousel />
-                </ViewsComponent>
-            </MainCategoryNewsBox>
+            <MainHeader>사람들이 많이 본 뉴스</MainHeader>
+            <MainNewsViewsBox>
+                {loading ? (
+                    <LoadingScreen />
+                ) : (
+                    <ViewsCarousel newsData={newsData} />
+                )}
+            </MainNewsViewsBox>
         </Main>
     )
 }
@@ -1020,50 +1064,141 @@ export function HomeSubNews() {
 }
 
 export function SearchNewsComponent() {
+    const { newsData, loading } = useNewsContext();
+    const [page, setPage] = useState(1);
+    const [items, setItems] = useState(10);
+    const [totalPages, setTotalPages] = useState(1);
+    const [sortedNewsData, setSortedNewsData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState(''); // searchTerm 정의 및 초기값 설정
+    const [filteredNewsData, setFilteredNewsData] = useState([]);
+    const [modalOn, setModalOn] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    // 데이터를 최근 날짜순으로 정렬 및 검색어에 따라 초기 데이터 필터링
+    useEffect(() => {
+        if (newsData.length > 0) {
+            // 최근 날짜순으로 정렬
+            const sortedData = [...newsData].sort((a, b) => {
+                const dateA = new Date(a.articleWriteTime);
+                const dateB = new Date(b.articleWriteTime);
+                return dateB - dateA;
+            });
+
+            // 검색어에 따라 초기 데이터 필터링
+            const filteredResults = sortedData.filter((item) =>
+                item.title.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            // 초기화된 데이터를 상태에 설정
+            setSortedNewsData(sortedData);
+            setFilteredNewsData(filteredResults);
+
+            // 페이지 수 다시 계산하여 업데이트
+            calculateTotalPages(filteredResults.length, items);
+        }
+    }, [newsData, searchTerm, items]);
+
+    // 검색어 입력 시 결과를 업데이트하고 페이징을 계산
+    const handleSearchInputChange = (e) => {
+        const newSearchTerm = e.target.value;
+        setSearchTerm(newSearchTerm);
+
+        // 검색어에 따라 전체 데이터 필터링
+        const filteredResults = newsData.filter((item) =>
+            item.title.toLowerCase().includes(newSearchTerm.toLowerCase())
+        );
+
+        // 페이지 수 다시 계산하여 업데이트
+        calculateTotalPages(filteredResults.length, items);
+
+        // 검색된 결과를 저장
+        setFilteredNewsData(filteredResults);
+
+        // 첫 번째 페이지로 이동
+        setPage(1);
+    };
+
+    // 페이징 코드
+    const handlePageChange = (page) => {
+        setPage(page);
+    };
+
+    const itemChange = (e) => {
+        const newItems = Number(e.target.value);
+        setItems(newItems);
+        calculateTotalPages(filteredNewsData.length, newItems);
+    };
+
+    const calculateTotalPages = (totalItems, itemsPerPage) => {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        setTotalPages(totalPages);
+    };
+
+    // 검색 결과에 대해 페이징된 데이터 가져오기
+    const startIndex = (page - 1) * items;
+    const endIndex = startIndex + items;
+    const paginatedData = filteredNewsData.slice(startIndex, endIndex);
+
+    const searchList = () => {
+        return paginatedData.filter((itemData) =>
+            itemData.title.toUpperCase().includes(searchTerm.toUpperCase())
+        );
+    };
+
+    const filteredSearchItems = searchList();
+
+    const handleModal = (item) => {
+        setSelectedItem(item);
+        setModalOn(!modalOn);
+      };
+    
+
+    console.log(newsData * (page - 1), newsData * (page - 1) + newsData)
+    // 가져온 데이터를 사용하여 UI를 렌더링  
+    const SearchNewsItems = filteredSearchItems.map((item, index) => (
+        <SearchNewsBox className='SearchNewsBox' key={index} onClick={() => handleModal(item)}>
+            <SearchNewsSideSlide className='SearchNewsBtn'>
+                <SearchNewsSideBtn src={BookmarkOn} />
+                <SearchNewsSideBtn src={Bookmark} />
+            </SearchNewsSideSlide>
+            <SearchNewsContentBox>
+                <SearchNewsDateBox>
+                    <SearchNewsMedia>{item.press}</SearchNewsMedia>
+                    <SearchNewsDate>{item.articleWriteTime}</SearchNewsDate>
+                </SearchNewsDateBox>
+                <SearchNewsTitle>{item.title}</SearchNewsTitle>
+                <SearchNewsContent>{item.articleContent}</SearchNewsContent>
+            </SearchNewsContentBox>
+            <SearchNewsImageBox>
+                <SearchNewsImage src={item.picture} />
+            </SearchNewsImageBox>
+        </SearchNewsBox>
+    ));
+
     return (
         <WrapperBox>
-            <SearchNewsBox className='SearchNewsBox'>
-                <SearchNewsSideSlide className='SearchNewsBtn'>
-                    <SearchNewsSideBtn src={BookmarkOn} />
-                    <SearchNewsSideBtn src={Bookmark} />
-                </SearchNewsSideSlide>
-                <SearchNewsContentBox>
-                    <SearchNewsDateBox>
-                        <SearchNewsMedia>마이데일리</SearchNewsMedia>
-                        <SearchNewsDate>2023.11.21. 9:02</SearchNewsDate>
-                    </SearchNewsDateBox>
-                    <SearchNewsTitle>"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)</SearchNewsTitle>
-                    <SearchNewsContent>
-                        '컨티뉴엄(CONTINUUM)'은 '연속'이라는 대주제를 다양한 콘셉트로 풀어내며 '빅스'로서 끊임없이 연결된 무한한 여정을 담았다. 지난 2019년 발매된 디지털 싱글 '패럴렐(PARALLEL)' 이후 4년 2개월 만의 신보이기도 하다.
-                        2012년 5월 24일 데뷔한 빅스는 올해 11주년을 맞이했다. '컨티뉴엄(CONTINUUM)'에는 지금 이 시점에서 이들이 생각한 '빅스스러움'이 담겼다. 음악, 퍼포먼스 특히 콘셉트까지 이번 앨범을 통해 담아낸 '나'의 정체성, 우리'의 정체성, '빅스'의 정체성이 궁금해졌다.
-                        다양한 걸 하겠지만 빅스가 이런 걸로 색깔이 잡힐 수 있는, 강점이 있는 팀이 되면 좋겠다"고 포부를 드러냈다.
-                    </SearchNewsContent>
-                </SearchNewsContentBox>
-                <SearchNewsImageBox>
-                    <SearchNewsImage src='https://mimgnews.pstatic.net/image/117/2023/11/21/0003789283_002_20231121090208311.jpg?type=w540' />
-                </SearchNewsImageBox>
-            </SearchNewsBox>
-            <SearchNewsBox className='SearchNewsBox'>
-                <SearchNewsSideSlide className='SearchNewsBtn'>
-                    <SearchNewsSideBtn src={BookmarkOn} />
-                    <SearchNewsSideBtn src={Bookmark} />
-                </SearchNewsSideSlide>
-                <SearchNewsContentBox>
-                    <SearchNewsDateBox>
-                        <SearchNewsMedia>마이데일리</SearchNewsMedia>
-                        <SearchNewsDate>2023.11.21. 9:02</SearchNewsDate>
-                    </SearchNewsDateBox>
-                    <SearchNewsTitle>"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)"빅스의 무한한 여정, 멤버들끼리 약속한 것 있어요" [MD인터뷰](종합)</SearchNewsTitle>
-                    <SearchNewsContent>
-                        '컨티뉴엄(CONTINUUM)'은 '연속'이라는 대주제를 다양한 콘셉트로 풀어내며 '빅스'로서 끊임없이 연결된 무한한 여정을 담았다. 지난 2019년 발매된 디지털 싱글 '패럴렐(PARALLEL)' 이후 4년 2개월 만의 신보이기도 하다.
-                        2012년 5월 24일 데뷔한 빅스는 올해 11주년을 맞이했다. '컨티뉴엄(CONTINUUM)'에는 지금 이 시점에서 이들이 생각한 '빅스스러움'이 담겼다. 음악, 퍼포먼스 특히 콘셉트까지 이번 앨범을 통해 담아낸 '나'의 정체성, 우리'의 정체성, '빅스'의 정체성이 궁금해졌다.
-                        다양한 걸 하겠지만 빅스가 이런 걸로 색깔이 잡힐 수 있는, 강점이 있는 팀이 되면 좋겠다"고 포부를 드러냈다.
-                    </SearchNewsContent>
-                </SearchNewsContentBox>
-                <SearchNewsImageBox>
-                    <SearchNewsImage src='https://mimgnews.pstatic.net/image/117/2023/11/21/0003789283_002_20231121090208311.jpg?type=w540' />
-                </SearchNewsImageBox>
-            </SearchNewsBox>
+            <SearchInputBox>
+                <SearchInputBack>
+                    <SearchInput value={searchTerm} onChange={handleSearchInputChange} placeholder='검색어를 입력해주세요' />
+                </SearchInputBack>
+            </SearchInputBox>
+            {loading ? (
+                <LoadingScreen />
+            ) : (
+                SearchNewsItems
+            )}
+            <PaginationBox>
+                <Pagination
+                    activePage={page}
+                    itemsCountPerPage={items}
+                    totalItemsCount={filteredNewsData.length}
+                    pageRangeDisplayed={5}
+                    onChange={handlePageChange}>
+                </Pagination>
+            </PaginationBox>
+            <ModalPortal>
+                {modalOn && <Modal item={selectedItem} onClose={() => setModalOn(false)} />}
+            </ModalPortal>
         </WrapperBox>
     )
 }

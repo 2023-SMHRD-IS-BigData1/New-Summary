@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import '../components/font.css';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -85,7 +85,7 @@ const MenuBox = styled.div`
 
 const MenuItem = styled.div`
     width: 100%;
-    max-width: 200px;
+    max-width: 300px;
     min-width: 100px;
     height: 40px;
     display: flex;
@@ -102,33 +102,12 @@ const MenuItem = styled.div`
     ${(props) =>
         props.onPage &&
         css`
-            background: #F0BE4D;
+            background: #264653 !important;
             color: white;
         `
     }
 `;
 
-const InputBox = styled.form`
-    width: 100%;
-    max-width: 300px;
-    height: 30px;
-    padding-bottom: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: right;
-`;
-
-const InputItem = styled.input`
-    width: 100%;
-    height: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #999999;
-    &:focus{
-        border: 1px solid #F0BE4D;
-    }
-`;
 
 
 export default function Header({ ...props }) {
@@ -162,6 +141,9 @@ export default function Header({ ...props }) {
                     <Link to="/category-news" style={{ textDecoration: "none", color: "black", width: "20%" }}>
                         {curruntURL == "/category-news" ? <MenuItem {...props} onPage>뉴스 모아보기</MenuItem> : <MenuItem>뉴스 모아보기</MenuItem>}
                     </Link>
+                    <Link to="/search" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/search" ? <MenuItem {...props} onPage>뉴스 찾아보기</MenuItem> : <MenuItem>뉴스 찾아보기</MenuItem>}
+                    </Link>
                     <Link to="/board" style={{ textDecoration: "none", color: "black", width: "20%" }}>
                         {curruntURL == "/board" ? <MenuItem {...props} onPage>커뮤니티</MenuItem> : <MenuItem>커뮤니티</MenuItem>}
                     </Link>
@@ -169,9 +151,6 @@ export default function Header({ ...props }) {
                         {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
                     </Link>
                 </MenuBox>
-                <InputBox>
-                    <InputItem />
-                </InputBox>
             </WrapperBottom>
         </Wrapper>
     )
