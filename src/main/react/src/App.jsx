@@ -9,7 +9,8 @@ import Login from './routes/login';
 import Board from './routes/board';
 import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
-import AutoPlayCarousel from './components/carousel';
+import { NewsProvider } from './data/news-data.context';
+import TopButtonLogo from '../src/assets/top-logo.svg'
 
 // 초기 시작페이지를 잡아주기
 const router = createBrowserRouter([
@@ -88,6 +89,10 @@ const TopButton = styled.a`
   }
 `;
 
+const TopButtonImage = styled.img`
+  padding: 10px;
+`;
+
 
 function App() {
   const [isLoading, setLoading] = useState(true);
@@ -98,13 +103,15 @@ function App() {
     init();
   }, []);
   return (
-    <>
+    <NewsProvider>
     <Wrapper>
       <GlobalStyles />
       {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-      <TopButton href="javascript:window.scrollTo(0,0);">&uarr;</TopButton>
+      <TopButton href="javascript:window.scrollTo(0,0);">
+        <TopButtonImage src={TopButtonLogo} />
+      </TopButton>
     </Wrapper>
-    </>
+    </NewsProvider>
   )
 }
 

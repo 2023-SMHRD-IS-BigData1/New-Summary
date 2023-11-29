@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import Close from "../assets/x-logo.svg"
 
 const Background = styled.div`
   height: 100%;
@@ -27,13 +28,24 @@ const Content = styled.div`
 `;
 
 const CloseButton = styled.button`
+  width: 60px;
+  height: 60px;
   position: absolute;
   top: 10px;
   right: 10px;
   background-color: #fff;
-  color: #000;
   padding: 5px 10px;
+  border: none;
   cursor: pointer;
+  &:hover {
+    border-radius: 50%;
+    transition: 0.5s;
+    background-color: #99999944;
+  }
+`;
+
+const CloseButtonImage = styled.img`
+  width: 100%;
 `;
 
 const HeadBox = styled.div`
@@ -46,24 +58,36 @@ const HeadTitle = styled.div`
   padding: 30px 0;
   font-size: 28px;
   font-weight: 600;
-`;
+  `;
 
 const DateBox = styled.div`
   width: 100%;
   height: 30px;
   padding: 20px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: 30px;
+  border-bottom: 1px solid #99999944;
+`;
+
+const Date = styled.div`
+  color: #999999;
+`;
+
+const Media = styled.div`
+  color: #999999;
+`;
+
+const ImageBox = styled.div`
+  width: 100%;
+  /* height: 400px;
+  overflow: hidden; */
+  padding-bottom: 30px;
   background-color: aqua;
 `;
 
-const Date = styled.div``;
-
-const Media = styled.div``;
-
-const ImageBox = styled.div`
-  
-`;
-
-const ImageUrl = styled.div`
+const ImageUrl = styled.img`
   width: 100%;
 `;
 
@@ -92,14 +116,19 @@ const Modal = ({ onClose, item }) => {
   return (
       <Background>
         <Content>
-        <CloseButton onClick={onClose}>Close</CloseButton>
+        <CloseButton onClick={onClose}>
+          <CloseButtonImage src={Close} />
+        </CloseButton>
         <HeadBox>
           <HeadTitle>{item.title}</HeadTitle>
         </HeadBox>
         <DateBox>
-
+          <Media>{item.press}</Media>
+          <Date>{item.articleWriteTime}</Date>
         </DateBox>
-                  //  ... modal 안의 contents 코드 ...
+        <ImageBox>
+          <ImageUrl src={item.picture} />
+        </ImageBox>
 
          </ Content>
       </Background>
