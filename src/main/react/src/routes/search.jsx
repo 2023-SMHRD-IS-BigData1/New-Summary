@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Header from '../components/header';
 import Footer from '../components/footer';
-import { DailyNewsComponent } from '../components/news';
+import { SearchNewsComponent } from '../components/news';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -10,12 +10,12 @@ const Wrapper = styled.div`
   gap: 50px;
 `;
 
-export default function DailyNews() {
+export default function SearchNews() {
 
     return (
         <Wrapper>
             <Header></Header>
-            <DailyNewsComponent />
+            <SearchNewsComponent />
             <Footer></Footer>
         </Wrapper>
     );

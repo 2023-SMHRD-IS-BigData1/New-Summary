@@ -100,24 +100,52 @@ const UserBoxName = styled.div`
     font-size: 22px;
 `
 
-const CategoryBox = styled.div``;
 
 export function BoardSNS() {
-    // return (
-    //     <Masonry
-    //         columns={4}
-    //         spacing={2}
-    //         defaultHeight={450}
-    //         defaultColumns={4}
-    //         defaultSpacing={1}
-    //     >
-    //         {heights.map((height, index) => (
-    //             <Item key={index} sx={{ height }}>
-    //                 {index + 1}
-    //             </Item>
-    //         ))}
-    //     </Masonry>
-    // )
+    const data = [600, 300, 600, 900, 600, 600, 600, 300, 600, 900, 600, 600];
+    const imageUrl = [
+        "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
+        undefined,
+        "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
+        "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
+        "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
+        "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
+        undefined,
+        "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
+        "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
+        "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
+        ]
+
+    return (
+        <Masonry
+            columns={3}
+            spacing={2}
+            defaultHeight={300}
+            defaultColumns={1}
+            defaultSpacing={2}
+        >
+            {data.map((data, index) => (
+                <Item key={index} style={{ height: `auto` }}>
+                    {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
+                    <ItemTextBox>
+                        <TextDate>2023.11.16 16:06</TextDate>
+                        <TextContent>
+                            사용자가 작성한 게시판 글이 여기에 나올 예정입니다 AAAAABABABABABBABABABBABABABABVAAVAVAVA 사용자가 작성한 게시판 글이 여기에 나올 예정입니다
+                        </TextContent>
+                        <TextUrl>https://www.naver.com/</TextUrl>
+                        <LikeBox>
+                            <Comments src={Comment} /> 10
+                            <Likes src={Like} /> 52
+                        </LikeBox>
+                        <UserBox>
+                            <UserBoxImage></UserBoxImage>
+                            <UserBoxName>UserName</UserBoxName>
+                        </UserBox>
+                    </ItemTextBox>
+                </Item>
+            ))}
+        </Masonry>
+    )
 }
 
 export function BoardMain() {

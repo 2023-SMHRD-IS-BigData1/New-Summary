@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Header from '../components/header';
 import Footer from '../components/footer';
+import { BoardSNS } from '../components/board-sns';
 
 
 const Wrapper = styled.div`
@@ -30,7 +31,7 @@ export default function Board() {
         <Wrapper>
             <Header></Header>
             <WrapperBox>
-
+              <BoardSNS />
             </WrapperBox>
             <Footer></Footer>
         </Wrapper>
