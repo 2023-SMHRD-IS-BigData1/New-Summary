@@ -1,7 +1,11 @@
 package com.newSummary.service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +71,17 @@ public class NewsService {
                 .collect(Collectors.toList());
         return newsDTOList;
     }
+	
+	// 카테고리 뉴스 데이터
+	public List<NewsDTO> cateRandomNews(String category){
+		List<News> newsList = newsRepository.findByCategory(category);
+		List<NewsDTO> newsDTOList = newsList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+		return newsDTOList;
+	}
+	
+	
 	
 	
 
