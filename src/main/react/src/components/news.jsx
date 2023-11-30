@@ -19,8 +19,7 @@ import Modal from './modal';
 // -- Home Main news component -- //
 const Main = styled.div`
   width: 100%;
-  max-width: 1400px;
-  padding: 50px 0 150px 0;
+  padding: 0px 0 150px 0;
 `;
 
 const MainHeader = styled.div`
@@ -30,6 +29,15 @@ const MainHeader = styled.div`
     display: flex;
     align-items: center;
     background-color: #ffffff;
+`;
+
+const MainCardHeader = styled.div`
+    width: 100%;
+    font-size: 28px;
+    padding: 30px 200px;
+    display: flex;
+    align-items: center;
+    background-color: #E9C46A;
 `;
 
 
@@ -69,106 +77,85 @@ const MainTrendBadge = styled.div`
 
 
 
-// -- Home 1second news component -- //
-const MainSearchBox = styled.div`
-    width: 100%;
-    height: 320px;
-    padding: 30px 40px;
-    gap: 40px;
-    margin-bottom: 100px;
-    overflow: hidden;
+// -- Home Card news component -- //
+const MainCardNewsBox = styled.div`
+  width: 100%;
+  height: 620px;
+  padding: 30px 140px;
+  gap: 40px;
+  margin-bottom: 100px;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  background-color: #F0BE4D;
+  box-shadow: 5px 5px 5px 2px #99999944;
+`;
+
+const MainCardNews = styled.div`
+  width: 440px;
+  height: 560px;
+  perspective: 1100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: 0.5s;
+  transform-style: preserve-3d;
+  `;
+
+const MainCardImageBox = styled.div`
+  width: 100%;
+  height: 560px;
+  border-radius: 30px;
+  overflow: hidden;
+  position: absolute;
+  backface-visibility: hidden;
+  `;
+
+const MainCardImage = styled.img`
+  position: absolute;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  `;
+
+const MainCardKey = styled.div`
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 10px;
+    color: #ffffff;
+    background-color: #264653;
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    position: relative;
-    background-color: #ffffff;
-    box-shadow: 5px 5px 5px 2px #99999944;
-`;
-
-const MainSearchNews = styled.div`
-    width: 100%;
-    max-width: 300px;
-    height: 260px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    &.dailynews-box1:hover {
-        z-index: 100;
-        .dailynews-area1 {
-            transform: translateY(-100%);
-            transition: 0.8s;
-        }
-    }
-    &.dailynews-box2:hover {
-        z-index: 100;
-        .dailynews-imagebox2{
-            transform: translateX(calc(-100% - 40px));
-            transition: 0.4s;
-        }
-        .dailynews-area2 {
-            transform: translateY(-100%);
-            transition: 0.8s;
-            transition-delay: 0.4s;
-        }
-    }
-    &.dailynews-box3:hover {
-        z-index: 100;
-        .dailynews-imagebox3{
-            transform: translateX(calc(-200% - 80px));
-            transition: 0.6s;
-        }
-        .dailynews-area3 {
-            transform: translateY(-100%);
-            transition: 0.8s;
-            transition-delay: 0.6s;
-        }
-    }
-    &.dailynews-box4:hover {
-        z-index: 100;
-        .dailynews-imagebox4{
-            transform: translateX(calc(-300% - 120px));
-            transition: 0.9s;
-        }
-        .dailynews-area4 {
-            transform: translateY(-100%);
-            transition: 0.8s;
-            transition-delay: 0.9s;
-        }
-    }
-`;
-
-const MainSearchIamgeBox = styled.div`
-    width: 100%;
-    position: relative;
-`;
-
-const MainSearchImage = styled.img`
-    width: 100%;
-    max-width: 300px;
-    height: 260px;
-    object-fit: cover;
-`;
-
-const MainSearchTextArea = styled.div`
-    width: 340%;
-    height: 270px;
     position: absolute;
-    left: 310px;
-    padding: 20px 20px;
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid #99999944;
-    transform: translateY(20%);
+    bottom: 10px;
+    right: 20px;
 `;
 
-const MainSearchTitle = styled.div`
+
+const MainCardTextArea = styled.div`
+  width: 100%;
+  height: 560px;
+  border-radius: 30px;
+  padding: 20px;
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+`;
+
+const MainCardTitle = styled.div`
     width: 100%;
     padding: 10px;
     font-size: 32px;
     font-weight: 600;
 `;
 
-const MainSearchContent = styled.div`
+const MainCardContent = styled.div`
     width: 100%;
     height: 210px;
     padding: 20px;
@@ -226,11 +213,9 @@ const ArrowButton = styled.img`
 `;
 
 const NewsMediaBottom = styled.div`
-  font-size: 22px;
 `;
 
 const NewsDateBottom = styled.div`
-  font-size: 18px;
 `;
 
 const NewsHeaderItem = styled.div`
@@ -306,7 +291,7 @@ const GraphBtn = styled.div`
 const MainBoxBottom = styled.div`
   width: 100%;
   max-width: 1400px;
-  height: 850px;
+  height: 680px;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -316,20 +301,26 @@ const MainBoxBottom = styled.div`
   box-shadow: 5px 5px 5px 2px #99999944;
 `;
 
-const BottomSubList = styled.div`
+const MainBoxCategory = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+`;
+
+const CategoryNewsList = styled.div`
   width: 100%;
   max-width: 500px;
-  height: 800px;
+  height: 660px;
   padding: 0 20px;
 `;
 
-const BottomSubNews = styled.div`
+const CategoryNewsMain = styled.div`
   width: 100%;
   max-width: 650px;
-  height: 800px;
+  height: 660px;
   padding: 0 20px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
 `;
 
@@ -372,32 +363,35 @@ const ListNewsTitle = styled.div`
 
 const SubNewsImageBox = styled.div`
   width: 100%;
-  max-height: 720px;
-  object-fit:cover;
-  box-shadow: 5px 5px 5px 5px #99999944;
+  max-height: 520px;
+  margin-top: 30px;
+  padding-top: 60px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 `;
 
 const SubNewsImage = styled.img`
     width: 100%;
-    object-fit:cover;
 `;
 
 const SubNewsTextBox = styled.div`
   width: 100%;
   max-width: 700px;
-  height: 220px;
+  height: 130px;
   padding: 20px 30px;
   position: absolute;
-  bottom: 0;
+  bottom: 30px;
   right: -150px;
+  border: 1px solid #99999944;
   box-shadow: 5px 5px 5px 5px #99999944;
   background-color: #ffffff;
 `;
 
 const SubNewsTitle = styled.div`
   width: 100%;
-  height: 145px;
-  font-size: 36px;
+  height: 64px;
+  font-size: 24px;
   line-height: 1.3;
   overflow: hidden;
   position: relative;
@@ -405,7 +399,7 @@ const SubNewsTitle = styled.div`
   word-wrap: break-word;
   display: -webkit-box;
   text-overflow: ellipsis;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 `;
 
@@ -416,8 +410,8 @@ const SubNewsTitle = styled.div`
 const BottomCategory = styled.div`
   width: 100%;
   max-width: 250px;
-  height: 800px;
-  padding: 80px 20px 0 20px;
+  height: 660px;
+  padding: 0 20px 0 20px;
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -457,7 +451,6 @@ const WrapperBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 30px;
   padding: 50px 50px 0px 50px;
   margin: auto;
   position: relative;
@@ -536,7 +529,6 @@ const SearchNewsContentBox = styled.div`
 const SearchNewsImageBox = styled.div`
     width: 30%;
     height: 240px;
-    object-fit:cover;
     overflow: hidden;
 `;
 
@@ -622,6 +614,7 @@ const SearchInputBox = styled.div`
     width: 100%;
     max-width: 1400px;
     height: 100px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -654,9 +647,9 @@ const SearchInput = styled.input`
 
 
 
-// -- Categori news component -- //
+// -- Category news component -- //
 
-const CategoriWrapperBox = styled.div`
+const CategoryWrapperBox = styled.div`
   width: 100%;
   max-width: 1400px;
   height: auto;
@@ -664,14 +657,13 @@ const CategoriWrapperBox = styled.div`
   flex-direction: row;
   justify-content: center;
   gap: 50px;
-  padding: 50px 50px 0px 50px;
   margin: auto;
   position: relative;
   `;
 
 const CategoryNewsArea = styled.div`
   width: 100%;
-  max-width: 1000px;
+  max-width: 1400px;
 `;
 
 const CategoryNewsBox = styled.div`
@@ -679,7 +671,7 @@ const CategoryNewsBox = styled.div`
     height: 300px;
     border: 1px solid #99999944;
     padding: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     position: relative;
     display: flex;
     align-items: center;
@@ -758,98 +750,6 @@ const CategoryNewsContent = styled.div`
     -webkit-box-orient: vertical;
 `;
 
-const NewsRightSlide = styled.div`
-    width: 200px;
-    height: 100%;
-    padding: 20px 20px 0 0;
-    display: flex;
-    justify-content: right;
-    background-image: linear-gradient(to right, #00000000, #00000055);
-    position: absolute;
-    right: 0;
-    opacity: 0;
-    transform: translateX(100%);
-`;
-
-const NewsBookMarkBtn = styled.img`
-    width: 50px;
-    height: 50px;
-    background-color: #ffffff;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-    &:hover{
-        padding: 6px;
-        transition: 0.5s;
-    }
-`;
-
-const CategorySideBox = styled.div`
-  width: 100%;
-  max-width: 300px;
-  height: 700px;
-  border: 1px solid #99999944;
-  box-shadow: 5px 5px 10px 1px #99999944;
-  padding-top: 80px;
-  background-color: #ffffff;
-`;
-
-const CategorySideTitle = styled.div`
-    width: 100%;
-    height: 30px;
-    padding: 30px;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-`;
-
-const CategorySideItemTop = styled.ul``;
-
-const CategorySideItem = styled.li`
-    width: 100%;
-    height: 50px;
-    padding: 30px;
-    input[type="checkbox"] {  
-        display: none;
-    }
-`;
-
-const CategorySideItemText = styled.span`
-    vertical-align: middle;
-    padding-left: 15px;
-`;
-
-const CategorySideInput = styled.input`
-    &:checked + label:before{
-        width:20px;
-        padding-left: 4px;
-        content:"✔";
-        color: #ffffff;
-        background-color:#f0be4d;
-        border-color:#f0be4d;
-        background-repeat: no-repeat;
-        background-position: 50%;
-    }
-`;
-
-const CategorySideItemLabel = styled.label`
-    width: 100%; 
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    font-size: 22px;
-    &:before{
-        content:"";
-        display:inline-block;
-        width:24px;
-        height:24px;
-        border:2px solid #f0be4d;
-        border-radius: 4px;
-        vertical-align:middle;
-    }
-`;
-
-
 
 
 // -- react-js-pagination component -- //
@@ -879,6 +779,7 @@ const PaginationBox = styled.div`
 `
 
 const CategoryData = [
+    { id: "value0", name: "전체" },
     { id: "value1", name: "사회" },
     { id: "value2", name: "정치" },
     { id: "value3", name: "경제" },
@@ -891,59 +792,76 @@ const CategoryData = [
 
 export function HomeMainNews() {
     const { newsData, loading } = useNewsContext();
+
+    const handleCardClick = (event) => {
+        const target = event.currentTarget;
+        const currentRotation = target.style.transform;
+        
+        if (currentRotation === "rotateY(180deg)") {
+          target.style.transform = "rotateY(0deg)"; 
+        } else {
+          target.style.transform = "rotateY(180deg)";
+        }
+      };
+    
     return (
         <Main>
-            <MainHeader>오늘 뜨는 뉴스</MainHeader>
+            <MainHeader>오늘의 키워드</MainHeader>
             <MainTrendBox>
-                <MainTrendBadge>국정원 정찰위성 보고</MainTrendBadge>
-                <MainTrendBadge>조달청 전산망 먹통</MainTrendBadge>
-                <MainTrendBadge>네덜란드 총선</MainTrendBadge>
-                <MainTrendBadge>폴리코노미</MainTrendBadge>
-                <MainTrendBadge>슈링크플레이션 신고</MainTrendBadge>
-                <MainTrendBadge>친일파 부당이득 반환</MainTrendBadge>
-                <MainTrendBadge>초록낙엽</MainTrendBadge>
-                <MainTrendBadge>갤럭시 마르지엘라 에디션</MainTrendBadge>
+                <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
+                <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
+                <MainTrendBadge># 네덜란드 총선</MainTrendBadge>
+                <MainTrendBadge># 폴리코노미</MainTrendBadge>
+                <MainTrendBadge># 슈링크플레이션 신고</MainTrendBadge>
+                <MainTrendBadge># 친일파 부당이득 반환</MainTrendBadge>
+                <MainTrendBadge># 초록낙엽</MainTrendBadge>
             </MainTrendBox>
-            <MainHeader>1분뉴스</MainHeader>
-            <MainSearchBox>
-                <MainSearchNews className='dailynews-box1'>
-                    <MainSearchIamgeBox className='dailynews-imagebox1'>
-                        <MainSearchImage className='dailynews-img1' src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
-                        <MainSearchTextArea className='dailynews-area1'>
-                            <MainSearchTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainSearchTitle>
-                            <MainSearchContent>'스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.</MainSearchContent>
-                        </MainSearchTextArea>
-                    </MainSearchIamgeBox>
-                </MainSearchNews>
-                <MainSearchNews className='dailynews-box2'>
-                    <MainSearchIamgeBox className='dailynews-imagebox2'>
-                        <MainSearchImage className='dailynews-img2' src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
-                        <MainSearchTextArea className='dailynews-area2'>
-                            <MainSearchTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainSearchTitle>
-                            <MainSearchContent>침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
-                                최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.</MainSearchContent>
-                        </MainSearchTextArea>
-                    </MainSearchIamgeBox>
-                </MainSearchNews>
-                <MainSearchNews className='dailynews-box3'>
-                    <MainSearchIamgeBox className='dailynews-imagebox3'>
-                        <MainSearchImage className='dailynews-img3' src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
-                        <MainSearchTextArea className='dailynews-area3'>
-                            <MainSearchTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainSearchTitle>
-                            <MainSearchContent>영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.</MainSearchContent>
-                        </MainSearchTextArea>
-                    </MainSearchIamgeBox>
-                </MainSearchNews>
-                <MainSearchNews className='dailynews-box4'>
-                    <MainSearchIamgeBox className='dailynews-imagebox4'>
-                        <MainSearchImage className='dailynews-img4' src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
-                        <MainSearchTextArea className='dailynews-area4'>
-                            <MainSearchTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainSearchTitle>
-                            <MainSearchContent>12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.</MainSearchContent>
-                        </MainSearchTextArea>
-                    </MainSearchIamgeBox>
-                </MainSearchNews>
-            </MainSearchBox>
+            <MainCardHeader>1분 카드뉴스</MainCardHeader>
+            <MainCardNewsBox>
+                    <MainCardNews onClick={handleCardClick}>
+                        <MainCardImageBox>
+                            <MainCardImage src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
+                            <MainCardKey>컴투스</MainCardKey>
+                        </MainCardImageBox>
+                        <MainCardTextArea>
+                            <MainCardTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainCardTitle>
+                            <MainCardContent>
+                                '스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.
+                            </MainCardContent>
+                        </MainCardTextArea>
+                    </MainCardNews>
+                    <MainCardNews onClick={handleCardClick}>
+                        <MainCardImageBox>
+                            <MainCardImage src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
+                            <MainCardKey>좀비 사슴</MainCardKey>
+                        </MainCardImageBox>
+                        <MainCardTextArea>
+                            <MainCardTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainCardTitle>
+                            <MainCardContent>
+                            침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
+                                최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.
+                            </MainCardContent>
+                        </MainCardTextArea>
+                    </MainCardNews>
+                {/* <MainCardNews className='dailynews-box3'>
+                    <MainCardImageBox className='dailynews-imagebox3'>
+                        <MainCardImage className='dailynews-img3' src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
+                        <MainCardTextArea className='dailynews-area3'>
+                            <MainCardTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainCardTitle>
+                            <MainCardContent>영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.</MainCardContent>
+                        </MainCardTextArea>
+                    </MainCardImageBox>
+                </MainCardNews>
+                <MainCardNews className='dailynews-box4'>
+                    <MainCardImageBox className='dailynews-imagebox4'>
+                        <MainCardImage className='dailynews-img4' src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
+                        <MainCardTextArea className='dailynews-area4'>
+                            <MainCardTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainCardTitle>
+                            <MainCardContent>12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.</MainCardContent>
+                        </MainCardTextArea>
+                    </MainCardImageBox>
+                </MainCardNews> */}
+            </MainCardNewsBox>
             <MainHeader>오늘의 뉴스</MainHeader>
             <MainNewsBox>
                 {loading ? (
@@ -989,77 +907,221 @@ export function HomeTrendNews() {
     )
 }
 
-export function HomeSubNews() {
+export function CategoryNewsComponent() {
+    const { newsData, loading } = useNewsContext();
+    const [page, setPage] = useState(1);
+    const [items, setItems] = useState(10);
+    const [totalPages, setTotalPages] = useState(1);
+    const [sortedNewsData, setSortedNewsData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState(''); // searchTerm 정의 및 초기값 설정
+    const [filteredNewsData, setFilteredNewsData] = useState([]);
+    const [modalOn, setModalOn] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    // 데이터를 최근 날짜순으로 정렬 및 검색어에 따라 초기 데이터 필터링
+    useEffect(() => {
+        if (newsData.length > 0) {
+            // 최근 날짜순으로 정렬
+            const sortedData = [...newsData].sort((a, b) => {
+                const dateA = new Date(a.articleWriteTime);
+                const dateB = new Date(b.articleWriteTime);
+                return dateB - dateA;
+            });
+
+            // 검색어에 따라 초기 데이터 필터링
+            const filteredResults = sortedData.filter((item) =>
+                item.title.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            // 초기화된 데이터를 상태에 설정
+            setSortedNewsData(sortedData);
+            setFilteredNewsData(filteredResults);
+
+            // 페이지 수 다시 계산하여 업데이트
+            calculateTotalPages(filteredResults.length, items);
+        }
+    }, [newsData, searchTerm, items]);
+
+    // 날짜에 해당하는 데이터만 필터링하는 함수
+    const filterDataByDate = (data, targetDate) => {
+        return data.filter((item) => {
+            const itemDate = new Date(item.articleWriteTime);
+            return itemDate.toDateString() === targetDate.toDateString();
+        });
+    };
+
+    // 날짜에 해당하는 데이터만 필터링
+    const filteredNewsByDate = filterDataByDate(newsData, currentDate);
+
+
+    // 페이징 코드
+    const handlePageChange = (page) => {
+        setPage(page);
+    };
+
+    const calculateTotalPages = (totalItems, itemsPerPage) => {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        setTotalPages(totalPages);
+    };
+
+    // 검색 결과에 대해 페이징된 데이터 가져오기
+    const startIndex = (page - 1) * items;
+    const endIndex = startIndex + items;
+    const paginatedData = filteredNewsData.slice(startIndex, endIndex);
+
+    const searchList = () => {
+        return paginatedData.filter((itemData) =>
+            itemData.title.toUpperCase().includes(searchTerm.toUpperCase())
+        );
+    };
+
+    // 정렬된 전체데이터
+    const filterCategoryItem = searchList();
+    // 첫번째 데이터
+    const firstItem = filterCategoryItem.length > 0 ? [filterCategoryItem[0]] : [];
+    // 두번째부터 여섯번째 까지의 데이터
+    const restItems = filterCategoryItem.slice(1, 6);
+    // 나머지 데이터
+    const otherItems = filterCategoryItem.slice(6);
+
+    const handleModal = (item) => {
+        setSelectedItem(item);
+        setModalOn(!modalOn);
+    };
+    console.log(items * (page - 1), items * (page - 1) + items)
+
+    // 날짜 핸들링
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}. ${month}. ${day}`;
+    };
+
+    const handleDateChange = (amount) => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(currentDate.getDate() + amount);
+
+        // 확인하려는 날짜
+        const today = new Date();
+
+        // 오늘 이후로는 변경하지 않도록 함
+        if (newDate <= today) {
+            setCurrentDate(newDate);
+
+            // 날짜에 해당하는 데이터만 필터링
+            const filteredData = filterDataByDate(newsData, newDate);
+
+            // 필터링된 데이터를 상태에 설정
+            setFilteredNewsData(filteredData);
+
+            // 페이지 수 다시 계산하여 업데이트
+            calculateTotalPages(filteredData.length, items);
+        }
+    };
+
+
+
+    // 가져온 데이터를 사용하여 UI를 렌더링  
+    const CategoryNewsItems = restItems.map((item, index) => (
+        <BottomListItem key={index} onClick={() => handleModal(item)}>
+            <NewsHeaderItem>
+                <NewsMediaText>{item.press}</NewsMediaText>
+                <NewsDateText>{item.articleWriteTime}</NewsDateText>
+            </NewsHeaderItem>
+            <ListNewsTitle>{item.title}</ListNewsTitle>
+        </BottomListItem>
+    ));
+
+    const CategoryNewsMainItems = firstItem.map((item, index) => (
+        <CategoryNewsMain key={index} onClick={() => handleModal(item)}>
+            <SubNewsImageBox>
+                <SubNewsImage src={item.picture} />
+            </SubNewsImageBox>
+            <SubNewsTextBox>
+                <NewsHeaderItem>
+                    <NewsMediaBottom>{item.press}</NewsMediaBottom>
+                    <NewsDateBottom>{item.articleWriteTime}</NewsDateBottom>
+                </NewsHeaderItem>
+                <SubNewsTitle>{item.title}</SubNewsTitle>
+            </SubNewsTextBox>
+        </CategoryNewsMain>
+    ));
+
+    const CategoryNewsOtherItems = otherItems.map((item, index) => (
+        <CategoryNewsBox className='CategoryNewsBox' key={index} onClick={() => handleModal(item)}>
+            <CategoryNewsContentBox key={index}>
+                <CategoryNewsDateBox>
+                    <CategoryNewsMedia>{item.press}</CategoryNewsMedia>
+                    <CategoryNewsDate>{item.articleWriteTime}</CategoryNewsDate>
+                </CategoryNewsDateBox>
+                <CategoryNewsTitle>{item.title}</CategoryNewsTitle>
+                <CategoryNewsContent>{item.articleContent}</CategoryNewsContent>
+            </CategoryNewsContentBox>
+            <CategoryNewsImageBox>
+                <CategoryNewsImage src={item.picture} />
+            </CategoryNewsImageBox>
+        </CategoryNewsBox>
+    ));
+
+
+
     return (
-        <MainBoxBottom>
-            <BottomSubList>
-                <BottomListItem>
-                    <NewsHeaderItem>
-                        <NewsMediaText>연합뉴스</NewsMediaText>
-                        <NewsDateText>2023.11.17 09:42</NewsDateText>
-                    </NewsHeaderItem>
-                    <ListNewsTitle>고양시 아파트 지하주차장 기둥 파손…차량 통제·긴급 보강작업(종합)</ListNewsTitle>
-                </BottomListItem>
-                <BottomListItem>
-                    <NewsHeaderItem>
-                        <NewsMediaText>디지털데일리</NewsMediaText>
-                        <NewsDateText>2023.11.16 17:20</NewsDateText>
-                    </NewsHeaderItem>
-                    <ListNewsTitle>[현장] 매장서 입어보고 온라인 주문? ‘무신사 홍대’에선 바로 구매 OK 매장서 입어보고 온라인 주문? ‘무신사 홍대’에선 바로 구매 OK</ListNewsTitle>
-                </BottomListItem>
-                <BottomListItem>
-                    <NewsHeaderItem>
-                        <NewsMediaText>연합뉴스</NewsMediaText>
-                        <NewsDateText>2023.11.17 09:42</NewsDateText>
-                    </NewsHeaderItem>
-                    <ListNewsTitle>고양시 아파트 지하주차장 기둥 파손…차량 통제·긴급 보강작업(종합)</ListNewsTitle>
-                </BottomListItem>
-                <BottomListItem>
-                    <NewsHeaderItem>
-                        <NewsMediaText>연합뉴스</NewsMediaText>
-                        <NewsDateText>2023.11.17 09:42</NewsDateText>
-                    </NewsHeaderItem>
-                    <ListNewsTitle>고양시 아파트 지하주차장 기둥 파손…차량 통제·긴급 보강작업(종합)</ListNewsTitle>
-                </BottomListItem>
-                <BottomListItem>
-                    <NewsHeaderItem>
-                        <NewsMediaText>연합뉴스</NewsMediaText>
-                        <NewsDateText>2023.11.17 09:42</NewsDateText>
-                    </NewsHeaderItem>
-                    <ListNewsTitle>고양시 아파트 지하주차장 기둥 파손…차량 통제·긴급 보강작업(종합)</ListNewsTitle>
-                </BottomListItem>
-                <BottomListItem>
-                    <NewsHeaderItem>
-                        <NewsMediaText>연합뉴스</NewsMediaText>
-                        <NewsDateText>2023.11.17 09:42</NewsDateText>
-                    </NewsHeaderItem>
-                    <ListNewsTitle>고양시 아파트 지하주차장 기둥 파손…차량 통제·긴급 보강작업(종합)</ListNewsTitle>
-                </BottomListItem>
-            </BottomSubList>
-            <BottomSubNews>
-                <SubNewsImageBox>
-                    <SubNewsImage src="https://imgnews.pstatic.net/image/277/2023/11/17/0005342242_001_20231117092303634.jpg?type=w647" />
-                </SubNewsImageBox>
-                <SubNewsTextBox>
-                    <NewsHeaderItem>
-                        <NewsMediaBottom>아시아경제</NewsMediaBottom>
-                        <NewsDateBottom>2023.11.17 09:11</NewsDateBottom>
-                    </NewsHeaderItem>
-                    <SubNewsTitle>"수건이 115만원? 우린 9900원"…발렌시아가 저격한 이케아"수건이 115만원? 우린 9900원"…발렌시아가 저격한 이케아</SubNewsTitle>
-                </SubNewsTextBox>
-            </BottomSubNews>
-            <BottomCategory>
-                <BottomCategoryTitle>카테고리</BottomCategoryTitle>
-                <BottomCategoryItem>사회</BottomCategoryItem>
-                <BottomCategoryItem>정치</BottomCategoryItem>
-                <BottomCategoryItem>경제</BottomCategoryItem>
-                <BottomCategoryItem>국제</BottomCategoryItem>
-                <BottomCategoryItem>문화</BottomCategoryItem>
-                <BottomCategoryItem>IT</BottomCategoryItem>
-                <BottomCategoryItem>연예</BottomCategoryItem>
-                <BottomCategoryItem>스포츠</BottomCategoryItem>
-            </BottomCategory>
-        </MainBoxBottom>
+        <>
+            <DateHead>
+                <DateBox>
+                    <ArrowBox onClick={() => handleDateChange(-1)}>&lt;</ArrowBox>
+                    {formatDate(currentDate)}
+                    <ArrowBox onClick={() => handleDateChange(1)}>&gt;</ArrowBox>
+                </DateBox>
+            </DateHead>
+            <MainBoxCategory>
+                <MainBoxBottom>
+                    <CategoryNewsList>
+                        {loading ? (
+                            <LoadingScreen />
+                        ) : (
+                            CategoryNewsItems
+                        )}
+                    </CategoryNewsList>
+                    {loading ? (
+                        <LoadingScreen />
+                    ) : (
+                        CategoryNewsMainItems
+                    )}
+                    <BottomCategory>
+                        {CategoryData.map(({ id, name }) => (
+                            <BottomCategoryItem key={id} className={id}>{name}</BottomCategoryItem>
+                        ))}
+                    </BottomCategory>
+                </MainBoxBottom>
+            </MainBoxCategory>
+
+
+            <CategoryWrapperBox>
+                <CategoryNewsArea>
+                    {loading ? (
+                        <LoadingScreen />
+                    ) : (
+                        CategoryNewsOtherItems
+                    )}
+                </CategoryNewsArea>
+            </CategoryWrapperBox>
+            <PaginationBox>
+                <Pagination
+                    activePage={page}
+                    itemsCountPerPage={items}
+                    totalItemsCount={newsData.length - 6}
+                    pageRangeDisplayed={5}
+                    onChange={handlePageChange}>
+                </Pagination>
+            </PaginationBox>
+            <ModalPortal>
+                {modalOn && <Modal item={selectedItem} onClose={() => setModalOn(false)} />}
+            </ModalPortal>
+
+        </>
     )
 }
 
@@ -1150,17 +1212,13 @@ export function SearchNewsComponent() {
     const handleModal = (item) => {
         setSelectedItem(item);
         setModalOn(!modalOn);
-      };
-    
+    };
+
 
     console.log(newsData * (page - 1), newsData * (page - 1) + newsData)
     // 가져온 데이터를 사용하여 UI를 렌더링  
     const SearchNewsItems = filteredSearchItems.map((item, index) => (
         <SearchNewsBox className='SearchNewsBox' key={index} onClick={() => handleModal(item)}>
-            <SearchNewsSideSlide className='SearchNewsBtn'>
-                <SearchNewsSideBtn src={BookmarkOn} />
-                <SearchNewsSideBtn src={Bookmark} />
-            </SearchNewsSideSlide>
             <SearchNewsContentBox>
                 <SearchNewsDateBox>
                     <SearchNewsMedia>{item.press}</SearchNewsMedia>
@@ -1200,127 +1258,5 @@ export function SearchNewsComponent() {
                 {modalOn && <Modal item={selectedItem} onClose={() => setModalOn(false)} />}
             </ModalPortal>
         </WrapperBox>
-    )
-}
-
-export function CategoriNewsComponent() {
-    const [data, setData] = useState([]);
-    const [page, setPage] = useState(1);
-    const [items, setItems] = useState(10);
-    const [totalPages, setTotalPages] = useState(1);
-    // 선택된 아이템 배열
-    const [checkedItem, setCheckedItem] = useState([]);
-
-    /* li 클릭 시 실행 */
-    const handleCheckBox = (e) => {
-        const selectedItem = e.currentTarget; // 주의: target 아니고 currentTarget이다
-
-        /* checked 여부에 따라 선택된 li 아이템 추가 또는 삭제 */
-        // 특정 아이템을 체크 + 선택한 아이템 배열에 체크한 아이템이 없는 경우
-        if (selectedItem.checked && !checkedItem.includes(selectedItem.id)) {
-            // 선택된 아이템 배열에 선택한 아이템 추가
-            setCheckedItem([...checkedItem, selectedItem.id]);
-
-            // 체크 해제 + 클릭한 아이템이 선택된 아이템 배열에 있는 경우
-        } else if (!selectedItem.checked && checkedItem.includes(selectedItem.id)) {
-            // 해당 아이템을 선택된 아이템 배열에서 삭제
-            setCheckedItem(checkedItem.filter((name) => selectedItem.id !== name));
-        } else return;
-    };
-
-    //페이징 코드
-    const NewsData = () => {
-        axios.get('https://jsonplaceholder.typicode.com/posts')
-            .then(res => {
-                setData(res.data)
-                calculateTotalPages(res.data.length);
-                console.log(res);
-                console.log(res.data);
-            })
-    }
-
-    const handlePageChange = (page) => { setPage(page); };
-    const itemChange = (e) => {
-        setItems(Number(e.target.value))
-        calculateTotalPages(data.length);
-    }
-
-    const calculateTotalPages = (totalItems) => {
-        const totalPages = Math.ceil(totalItems / items);
-        setTotalPages(totalPages);
-    }
-
-    useEffect(() => {
-        NewsData();
-    }, []);
-
-    console.log(items * (page - 1), items * (page - 1) + items)
-
-    return (
-        <>
-            <DateHead>
-                <DateBox>
-                    <ArrowBox>&lt;</ArrowBox>
-                    2023. &nbsp;11. &nbsp;21
-                    <ArrowBox>&gt;</ArrowBox>
-                </DateBox>
-            </DateHead>
-            <CategoriWrapperBox>
-                <CategorySideBox>
-                    <CategorySideTitle>카테고리</CategorySideTitle>
-                    <CategorySideItemTop>
-                        {CategoryData.map(({ id, name }) => (
-                            <CategorySideItem key={id} className={id}>
-                                <CategorySideInput
-                                    id={name}
-                                    type='checkbox'
-                                    onChange={handleCheckBox}
-                                />
-                                <CategorySideItemLabel htmlFor={name}>
-                                    <CategorySideItemText>
-                                        {name}
-                                    </CategorySideItemText>
-                                </CategorySideItemLabel>
-                            </CategorySideItem>
-                        ))}
-                    </CategorySideItemTop>
-                </CategorySideBox>
-                <CategoryNewsArea>
-                    {data.slice(
-                        items * (page - 1),
-                        items * (page - 1) + items
-                    ).map((value, index) => {
-                        return (
-                            <CategoryNewsBox className='CategoryNewsBox'>
-                                <NewsRightSlide className='CategoryNewsBtn'>
-                                    <NewsBookMarkBtn src={BookmarkOn} />
-                                    <NewsBookMarkBtn src={Bookmark} />
-                                </NewsRightSlide>
-                                <CategoryNewsContentBox key={index}>
-                                    <CategoryNewsDateBox>
-                                        <CategoryNewsMedia>{value.userId}</CategoryNewsMedia>
-                                        <CategoryNewsDate>{value.id}</CategoryNewsDate>
-                                    </CategoryNewsDateBox>
-                                    <CategoryNewsTitle>{value.title}</CategoryNewsTitle>
-                                    <CategoryNewsContent>{value.body}</CategoryNewsContent>
-                                </CategoryNewsContentBox>
-                                <CategoryNewsImageBox>
-                                    <CategoryNewsImage src='https://mimgnews.pstatic.net/image/117/2023/11/21/0003789283_002_20231121090208311.jpg?type=w540' />
-                                </CategoryNewsImageBox>
-                            </CategoryNewsBox>
-                        )
-                    })}
-                </CategoryNewsArea>
-            </CategoriWrapperBox>
-            <PaginationBox>
-                <Pagination
-                    activePage={page}
-                    itemsCountPerPage={items}
-                    totalItemsCount={data.length - 1}
-                    pageRangeDisplayed={5}
-                    onChange={handlePageChange}>
-                </Pagination>
-            </PaginationBox>
-        </>
     )
 }

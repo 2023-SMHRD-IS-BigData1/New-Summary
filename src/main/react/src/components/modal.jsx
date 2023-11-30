@@ -64,6 +64,7 @@ const DateBox = styled.div`
   width: 100%;
   height: 30px;
   padding: 20px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: right;
   align-items: center;
@@ -81,19 +82,45 @@ const Media = styled.div`
 
 const ImageBox = styled.div`
   width: 100%;
-  /* height: 400px;
-  overflow: hidden; */
-  padding-bottom: 30px;
-  background-color: aqua;
+  padding-bottom: 20px;
 `;
 
 const ImageUrl = styled.img`
   width: 100%;
 `;
 
-const ContentBox = styled.div``;
+const ContentBox = styled.div`
+  padding: 10px;
+  margin-bottom: 30px;
+`;
 
-const ContentText = styled.div``;
+const ContentText = styled.div`
+  font-size: 18px;
+  margin-bottom: 60px;
+  line-height: 1.3;
+  white-space: normal;
+  word-wrap: break-word;
+`;
+
+const NewsUrlBox = styled.div`
+  width: 100%;
+  height: 20px;
+  padding-right: 30px;
+  font-size: 18px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: 10px;
+`;
+
+const NewsUrl = styled.a`
+  text-decoration: none;
+  color: #000000;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 
 
@@ -109,13 +136,14 @@ const Modal = ({ onClose, item }) => {
       };
     }, []);
 
-    
-    console.log(item);
-    console.log(item.Title);
+    const handleModalClick = (e) => {
+      // 모달 내부의 클릭 이벤트일 경우 이벤트 전파 중지
+      e.stopPropagation();
+    };
 
   return (
-      <Background>
-        <Content>
+      <Background onClick={onClose}>
+        <Content onClick={handleModalClick}>
         <CloseButton onClick={onClose}>
           <CloseButtonImage src={Close} />
         </CloseButton>
@@ -129,7 +157,13 @@ const Modal = ({ onClose, item }) => {
         <ImageBox>
           <ImageUrl src={item.picture} />
         </ImageBox>
-
+        <ContentBox>
+          <ContentText>{item.articleContent}</ContentText>
+          <NewsUrlBox>
+            기사 원문 :  
+            <NewsUrl href={item.url} target="_blank">{item.url}</NewsUrl>
+          </NewsUrlBox>
+        </ContentBox>
          </ Content>
       </Background>
   );
