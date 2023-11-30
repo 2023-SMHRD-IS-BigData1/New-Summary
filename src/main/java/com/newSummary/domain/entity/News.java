@@ -41,4 +41,8 @@ public class News {
 	
 	@Field("조회수")
 	private Long viewCount;
+	
+	public void incrementViewCount() {
+		this.viewCount++;
+	}
 }
