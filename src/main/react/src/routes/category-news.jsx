@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Header from '../components/header';
 import Footer from '../components/footer';
-import { CategoriNewsComponent } from '../components/news';
+import { CategoryNewsComponent } from '../components/news';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -15,7 +15,7 @@ export default function CategoryNews() {
   return (
     <Wrapper>
       <Header></Header>
-        <CategoriNewsComponent />
+        <CategoryNewsComponent />
       <Footer></Footer>
     </Wrapper>
   );

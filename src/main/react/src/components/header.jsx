@@ -16,7 +16,7 @@ const Wrapper = styled.div`
     top: 0;
     backdrop-filter: blur(10px);
     box-shadow: 5px 5px 50px 5px #99999944;
-    z-index: 99;
+    z-index: 199;
 `;
 
 const WrapperTop = styled.div`
@@ -81,6 +81,7 @@ const MenuBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: left;
+    position: relative;
 `;
 
 const MenuItem = styled.div`

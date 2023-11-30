@@ -126,6 +126,9 @@ const InputBox = styled.input`
     text-transform: capitalize;
     font-weight: bold;
   }
+  &:focus {
+    box-shadow: 0 0 5px #264653;
+  }
 `;
 
 const SubmitBox = styled.div`

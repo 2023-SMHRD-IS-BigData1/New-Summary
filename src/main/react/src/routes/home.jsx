@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Footer from '../components/footer';
 import { BoardMain } from '../components/board-sns';
-import { HomeMainNews, HomeSubNews, HomeTrendNews } from '../components/news';
+import { HomeMainNews } from '../components/news';
 
 const Wrapper = styled.div`
   width: 100%;
