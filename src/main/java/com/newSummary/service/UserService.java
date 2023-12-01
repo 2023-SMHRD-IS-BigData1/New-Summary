@@ -1,14 +1,14 @@
 package com.newSummary.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.newSummary.domain.UserRole;
-import com.newSummary.domain.dto.UserDTO;
+import com.newSummary.domain.dto.user.JoinRequest;
+import com.newSummary.domain.dto.user.LoginRequest;
+import com.newSummary.domain.dto.user.UserDTO;
 import com.newSummary.domain.entity.User;
 import com.newSummary.repository.UserRepository;
 
@@ -18,94 +18,76 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
-	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 
-	// 회원 가입
-	public User userSave(UserDTO userDTO){
-        return userRepository.save(User.builder()
-        		.userEmail(userDTO.getUserEmail())
-                .userPw(passwordEncoder.encode(userDTO.getUserPw()))
-                .userName(userDTO.getUserName())
-                .userPhone(userDTO.getUserPhone())
-                .userProfile(userDTO.getUserProfile())
-                .userRole(UserRole.U)
-                .build());
- 
-    }
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder encoder;
+
+	 
+	// userEmail 중복 체크 중복안되면 true return
+	public boolean checkUserEmailDuplicate(String userEmail) {
+		return userRepository.existsByUserEmail(userEmail);
+	}
+	// userPhone 중복 체크 중복안되면 true return
+	public boolean checkUserPhoneDuplicate(String userPhone) {
+		return userRepository.existsByUserPhone(userPhone);
+	}
+
 	
-	public User adminSave(UserDTO userDTO){
-        return userRepository.save(User.builder()
-        		.userEmail(userDTO.getUserEmail())
-                .userName(userDTO.getUserName())
-                .userPw(passwordEncoder.encode(userDTO.getUserPw()))
-                .userPhone(userDTO.getUserPhone())
-                .userProfile(userDTO.getUserProfile())
-                .userRole(UserRole.A)
-                .build());
-    }
-	
+	// 암호화 안된 회원가입(확인용)
+	public void join(JoinRequest req) {
+		userRepository.save(req.toEntity());
+	}
+
+	// 암호화된 회원가입
+	public void join2(JoinRequest req) {
+		userRepository.save(req.toEntity(encoder.encode(req.getUserPw())));
+	}
+
 	// 이메일로 회원조회
 	public UserDTO findByUserEmail(String userEmail) {
-		UserDTO userDTO = UserDTO.toUserDTO(userRepository.findByUserEmail(userEmail));
-        return userDTO;
+		UserDTO userDTO = UserDTO.toUserDTO(userRepository.findByUserEmail(userEmail).get());
+		return userDTO;
 	}
-	
-	// 회원 전체 조회
-    public List<UserDTO> findUserAll(){
-        List<User> userList = userRepository.findAll();
-        List<UserDTO> userDTOList = new ArrayList<>();
-        for(User user : userList){
-            if(user.getUserRole() == UserRole.U){
-                userDTOList.add(UserDTO.toUserDTO(user));
-            }
-        }
-        return userDTOList;
-    }
-    
-    // 관리자 전체 조회
-    public List<UserDTO> findAdminAll(){
-        List<User> userList = userRepository.findAll();
-        List<UserDTO> userDTOList = new ArrayList<>();
-        for(User user : userList){
-            if(user.getUserRole() == UserRole.A){
-                userDTOList.add(UserDTO.toUserDTO(user));
-            }
-        }
-        return userDTOList;
-    }
-    
-    // 회원 정보 수정
-    public void editUser(UserDTO originalUserDTO, UserDTO userDTO) {
-    	originalUserDTO.setUserRole(UserRole.U);
-    	originalUserDTO.setUserName(userDTO.getUserName());
-    	originalUserDTO.setUserPw(userDTO.getUserPw());
-    	originalUserDTO.setUserPhone(userDTO.getUserPhone());
-    	originalUserDTO.setUserProfile(userDTO.getUserProfile());
-    	userRepository.save(User.toEditUserEntity(originalUserDTO, passwordEncoder));
-    }
-    
-    // 관리자 정보 수정
-    public void editAdmin(UserDTO originalUserDTO, UserDTO userDTO){
-      	originalUserDTO.setUserRole(UserRole.A);
-    	originalUserDTO.setUserName(userDTO.getUserName());
-    	originalUserDTO.setUserPw(userDTO.getUserPw());
-    	originalUserDTO.setUserPhone(userDTO.getUserPhone());
-    	originalUserDTO.setUserProfile(userDTO.getUserProfile());
-        userRepository.save(User.toEditUserEntity(originalUserDTO, passwordEncoder));
-    }
 
-    // 회원탈퇴
-    public void deleteByEmail(String userEmail) {
-    	userRepository.deleteById(userEmail);
-    }
-    
-    // 이메일 중복 체크
-    @Transactional(readOnly =true)
-    public boolean checkUserEmail(String userEmail) {
-    	return userRepository.existsByUserEmail(userEmail);
-    }
-    
-    
-    
+	/**
+	 * 로그인 기능 화면에서 LoginRequest(userEmail, userPw)을 입력받아 
+	 * loginId와 password가 일치하면 User return 
+	 * loginId가 존재하지 않거나 password가 일치하지 않으면 null return
+	 * 안씀
+	 */
+//	public User login(LoginRequest req) {
+//		Optional<User> optionalUser = userRepository.findByUserEmail(req.getUserEmail());
+//
+//		// loginId와 일치하는 User가 없으면 null return
+//		if (optionalUser.isEmpty()) {
+//			return null;
+//		}
+//
+//		User user = optionalUser.get();
+//
+//		// 찾아온 User의 userPw와 입력된 userPw가 다르면 null return
+//		if (!user.getUserPw().equals(req.getUserPw())) {
+//			return null;
+//		}
+//
+//		return user;
+//	}
+
+	/**
+	 * userEmail(String)를 입력받아 User을 return 해주는 기능 인증, 
+	 * 인가 시 사용 userEmail가 null이거나(로그인 X) 
+	 * userEmail로 찾아온 User가 없으면 null return 
+	 * userEmail로 찾아온 User가 존재하면 User return
+	 */
+	public User getLoginUserByEmail(String userEmail) {
+		if (userEmail == null)
+			return null;
+
+		Optional<User> optionalUser = userRepository.findByUserEmail(userEmail);
+		if (optionalUser.isEmpty())
+			return null;
+
+		return optionalUser.get();
+	}
+
 }

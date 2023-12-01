@@ -1,4 +1,4 @@
-package com.newSummary.domain.dto;
+package com.newSummary.domain.dto.user;
 
 
 
@@ -11,11 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
@@ -39,20 +37,6 @@ public class UserDTO {
     	userDTO.setUserProfile(user.getUserProfile());
     	userDTO.setJoinedAt(user.getJoinedAt());
     	userDTO.setUserRole(UserRole.U);
-    	userDTO.setUserType(user.getUserType());
-    	userDTO.setUserToken(user.getUserToken());
-    	return userDTO;
-    }
-    // Admin 용
-    public static UserDTO toAdminDTO(User user){
-    	UserDTO userDTO = new UserDTO();
-    	userDTO.setUserEmail(user.getUserEmail());
-    	userDTO.setUserPw(user.getUserPw());
-    	userDTO.setUserName(user.getUserName());
-    	userDTO.setUserPhone(user.getUserPhone());
-    	userDTO.setUserProfile(user.getUserProfile());
-    	userDTO.setJoinedAt(user.getJoinedAt());
-    	userDTO.setUserRole(UserRole.A);
     	userDTO.setUserType(user.getUserType());
     	userDTO.setUserToken(user.getUserToken());
     	return userDTO;

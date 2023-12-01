@@ -4,10 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.newSummary.domain.UserRole;
-import com.newSummary.domain.dto.UserDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -47,7 +45,7 @@ public class User {
     @Column(length = 40)
     private String userName;
 
-    @Column(length = 20)
+    @Column(length = 20, unique = true)
     private String userPhone;
     
     @CreationTimestamp
@@ -63,7 +61,6 @@ public class User {
     private UserRole userRole; // 회원 권한 일반유저(U), 관리자(A)
     
     @Column(length=300)
-    
     private String userToken;
     
     
@@ -82,20 +79,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<NewsLog> newsLogs;
     
+
     
-    // 정보 수정
-    public static User toEditUserEntity(UserDTO userDTO, PasswordEncoder passwordEncoder){
-    	User user = User.builder()
-                .userName(userDTO.getUserName())
-                .userPw(passwordEncoder.encode((userDTO.getUserPw())))
-                .userPhone(userDTO.getUserPhone())
-                .userProfile(userDTO.getUserProfile())
-                .userRole(userDTO.getUserRole())
-                .userType(userDTO.getUserType())
-                .userToken(userDTO.getUserToken())
-                .build();
-        return user;
-    }
 
 }
     
