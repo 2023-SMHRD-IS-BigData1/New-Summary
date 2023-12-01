@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import AutoPlayCarousel from '../components/carousel';
-import ViewsCarousel from '../components/views-carousel';
-import { SearchNewsComponent } from '../components/news';
+
 
 
 
