@@ -241,12 +241,40 @@ const SocialButtonImage = styled.img`
 export default function Login() {
   const [data, setData] = useState('');
   const [isActive, setIsActive] = useState(false);
+  // 중복 확인 상태 추가
+  const [isDuplicateEmail, setIsDuplicateEmail] = useState(false);
+
+  // 중복 확인 함수
+  const checkDuplicateEmail = async () => {
+    const email = signupFormData.userEmail;
+
+    // 한글 URL
+    const url = `/api/users/duplication-email?email=${encodeURIComponent(email)}`;
+
+    try {
+      const response = await axios.get(url);
+
+      // 서버 응답 처리
+      if (response.data.isDuplicate) {
+        // 중복된 이메일인 경우
+        setIsDuplicateEmail(true);
+      } else {
+        // 중복되지 않은 이메일인 경우
+        setIsDuplicateEmail(false);
+      }
+    } catch (error) {
+      console.error('중복 확인 에러:', error);
+    }
+  };
+  
 
   // 각각의 폼에 대한 데이터 상태 추가
   const [signupFormData, setSignupFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
+    userEmail: '',
+    userPw: '',
+    passwordCheck: '',
+    userName: '',
+    userPhone: '',
   });
 
   const [loginFormData, setLoginFormData] = useState({
@@ -257,6 +285,73 @@ export default function Login() {
   const toggle = () => {
     setIsActive((prevIsActive) => !prevIsActive);
   };
+
+  const [userEmail, setUserEmail] = useState("");
+  const [userPw, setUserPw] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+
+  const handleUserEmail = (e) => {
+    setUserEmail(e.target.value);
+  };
+
+  const handleUserPw = (e) => {
+    setUserPw(e.target.value);
+  };
+
+  const handlePasswordCheck = (e) => {
+    setPasswordCheck(e.target.value);
+  };
+
+  const handletUserName = (e) => {
+    setUserName(e.target.value);
+  };
+
+  const handleUserPhone = (e) => {
+    setUserPhone(e.target.value);
+  };
+
+  const onClickLogin = () => {
+    console.log("click login");
+    console.log("ID : ", inputId);
+    console.log("PW : ", inputPw);
+    axios
+      .post("http://localhost:8081/users/join", {
+        userEmail: userEmail,
+        userPw: userPw,
+        passwordCheck: passwordCheck,
+        userName: userName,
+        userPhone: userPhone,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log("res.data.userEmail :: ", res.data.userEmail);
+        console.log("res.data.msg :: ", res.data.msg);
+        if (res.data.userEmail === undefined) {
+          // id 일치하지 않는 경우 userId = undefined, msg = '입력하신 id 가 일치하지 않습니다.'
+          console.log("======================", res.data.msg);
+          alert("입력하신 id 가 일치하지 않습니다.");
+        } else if (res.data.userEmail === null) {
+          // id는 있지만, pw 는 다른 경우 userId = null , msg = undefined
+          console.log(
+            "======================",
+            "입력하신 비밀번호 가 일치하지 않습니다."
+          );
+          alert("입력하신 비밀번호 가 일치하지 않습니다.");
+        } else if (res.data.userEmail === inputId) {
+          // id, pw 모두 일치 userId = userId1, msg = undefined
+          console.log("======================", "로그인 성공");
+          sessionStorage.setItem("user_id", inputId); // sessionStorage에 id를 user_id라는 key 값으로 저장
+          sessionStorage.setItem("name", res.data.name); // sessionStorage에 id를 user_id라는 key 값으로 저장
+        }
+        // 작업 완료 되면 페이지 이동(새로고침)
+        document.location.href = "/";
+      })
+      .catch();
+  };
+
+
 
   // 로그인 폼을 제출할 때 실행되는 함수
   const handleLoginSubmit = (e) => {
@@ -275,21 +370,51 @@ export default function Login() {
         // history.push('/login');
       });
   };
+  
 
   // 회원가입 폼을 제출할 때 실행되는 함수
   const handleSignupSubmit = (e) => {
     e.preventDefault();
 
     // axios를 사용하여 회원가입 데이터를 백엔드로 보냅니다.
-    axios.post('/api/signup', signupFormData)
+    axios.post('/api/users/join', {
+      userEmail: userEmail,
+      userPw: userPw,
+      passwordCheck: passwordCheck,
+      userName: userName,
+      userPhone: userPhone,
+    })
       .then(response => {
         console.log('회원가입 응답 받음:', response.data);
       })
       .catch(error => {
         console.error('회원가입 에러 발생:', error);
       });
-      history.push('/login')
+    // history.push('/login')
   };
+
+
+  // const signUpDB = (...signupFormData) => {
+  //   return function (dispatch, getState, { history }) {
+  //     axios({
+  //       method: "post",
+  //       url: "/api/users/join",
+  //       data: {
+  //         userEmail: userEmail,
+  //         userPw: userPw,
+  //         passwordCheck: passwordCheck,
+  //         userName: userName,
+  //         userPhone: userPhone,
+  //       },
+  //     })
+  //       .then((res) => {
+  //         window.alert(res.data.result);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   };
+  // };
 
   return (
     <Body>
@@ -298,34 +423,48 @@ export default function Login() {
           <ImageBox className="inputImage" src={LoginImage} alt="" />
           <SignupBox className="sign-up">
             <BoxTextHead>Create An Account</BoxTextHead>
-            <FormBox action="" onSubmit={handleSignupSubmit}>
-              <InputBox
-                type="text"
-                placeholder="Username"
-                name="username"
-                value={signupFormData.username}
-                onChange={(e) => setSignupFormData({ ...signupFormData, username: e.target.value })}
-              />
+            <FormBox action="/api/users/join" method='post' onSubmit={handleSignupSubmit}>
               <InputBox
                 type="email"
                 placeholder="Email Address"
-                name="email"
-                value={signupFormData.email}
-                onChange={(e) => setSignupFormData({ ...signupFormData, email: e.target.value })}
+                name="userEmail"
+                id="userEmail"
+                value={signupFormData.userEmail}
+                onChange={(e) => setSignupFormData({ ...signupFormData, userEmail: e.target.value })}
+                onBlur={checkDuplicateEmail} //focus가 해제될 때 중복 확인
+                isDuplicate={isDuplicateEmail} // 추가: 중복 여부에 따라 스타일을 변경하기 위한 속성
               />
               <InputBox
                 type="password"
                 placeholder="Create Password"
-                name="password"
-                value={signupFormData.password}
-                onChange={(e) => setSignupFormData({ ...signupFormData, password: e.target.value })}
+                name="userPw"
+                id="userPw"
+                value={signupFormData.userPw}
+                onChange={(e) => setSignupFormData({ ...signupFormData, userPw: e.target.value })}
               />
               <InputBox
                 type="password"
                 placeholder="Confirm Password"
-                name="confirmPassword"
-                value={signupFormData.confirmPassword}
-                onChange={(e) => setSignupFormData({ ...signupFormData, confirmPassword: e.target.value })}
+                name="passwordCheck"
+                id="passwordCheck"
+                value={signupFormData.passwordCheck}
+                onChange={(e) => setSignupFormData({ ...signupFormData, passwordCheck: e.target.value })}
+              />
+              <InputBox
+                type="text"
+                placeholder="Username"
+                name="userName"
+                id="userName"
+                value={signupFormData.username}
+                onChange={(e) => setSignupFormData({ ...signupFormData, username: e.target.value })}
+              />
+              <InputBox
+                type="text"
+                placeholder="Phone Number"
+                name="userPhone"
+                id="userPhone"
+                value={signupFormData.userPhone}
+                onChange={(e) => setSignupFormData({ ...signupFormData, userPhone: e.target.value })}
               />
               <SubmitBox>
                 <SubmitButton type="submit" value="Sign Up" />
@@ -341,18 +480,18 @@ export default function Login() {
           <ImageBox className="inputImage" src={SignupImage} />
           <LoginBox className="login">
             <BoxTextHead>Log In</BoxTextHead>
-            <FormBox action="" onSubmit={handleLoginSubmit}>
+            <FormBox action="/api/login" onSubmit={handleLoginSubmit}>
               <InputBox
                 type="email"
                 placeholder="Email Address"
-                name="email"
+                name="userEmail"
                 value={loginFormData.email}
                 onChange={(e) => setLoginFormData({ ...loginFormData, email: e.target.value })}
               />
               <InputBox
                 type="password"
                 placeholder="Password"
-                name="password"
+                name="userPw"
                 value={loginFormData.password}
                 onChange={(e) => setLoginFormData({ ...loginFormData, password: e.target.value })}
               />
@@ -373,12 +512,12 @@ export default function Login() {
                   <SocialButtonImage src={Kakao} />
                 </SocialButtonKakao>
               </a>
-              <SocialButtonNaver>
+              {/* <SocialButtonNaver>
                 <SocialButtonImage src={Naver} />
               </SocialButtonNaver>
               <SocialButtonGithub>
                 <SocialButtonImage src={Github} />
-              </SocialButtonGithub>
+              </SocialButtonGithub> */}
             </SocialBox>
           </LoginBox>
         </RightBox>
