@@ -2,6 +2,8 @@ package com.newSummary.domain.dto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 
 import lombok.Data;
 
@@ -18,8 +20,20 @@ public class NewsDTO {
 	private String articleWriteTime;
 	
 	public LocalDateTime getArticleWriteTimeAsDateTime() {
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm");
-	    return LocalDateTime.parse(articleWriteTime, formatter);
+	    DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy. MM. dd. HH:mm");
+	    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy. MM. d. HH:mm");
+
+	    try {
+	        return LocalDateTime.parse(articleWriteTime, formatter1);
+	    } catch (DateTimeParseException e1) {
+	        try {
+	            return LocalDateTime.parse(articleWriteTime, formatter2);
+	        } catch (DateTimeParseException e2) {
+	            // 예외 처리, 로깅 또는 더 구체적인 예외 던지기
+	            e2.printStackTrace(); // 또는 throw new IllegalArgumentException("Invalid date/time format", e2);
+	            return null; // 또는 다른 기본 값
+	        }
+	    }
 	}
 	// 사진 url
 	private String picture;
