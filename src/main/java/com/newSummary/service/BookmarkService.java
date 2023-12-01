@@ -1,12 +1,8 @@
 package com.newSummary.service;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.newSummary.domain.dto.UserDTO;
-import com.newSummary.domain.entity.Bookmark;
-import com.newSummary.domain.entity.User;
 import com.newSummary.repository.BookmarkRepository;
 
 import lombok.RequiredArgsConstructor;

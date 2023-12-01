@@ -22,7 +22,7 @@ public class NewsService {
 
 	// 전체 리스트 조회
 	public List<NewsDTO> getNewsList() {
-		List<News> newsList = this.newsRepository.findAllByOrderByViewCountDesc();
+		List<News> newsList = this.newsRepository.findAllByOrderByArticleWriteTimeDesc();
 		System.out.println("돼냐? " + newsList.size());
 
 		// DTO 변환
@@ -56,6 +56,7 @@ public class NewsService {
 		newsDTO.setUrl(news.getUrl());
 		newsDTO.setCategory(news.getCategory());
 		newsDTO.setViewCount(news.getViewCount());
+		newsDTO.setSummary(news.getSummary());
 		return newsDTO;
 	}
 	// 검색 서비스

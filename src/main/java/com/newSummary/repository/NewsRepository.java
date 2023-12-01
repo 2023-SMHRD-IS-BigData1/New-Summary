@@ -12,7 +12,7 @@ import com.newSummary.domain.entity.News;
 public interface NewsRepository extends MongoRepository<News, String>{
 	
 	// 전체 뉴스 리스트 조회
-	List<News> findAllByOrderByViewCountDesc();
+	List<News> findAllByOrderByArticleWriteTimeDesc();
 	
 	// 뉴스 상세 리스트 조회
 	Optional<News> findById(String id);
