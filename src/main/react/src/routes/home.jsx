@@ -42,7 +42,6 @@ const Content = styled.div`
 const BoardBox = styled.div`
   width: 100%;
   max-width: 1400px;
-  height: 1250px;
   padding: 0 30px 30px 30px;
   display: flex;
   justify-content: center;

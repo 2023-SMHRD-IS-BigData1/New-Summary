@@ -35,7 +35,6 @@ const WrapperBottom = styled.div`
     max-width: 1400px;
     padding: 0 50px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 `;
 
@@ -81,6 +80,17 @@ const MenuBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: left;
+    position: relative;
+`;
+
+const MenuHambergerBox = styled.div`
+    width: 100%;
+    max-width: 1100px;
+    height: 40px;
+    padding-right: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
     position: relative;
 `;
 
@@ -152,6 +162,23 @@ export default function Header({ ...props }) {
                         {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
                     </Link>
                 </MenuBox>
+                {/* <MenuHambergerBox>
+                    <Link to="/" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/" ? <MenuItem {...props} onPage>메인페이지</MenuItem> : <MenuItem>메인페이지</MenuItem>}
+                    </Link>
+                    <Link to="/category-news" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/category-news" ? <MenuItem {...props} onPage>뉴스 모아보기</MenuItem> : <MenuItem>뉴스 모아보기</MenuItem>}
+                    </Link>
+                    <Link to="/search" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/search" ? <MenuItem {...props} onPage>뉴스 찾아보기</MenuItem> : <MenuItem>뉴스 찾아보기</MenuItem>}
+                    </Link>
+                    <Link to="/board" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/board" ? <MenuItem {...props} onPage>커뮤니티</MenuItem> : <MenuItem>커뮤니티</MenuItem>}
+                    </Link>
+                    <Link to="/profile" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                        {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
+                    </Link>
+                </MenuHambergerBox> */}
             </WrapperBottom>
         </Wrapper>
     )

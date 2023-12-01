@@ -80,20 +80,21 @@ const MainTrendBadge = styled.div`
 // -- Home Card news component -- //
 const MainCardNewsBox = styled.div`
   width: 100%;
-  height: 620px;
   padding: 30px 140px;
   gap: 40px;
   margin-bottom: 100px;
   overflow: hidden;
   display: flex;
-  justify-content: space-between;
-  background-color: #F0BE4D;
+  justify-content: center;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  background: linear-gradient(to bottom, rgba(233,196,106,1) 0%,rgba(240,190,77,1) 50%,rgba(240,190,77,1) 100%);
   box-shadow: 5px 5px 5px 2px #99999944;
 `;
 
 const MainCardNews = styled.div`
-  width: 440px;
-  height: 560px;
+   width: ${(props) => (props.isFirst ? '440px' : '360px')};
+   height: ${(props) => (props.isFirst ? '560px' : '440px')};
   perspective: 1100px;
   display: flex;
   justify-content: center;
@@ -104,8 +105,9 @@ const MainCardNews = styled.div`
   `;
 
 const MainCardImageBox = styled.div`
-  width: 100%;
-  height: 560px;
+   width: ${(props) => (props.isFirst ? '440px' : '360px')};
+   height: ${(props) => (props.isFirst ? '560px' : '440px')};
+   border: 1px solid #999999;
   border-radius: 30px;
   overflow: hidden;
   position: absolute;
@@ -137,8 +139,9 @@ const MainCardKey = styled.div`
 
 
 const MainCardTextArea = styled.div`
-  width: 100%;
-  height: 560px;
+   width: ${(props) => (props.isFirst ? '440px' : '360px')};
+  height: ${(props) => (props.isFirst ? '560px' : '440px')};
+  border: 1px solid #999999;
   border-radius: 30px;
   padding: 20px;
   background-color: #ffffff;
@@ -150,17 +153,35 @@ const MainCardTextArea = styled.div`
 
 const MainCardTitle = styled.div`
     width: 100%;
+    max-height: 105px;
     padding: 10px;
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 600;
+    line-height: 1.3;
+    overflow: hidden;
+    position: relative;
+    white-space: normal;
+    word-wrap: break-word;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 `;
 
 const MainCardContent = styled.div`
     width: 100%;
-    height: 210px;
+    height: 280px;
     padding: 20px;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.3;
+    overflow: hidden;
+    position: relative;
+    white-space: normal;
+    word-wrap: break-word;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 11;
+    -webkit-box-orient: vertical;
 `;
 
 
@@ -792,18 +813,19 @@ const CategoryData = [
 
 export function HomeMainNews() {
     const { newsData, loading } = useNewsContext();
+    const [isFirst, setIsFirst] = useState(true);
 
     const handleCardClick = (event) => {
         const target = event.currentTarget;
         const currentRotation = target.style.transform;
-        
+
         if (currentRotation === "rotateY(180deg)") {
-          target.style.transform = "rotateY(0deg)"; 
+            target.style.transform = "rotateY(0deg)";
         } else {
-          target.style.transform = "rotateY(180deg)";
+            target.style.transform = "rotateY(180deg)";
         }
-      };
-    
+    };
+
     return (
         <Main>
             <MainHeader>오늘의 키워드</MainHeader>
@@ -818,49 +840,55 @@ export function HomeMainNews() {
             </MainTrendBox>
             <MainCardHeader>1분 카드뉴스</MainCardHeader>
             <MainCardNewsBox>
-                    <MainCardNews onClick={handleCardClick}>
-                        <MainCardImageBox>
-                            <MainCardImage src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
-                            <MainCardKey>컴투스</MainCardKey>
-                        </MainCardImageBox>
-                        <MainCardTextArea>
-                            <MainCardTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainCardTitle>
-                            <MainCardContent>
-                                '스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.
-                            </MainCardContent>
-                        </MainCardTextArea>
-                    </MainCardNews>
-                    <MainCardNews onClick={handleCardClick}>
-                        <MainCardImageBox>
-                            <MainCardImage src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
-                            <MainCardKey>좀비 사슴</MainCardKey>
-                        </MainCardImageBox>
-                        <MainCardTextArea>
-                            <MainCardTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainCardTitle>
-                            <MainCardContent>
-                            침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
-                                최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.
-                            </MainCardContent>
-                        </MainCardTextArea>
-                    </MainCardNews>
-                {/* <MainCardNews className='dailynews-box3'>
-                    <MainCardImageBox className='dailynews-imagebox3'>
-                        <MainCardImage className='dailynews-img3' src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
-                        <MainCardTextArea className='dailynews-area3'>
-                            <MainCardTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainCardTitle>
-                            <MainCardContent>영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.</MainCardContent>
-                        </MainCardTextArea>
+                <MainCardNews isFirst={isFirst} onClick={handleCardClick}>
+                    <MainCardImageBox isFirst={isFirst}>
+                        <MainCardImage src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
+                        <MainCardKey>컴투스</MainCardKey>
                     </MainCardImageBox>
+                    <MainCardTextArea isFirst={isFirst}>
+                        <MainCardTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainCardTitle>
+                        <MainCardContent>
+                            '스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.
+                        </MainCardContent>
+                    </MainCardTextArea>
                 </MainCardNews>
-                <MainCardNews className='dailynews-box4'>
-                    <MainCardImageBox className='dailynews-imagebox4'>
-                        <MainCardImage className='dailynews-img4' src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
-                        <MainCardTextArea className='dailynews-area4'>
-                            <MainCardTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainCardTitle>
-                            <MainCardContent>12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.</MainCardContent>
-                        </MainCardTextArea>
+                <MainCardNews onClick={handleCardClick}>
+                    <MainCardImageBox>
+                        <MainCardImage src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
+                        <MainCardKey>좀비 사슴</MainCardKey>
                     </MainCardImageBox>
-                </MainCardNews> */}
+                    <MainCardTextArea>
+                        <MainCardTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인     침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainCardTitle>
+                        <MainCardContent>
+                            침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
+                            최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.
+                        </MainCardContent>
+                    </MainCardTextArea>
+                </MainCardNews>
+                <MainCardNews onClick={handleCardClick}>
+                    <MainCardImageBox>
+                        <MainCardImage src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
+                        <MainCardKey>호텔 케이크</MainCardKey>
+                    </MainCardImageBox>
+                    <MainCardTextArea>
+                        <MainCardTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainCardTitle>
+                        <MainCardContent>
+                            뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.
+                        </MainCardContent>
+                    </MainCardTextArea>
+                </MainCardNews>
+                <MainCardNews onClick={handleCardClick}>
+                    <MainCardImageBox>
+                        <MainCardImage src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
+                        <MainCardKey>찰스 3세</MainCardKey>
+                    </MainCardImageBox>
+                    <MainCardTextArea>
+                        <MainCardTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainCardTitle>
+                        <MainCardContent>
+                        영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.
+                        </MainCardContent>
+                    </MainCardTextArea>
+                </MainCardNews>
             </MainCardNewsBox>
             <MainHeader>오늘의 뉴스</MainHeader>
             <MainNewsBox>
