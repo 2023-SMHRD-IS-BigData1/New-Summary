@@ -102,6 +102,28 @@ const UserBoxName = styled.div`
 
 
 export function BoardSNS() {
+    const [columns, setColumns] = React.useState(3);
+    React.useEffect(() => {
+        const handleResize = () => {
+            const newColumns = window.innerWidth <= 700 ? 1 : window.innerWidth <= 1100 ? 2 : 3;
+            setColumns(newColumns);
+        };
+    
+        const handleImageLoad = (index, height) => {
+            const newData = [...data];
+            newData[index] = 300 + height;
+            setData(newData);
+        };
+    
+        handleResize();
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    
     const data = [600, 300, 600, 900, 600, 600, 600, 300, 600, 900, 600, 600];
     const imageUrl = [
         "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
@@ -118,7 +140,7 @@ export function BoardSNS() {
 
     return (
         <Masonry
-            columns={3}
+            columns={columns}
             spacing={2}
             defaultHeight={300}
             defaultColumns={1}
@@ -149,6 +171,28 @@ export function BoardSNS() {
 }
 
 export function BoardMain() {
+    const [columns, setColumns] = React.useState(3);
+    React.useEffect(() => {
+        const handleResize = () => {
+            const newColumns = window.innerWidth <= 700 ? 1 : window.innerWidth <= 1100 ? 2 : 3;
+            setColumns(newColumns);
+        };
+    
+        const handleImageLoad = (index, height) => {
+            const newData = [...data];
+            newData[index] = 300 + height;
+            setData(newData);
+        };
+    
+        handleResize();
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     const heights = [600, 300, 600, 900, 600, 600];
     const imageUrl = [
         "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
@@ -161,7 +205,7 @@ export function BoardMain() {
 
     return (
         <Masonry
-            columns={3}
+            columns={columns}
             spacing={2}
             defaultHeight={300}
             defaultColumns={1}
