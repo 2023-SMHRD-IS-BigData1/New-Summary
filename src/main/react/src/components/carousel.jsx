@@ -5,6 +5,7 @@ import ModalPortal from "./portal";
 import Modal from './modal';
 import {format, register } from 'timeago.js' //임포트하기 register 한국어 선택
 import koLocale from 'timeago.js/lib/lang/ko' //한국어 선택
+import { useNewsContext, useNewsViewContext } from '../data/news-data.context';
 
 register('ko', koLocale);
 
@@ -55,11 +56,9 @@ const SubDate = styled.div`
 `;
 
 const SubCategory = styled.div`
-  height: 24px;
-  padding: 0 20px;
-  border: 1px solid #99999944;
+  padding: 5px 20px;
   border-radius: 5px;
-  background-color: #ecc76f;
+  background-color: #F4A261;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,7 +110,9 @@ const CarouselButton = styled.button`
 
 
 
-export default function AutoPlayCarousel({ newsData }) {
+export default function AutoPlayCarousel() {
+  const { newsData, loading } = useNewsContext();
+  const { newsViewData, viewLoading } = useNewsViewContext();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [modalOn, setModalOn] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -136,9 +137,26 @@ export default function AutoPlayCarousel({ newsData }) {
     setActiveItemIndex(value);
   };
 
-  const handleModal = (item) => {
+  const handleModal = async (item) => {
     setSelectedItem(item);
-    setModalOn(!modalOn);
+    setModalOn(true);
+
+    try {
+      // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+      const response = await axios.get(`/api/news/detail/${item.id}`);
+      
+      // useNewsViewContext 훅을 함수 컴포넌트 내에서 호출
+      const { setNewsData } = useNewsViewContext();
+      
+      // 훅을 호출하는 함수를 useEffect 내에서 실행
+      useEffect(() => {
+        setNewsData(response.data);
+        console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+      }, [response.data, setNewsData]);
+      
+    } catch (error) {
+      console.error('데이터 로드 중 오류 발생:', error);
+    }
   };
 
   // newsData가 있는 경우에만 실행
@@ -151,7 +169,7 @@ const sortedNewsData = newsData && newsData
   
   // 가져온 데이터를 사용하여 UI를 렌더링
   const carouselItems = sortedNewsData && sortedNewsData.map((item, index) => (
-    <SlideItem key={index} onClick={() => handleModal(item)}>
+    <SlideItem key={item.id} onClick={() => handleModal(item)}>
       <NewsImageBox>
         <NewsImage src={item.picture} />
       </NewsImageBox>
@@ -159,7 +177,6 @@ const sortedNewsData = newsData && newsData
         <SubCategory>{item.category}</SubCategory>
         <SubDate>{format(new Date(item.articleWriteTime), 'ko')}</SubDate>
       </SubTextBox>
-      {newsData.articleWriteTime}
       <NewsTitle>{item.title}</NewsTitle>
       <NewsContent>{item.articleContent}</NewsContent>
     </SlideItem>

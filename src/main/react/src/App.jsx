@@ -9,8 +9,9 @@ import Login from './routes/login';
 import Board from './routes/board';
 import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
-import { NewsProvider } from './data/news-data.context';
+import { NewsProvider, NewsViewProvider } from './data/news-data.context';
 import TopButtonLogo from '../src/assets/top-logo.svg'
+import BoardWrite from './routes/board-write';
 
 // 초기 시작페이지를 잡아주기
 const router = createBrowserRouter([
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
         path: "board",
         element: <Board />,
       },
+      {
+        path: "board-write",
+        element: <BoardWrite />,
+      },
     ],
   },
 ])
@@ -67,8 +72,8 @@ position: relative;
 `;
 
 const TopButton = styled.a`
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border: 1px solid #99999944;
   border-radius: 50%;
   position: fixed;
@@ -90,7 +95,7 @@ const TopButton = styled.a`
 `;
 
 const TopButtonImage = styled.img`
-  padding: 10px;
+  padding: 8px;
 `;
 
 
@@ -104,13 +109,15 @@ function App() {
   }, []);
   return (
     <NewsProvider>
-    <Wrapper>
-      <GlobalStyles />
-      {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-      <TopButton href="javascript:window.scrollTo(0,0);">
-        <TopButtonImage src={TopButtonLogo} />
-      </TopButton>
-    </Wrapper>
+      <NewsViewProvider>
+        <Wrapper>
+          <GlobalStyles />
+          {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+          <TopButton href="javascript:window.scrollTo(0,0);">
+            <TopButtonImage src={TopButtonLogo} />
+          </TopButton>
+        </Wrapper>
+      </NewsViewProvider>
     </NewsProvider>
   )
 }
