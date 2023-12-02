@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.newSummary.domain.UserRole;
 import com.newSummary.domain.dto.user.JoinRequest;
 import com.newSummary.domain.dto.user.LoginRequest;
 import com.newSummary.domain.dto.user.UserDTO;
@@ -23,11 +24,11 @@ public class UserService {
 	private final BCryptPasswordEncoder encoder;
 
 	 
-	// userEmail 중복 체크 중복안되면 true return
+	// userEmail 중복 체크 중복되면 true return
 	public boolean checkUserEmailDuplicate(String userEmail) {
 		return userRepository.existsByUserEmail(userEmail);
 	}
-	// userPhone 중복 체크 중복안되면 true return
+	// userPhone 중복 체크 중복되면 true return
 	public boolean checkUserPhoneDuplicate(String userPhone) {
 		return userRepository.existsByUserPhone(userPhone);
 	}
@@ -48,6 +49,7 @@ public class UserService {
 		UserDTO userDTO = UserDTO.toUserDTO(userRepository.findByUserEmail(userEmail).get());
 		return userDTO;
 	}
+
 
 	/**
 	 * 로그인 기능 화면에서 LoginRequest(userEmail, userPw)을 입력받아 

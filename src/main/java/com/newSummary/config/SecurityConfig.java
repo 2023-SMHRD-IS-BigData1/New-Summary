@@ -41,9 +41,8 @@ public class SecurityConfig {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 프론트엔드 서버 주소
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8081"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST")); 
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173","http://localhost:8081")); // 프론트엔드 서버 주소
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST","PUT","PATCH","DELETE")); 
         configuration.setAllowCredentials(true); // 세션 사용에 필요
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -58,10 +57,10 @@ public class SecurityConfig {
 		        // 권한에 따라 허용하는 url 설정
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 						// 인증
-						.requestMatchers("/users/info").authenticated() //유저가 로그인해야만 볼 수 있는 것
-						// 인가
-						.requestMatchers("/admins/**").hasRole(UserRole.A.name()) //
-						.anyRequest().permitAll()
+//						.requestMatchers("/users/info").authenticated() //유저가 로그인해야만 볼 수 있는 것
+//						// 인가
+//						.requestMatchers("/admins/**").hasRole(UserRole.A.name()) //
+						.requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
 				)
 				// 폼방식 적용
 				.formLogin((form) -> form
