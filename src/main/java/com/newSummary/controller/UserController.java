@@ -97,16 +97,16 @@ public class UserController {
 	}
 
 	// 회원정보 수정
-//	@PatchMapping("/users/me")
-//	public ResponseEntity<UserDTO> editMypageUser(@RequestBody UserDTO userDTO){
-//		UserDTO originUserDTO = userService.findByUserEmail(userDTO.getUserEmail());
-//		if(userService.checkUserPhoneDuplicate(userDTO.getUserPhone())==false) {
-//		userService.updateUserInfo(originUserDTO)
-//		}
-//		
-//		User user = userService.getLoginUserByEmail(userDTO.getUserEmail());
-//		UserDTO UpdateuserDTO = UserDTO.toUserDTO(user);
-//		return ResponseEntity.ok(UpdateuserDTO);
-//		
-//	}
+	// @PatchMapping("/users/me")
+	// public ResponseEntity<UserDTO> editMypageUser(@RequestBody UserDTO userDTO){
+	// UserDTO originUserDTO = userService.findByUserEmail(userDTO.getUserEmail());
+	// if(userService.checkUserPhoneDuplicate(userDTO.getUserPhone())==false) {
+	// userService.updateUserInfo(originUserDTO)
+	// }
+	//
+	// User user = userService.getLoginUserByEmail(userDTO.getUserEmail());
+	// UserDTO UpdateuserDTO = UserDTO.toUserDTO(user);
+	// return ResponseEntity.ok(UpdateuserDTO);
+	//
+	// }
 }
