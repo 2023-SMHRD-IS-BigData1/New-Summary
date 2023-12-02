@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,16 +20,16 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/users/join")
 	public ResponseEntity<?> join(@Valid @RequestBody JoinRequest joinRequest, BindingResult bindingResult) {
-
 		// 이메일 중복 체크
 		if (userService.checkUserEmailDuplicate(joinRequest.getUserEmail())) {
 			bindingResult.addError(new FieldError("joinRequest", " userEmail", "이메일이 중복됩니다."));
@@ -52,38 +53,30 @@ public class UserController {
 	}
 
 	// 이메일 중복체크
-	@GetMapping("/users/duplication-email")
-	public ResponseEntity<String> checkUserEmail(@RequestBody @Valid DuplicationEmailRequest request) {
-		if (userService.checkUserEmailDuplicate(request.getUserEmail())) {
-			return ResponseEntity.ok("이메일이 중복됩니다.다시 확인해주세요.");
+	@GetMapping("/users/duplication-email/{userEmail}")
+	public String checkUserEmail(@PathVariable("userEmail") String userEmail) {
+		if (userService.checkUserEmailDuplicate(userEmail)) {
+			log.info("userEmail={},message={}",userEmail,"이메일이 중복됩니다.다시 확인해주세요.");
+			return "이메일이 중복됩니다.다시 확인해주세요.";
 		} else {
-			return ResponseEntity.ok("이메일 사용 가능합니다.");
+			log.info("userEmail={},message={}",userEmail,"이메일 사용 가능합니다.");
+			return "이메일 사용 가능합니다.";
 		}
 
-	}
-
-	@Data
-	static class DuplicationEmailRequest {
-		@NotEmpty
-		private String userEmail;
 	}
 
 	// 전화번호 중복확인
-	@GetMapping("/users/duplication-phone")
-	public ResponseEntity<String> checkNickname(@RequestBody @Valid DuplicationPhoneRequest request) {
-		if (userService.checkUserPhoneDuplicate(request.getUserPhone())) {
-			return ResponseEntity.ok("전화번호 사용 불가합니다.다시 확인해주세요.");
+	@GetMapping("/users/duplication-phone/{userPhone}")
+	public String checkNickname(@PathVariable("userPhone") String userPhone) {
+		if (userService.checkUserPhoneDuplicate(userPhone)) {
+			log.info("userPhone={},message={}",userPhone,"전화번호가 중복됩니다.다시 확인해주세요.");
+			return "전화번호 사용 불가합니다.다시 확인해주세요.";
 		} else {
-			return ResponseEntity.ok("전화번호 사용 가능합니다.");
+			log.info("userPhone={},message={}",userPhone,"전화번호 사용가능합니다.");
+			return "전화번호 사용 가능합니다.";
 		}
-
 	}
 
-	@Data
-	static class DuplicationPhoneRequest {
-		@NotEmpty
-		private String userPhone;
-	}
 
 	// 로그인한 데이터
 	@GetMapping("/users/me")
