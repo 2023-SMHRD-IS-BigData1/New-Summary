@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled, { css, keyframes } from 'styled-components';
-import WordcloudResult from '../components/wordcloud';
 import AutoPlayCarousel from '../components/carousel';
 import ViewsCarousel from '../components/views-carousel';
-import ArrowLeft from '../assets/arrow-left-circle.svg';
-import ArrowRight from '../assets/arrow-right-circle.svg';
-import MyBarChart from '../components/bar-chart';
 import Bookmark from '../assets/bookmark.svg';
 import BookmarkOn from '../assets/bookmark-on.svg';
 import Pagination from "react-js-pagination";
-import { useNewsContext } from '../data/news-data.context';
 import LoadingScreen from './loading-screen';
-import ReactPaginate from "react-paginate";
 import ModalPortal from './portal';
 import Modal from './modal';
+import { useNewsContext, useNewsViewContext } from '../data/news-data.context';
 
 // -- Home Main news component -- //
 const Main = styled.div`
@@ -31,22 +26,24 @@ const MainHeader = styled.div`
     background-color: #ffffff;
 `;
 
-const MainCardHeader = styled.div`
+const MainDailyHeader = styled.div`
     width: 100%;
     font-size: 28px;
-    padding: 30px 200px;
+    padding: 30px 130px 0 130px;
     display: flex;
     align-items: center;
-    background-color: #E9C46A;
+    background-color: #ffffff;
 `;
+
+
 
 
 
 // -- Home Trend badge component -- //
 const MainTrendBox = styled.div`
     width: 100%;
-    padding: 30px 40px;
-    gap: 20px 40px;
+    padding: 30px 140px;
+    gap: 20px 30px;
     margin-bottom: 100px;
     display: flex;
     align-items: center;
@@ -80,8 +77,10 @@ const MainTrendBadge = styled.div`
 // -- Home Card news component -- //
 const MainCardNewsBox = styled.div`
   width: 100%;
+  height: 630px;
   padding: 30px 140px;
   gap: 40px;
+  position: relative;
   margin-bottom: 100px;
   overflow: hidden;
   display: flex;
@@ -90,6 +89,29 @@ const MainCardNewsBox = styled.div`
   flex-wrap: wrap;
   background: linear-gradient(to bottom, rgba(233,196,106,1) 0%,rgba(240,190,77,1) 50%,rgba(240,190,77,1) 100%);
   box-shadow: 5px 5px 5px 2px #99999944;
+  @media screen and (max-width: 1140px) {
+        padding-top: 120px;
+        height: 710px;
+    }
+`;
+
+const MainCardNewsArea = styled.div`
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+`;
+
+const MainCardHeader = styled.div`
+    font-size: 28px;
+    padding: 30px 200px;
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    @media screen and (max-width: 1140px) {
+        left: 30px;
+    }
 `;
 
 const MainCardNews = styled.div`
@@ -828,7 +850,7 @@ export function HomeMainNews() {
 
     return (
         <Main>
-            <MainHeader>오늘의 키워드</MainHeader>
+            <MainDailyHeader>오늘의 키워드</MainDailyHeader>
             <MainTrendBox>
                 <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
                 <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
@@ -838,8 +860,8 @@ export function HomeMainNews() {
                 <MainTrendBadge># 친일파 부당이득 반환</MainTrendBadge>
                 <MainTrendBadge># 초록낙엽</MainTrendBadge>
             </MainTrendBox>
-            <MainCardHeader>1분 카드뉴스</MainCardHeader>
             <MainCardNewsBox>
+                <MainCardHeader>1분 카드뉴스</MainCardHeader>
                 <MainCardNews isFirst={isFirst} onClick={handleCardClick}>
                     <MainCardImageBox isFirst={isFirst}>
                         <MainCardImage src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
@@ -885,19 +907,21 @@ export function HomeMainNews() {
                     <MainCardTextArea>
                         <MainCardTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainCardTitle>
                         <MainCardContent>
-                        영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.
+                            영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
             </MainCardNewsBox>
-            <MainHeader>오늘의 뉴스</MainHeader>
-            <MainNewsBox>
-                {loading ? (
-                    <LoadingScreen />
-                ) : (
-                    <AutoPlayCarousel newsData={newsData} />
-                )}
-            </MainNewsBox>
+            <MainCardNewsArea>
+                <MainHeader>오늘의 뉴스</MainHeader>
+                <MainNewsBox>
+                    {loading ? (
+                        <LoadingScreen />
+                    ) : (
+                        <AutoPlayCarousel newsData={newsData} />
+                    )}
+                </MainNewsBox>
+            </MainCardNewsArea>
             <MainHeader>사람들이 많이 본 뉴스</MainHeader>
             <MainNewsViewsBox>
                 {loading ? (
@@ -910,33 +934,34 @@ export function HomeMainNews() {
     )
 }
 
-export function HomeTrendNews() {
-    return (
-        <TrendBox>
-            <GraphHeader>
-                <GraphTextBox>
-                    <GraphTitle>오늘의 트렌드</GraphTitle>
-                    <GraphText>연예 트렌드</GraphText>
-                </GraphTextBox>
-                <GraphBtn>
-                    <ArrowButton src={ArrowLeft} />
-                    <ArrowButton src={ArrowRight} />
-                </GraphBtn>
-            </GraphHeader>
-            <GraphBox>
-                <WordCloudBox>
-                    <WordcloudResult />
-                </WordCloudBox>
-                <GraphContent>
-                    <MyBarChart />
-                </GraphContent>
-            </GraphBox>
-        </TrendBox>
-    )
-}
+// export function HomeTrendNews() {
+//     return (
+//         <TrendBox>
+//             <GraphHeader>
+//                 <GraphTextBox>
+//                     <GraphTitle>오늘의 트렌드</GraphTitle>
+//                     <GraphText>연예 트렌드</GraphText>
+//                 </GraphTextBox>
+//                 <GraphBtn>
+//                     <ArrowButton src={ArrowLeft} />
+//                     <ArrowButton src={ArrowRight} />
+//                 </GraphBtn>
+//             </GraphHeader>
+//             <GraphBox>
+//                 <WordCloudBox>
+//                     <WordcloudResult />
+//                 </WordCloudBox>
+//                 <GraphContent>
+//                     <MyBarChart />
+//                 </GraphContent>
+//             </GraphBox>
+//         </TrendBox>
+//     )
+// }
 
 export function CategoryNewsComponent() {
     const { newsData, loading } = useNewsContext();
+    const { newsViewData, viewLoading } = useNewsViewContext();
     const [page, setPage] = useState(1);
     const [items, setItems] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
@@ -1013,10 +1038,28 @@ export function CategoryNewsComponent() {
     // 나머지 데이터
     const otherItems = filterCategoryItem.slice(6);
 
-    const handleModal = (item) => {
+    const handleModal = async (item) => {
         setSelectedItem(item);
         setModalOn(!modalOn);
+
+        try {
+            // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+            const response = await axios.get(`/api/news/detail/${item.id}`);
+
+            // useNewsViewContext 훅을 함수 컴포넌트 내에서 호출
+            const { setNewsData } = useNewsViewContext();
+
+            // 훅을 호출하는 함수를 useEffect 내에서 실행
+            useEffect(() => {
+                setNewsData(response.data);
+                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+            }, [response.data, setNewsData]);
+
+        } catch (error) {
+            console.error('데이터 로드 중 오류 발생:', error);
+        }
     };
+
     console.log(items * (page - 1), items * (page - 1) + items)
 
     // 날짜 핸들링
@@ -1053,7 +1096,7 @@ export function CategoryNewsComponent() {
 
     // 가져온 데이터를 사용하여 UI를 렌더링  
     const CategoryNewsItems = restItems.map((item, index) => (
-        <BottomListItem key={index} onClick={() => handleModal(item)}>
+        <BottomListItem key={item.id} onClick={() => handleModal(item)}>
             <NewsHeaderItem>
                 <NewsMediaText>{item.press}</NewsMediaText>
                 <NewsDateText>{item.articleWriteTime}</NewsDateText>
@@ -1063,7 +1106,7 @@ export function CategoryNewsComponent() {
     ));
 
     const CategoryNewsMainItems = firstItem.map((item, index) => (
-        <CategoryNewsMain key={index} onClick={() => handleModal(item)}>
+        <CategoryNewsMain key={item.id} onClick={() => handleModal(item)}>
             <SubNewsImageBox>
                 <SubNewsImage src={item.picture} />
             </SubNewsImageBox>
@@ -1078,7 +1121,7 @@ export function CategoryNewsComponent() {
     ));
 
     const CategoryNewsOtherItems = otherItems.map((item, index) => (
-        <CategoryNewsBox className='CategoryNewsBox' key={index} onClick={() => handleModal(item)}>
+        <CategoryNewsBox className='CategoryNewsBox' key={item.id} onClick={() => handleModal(item)}>
             <CategoryNewsContentBox key={index}>
                 <CategoryNewsDateBox>
                     <CategoryNewsMedia>{item.press}</CategoryNewsMedia>
@@ -1155,6 +1198,7 @@ export function CategoryNewsComponent() {
 
 export function SearchNewsComponent() {
     const { newsData, loading } = useNewsContext();
+    const { newsViewData, viewLoading } = useNewsViewContext();
     const [page, setPage] = useState(1);
     const [items, setItems] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
@@ -1237,16 +1281,33 @@ export function SearchNewsComponent() {
 
     const filteredSearchItems = searchList();
 
-    const handleModal = (item) => {
+    const handleModal = async (item) => {
         setSelectedItem(item);
         setModalOn(!modalOn);
+
+        try {
+            // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+            const response = await axios.get(`/api/news/detail/${item.id}`);
+
+            // useNewsViewContext 훅을 함수 컴포넌트 내에서 호출
+            const { setNewsData } = useNewsViewContext();
+
+            // 훅을 호출하는 함수를 useEffect 내에서 실행
+            useEffect(() => {
+                setNewsData(response.data);
+                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+            }, [response.data, setNewsData]);
+
+        } catch (error) {
+            console.error('데이터 로드 중 오류 발생:', error);
+        }
     };
 
 
     console.log(newsData * (page - 1), newsData * (page - 1) + newsData)
     // 가져온 데이터를 사용하여 UI를 렌더링  
     const SearchNewsItems = filteredSearchItems.map((item, index) => (
-        <SearchNewsBox className='SearchNewsBox' key={index} onClick={() => handleModal(item)}>
+        <SearchNewsBox className='SearchNewsBox' key={item.id} onClick={() => handleModal(item)}>
             <SearchNewsContentBox>
                 <SearchNewsDateBox>
                     <SearchNewsMedia>{item.press}</SearchNewsMedia>
