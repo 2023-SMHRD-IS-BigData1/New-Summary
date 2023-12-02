@@ -34,61 +34,60 @@ public class SecurityConfig {
 	private final PrincipalOauth2UserService principalOauth2UserService;
 
 	@Bean
-	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)throws Exception{
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
 		// AuthenticationManager - 얘가 인증을 관리함
 		return authenticationConfiguration.getAuthenticationManager();
 	}
-	@Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173","http://localhost:8081")); // 프론트엔드 서버 주소
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST","PUT","PATCH","DELETE")); 
-        configuration.setAllowCredentials(true); // 세션 사용에 필요
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8081")); // 프론트엔드 서버 주소
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+		configuration.setAllowCredentials(true); // 세션 사용에 필요
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-		        .csrf(AbstractHttpConfigurer::disable)
-		        .cors(cors -> cors.configurationSource(corsConfigurationSource())) //리액트 연결을 위한 것
-		        // 권한에 따라 허용하는 url 설정
+				.csrf(AbstractHttpConfigurer::disable)
+				.cors(cors -> cors.configurationSource(corsConfigurationSource())) // 리액트 연결을 위한 것
+				// 권한에 따라 허용하는 url 설정
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 						// 인증
-//						.requestMatchers("/users/info").authenticated() //유저가 로그인해야만 볼 수 있는 것
-//						// 인가
-//						.requestMatchers("/admins/**").hasRole(UserRole.A.name()) //
-						.requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-				)
+						// .requestMatchers("/users/info").authenticated() //유저가 로그인해야만 볼 수 있는 것
+						// // 인가
+						// .requestMatchers("/admins/**").hasRole(UserRole.A.name()) //
+						.requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
 				// 폼방식 적용
 				.formLogin((form) -> form
 						// 로그인시 사용할 파라미터
 						.loginPage("/")
 						.loginProcessingUrl("/api/login")
 						.usernameParameter("userEmail").passwordParameter("userPw")
-//						.defaultSuccessUrl("/",true) // 로그인 성공 시 이동할 URL
-//						.failureUrl("/login?error=true") // 로그인 실패 시 이동할 URL
+						// .defaultSuccessUrl("/",true) // 로그인 성공 시 이동할 URL
+						// .failureUrl("/login?error=true") // 로그인 실패 시 이동할 URL
 						.successHandler(new CustomAuthenticationSuccessHandler())
-						.failureHandler(new CustomAuthenticationFailureHandler())
-				)
+						.failureHandler(new CustomAuthenticationFailureHandler()))
 				.logout((logout) -> logout
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 						.logoutUrl("/api/logout")
 						.logoutSuccessHandler(new CustomLogoutSuccessHandler())
-			            .invalidateHttpSession(true)
-			            .deleteCookies("JSESSIONID")
-			    )
+						.invalidateHttpSession(true)
+						.deleteCookies("JSESSIONID"))
 				.oauth2Login((oauth2) -> oauth2
-						 .loginProcessingUrl("/api/login/oauth")
-//						 .defaultSuccessUrl("/",true)
-						 .successHandler(new CustomAuthenticationSuccessHandler())
-						 .failureHandler(new CustomAuthenticationFailureHandler())
-						 .userInfoEndpoint((userInfo) -> userInfo
-								.userService(principalOauth2UserService))
-				);
-	
+						.loginProcessingUrl("/api/login/oauth")
+						// .defaultSuccessUrl("/",true)
+						.successHandler(new CustomAuthenticationSuccessHandler())
+						.failureHandler(new CustomAuthenticationFailureHandler())
+						.userInfoEndpoint((userInfo) -> userInfo
+								.userService(principalOauth2UserService)));
+
 		return http.build();
 	}
 }
