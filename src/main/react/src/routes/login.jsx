@@ -243,7 +243,7 @@ export default function Login() {
   const [data, setData] = useState('');
   const [isActive, setIsActive] = useState(false);
   const [isDuplicateEmail, setIsDuplicateEmail] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, userData, login, logout } = useAuth();
 
   // 중복 확인 함수
   const checkDuplicateEmail = async () => {
@@ -295,10 +295,17 @@ export default function Login() {
     axios.post('/api/api/login', loginFormData)
       .then(response => {
         console.log('로그인 응답 받음:', response.data);
-        // 서버로부터 받은 토큰을 localStorage에 저장
-        // window.localStorage.setItem('accessToken', JSON.stringify(response.data));
-        // 로그인 상태를 true로 업데이트
         setIsLoggedIn(true);
+        console.log("유저 로그인 성공");
+        // 로그인 성공 후 유저 정보를 가져오는 요청
+        axios.get('/api/users/me')
+          .then(userResponse => {
+            console.log('유저 정보 응답 받음:', userResponse.data);
+            sessionStorage.setItem('userData', JSON.stringify(userResponse.data));
+          })
+          .catch(userError => {
+            console.error('유저 정보 요청 에러 발생:', userError);
+          });
         navigate('/');
       })
       .catch(error => {
@@ -308,11 +315,8 @@ export default function Login() {
 
   // 로그아웃을 처리하는 함수
   const handleLogout = () => {
-    // localStorage에서 토큰을 제거
     localStorage.removeItem('accessToken');
-    // 로그아웃 후의 작업 수행
     console.log('로그아웃 성공!');
-    // 다른 리다이렉션 또는 상태 업데이트 등을 수행할 수 있습니다.
   };
 
   // 회원가입 폼을 제출할 때 실행되는 함수
