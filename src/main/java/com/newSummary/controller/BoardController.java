@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.newSummary.domain.dto.board.BoardRequestDTO;
 import com.newSummary.domain.dto.board.BoardResponseDTO;
 import com.newSummary.domain.dto.board.BoardSuccessDTO;
+import com.newSummary.domain.entity.Board;
 import com.newSummary.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class BoardController {
 	
 	// 게시글 상세 보기
 	@GetMapping("/detail/{bdIdx}")
-	public BoardResponseDTO boardDetail(@PathVariable("bdIdx") Long bdIdx) {
+	public Board boardDetail(@PathVariable("bdIdx") Long bdIdx) {
 		return boardService.boardDetail(bdIdx);
 	}
 	
