@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Id;
 import lombok.Getter;
@@ -18,14 +19,10 @@ public class Keyword {
 	private String id;
 	
 	@Field("keywords")
-	private KeywordsData keywordsData;
+	private Map<String, Integer> keywordsData;
 	
 	@Field("created_at")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private String keywordWriteTime;
 	
-    @Getter
-    @NoArgsConstructor
-    public class KeywordsData {
-    	private Map<String, Integer> keywords;
-    }
 }

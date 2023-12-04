@@ -49,5 +49,8 @@ public class NewsDTO {
 	private Long viewCount;
 	// 요약본
 	private String summary;
+	// 키워드
+	private String keyword;
+	
 
 }

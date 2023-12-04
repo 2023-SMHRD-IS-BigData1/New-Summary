@@ -3,8 +3,13 @@ package com.newSummary.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.newSummary.domain.dto.board.BoardRequestDTO;
+import com.newSummary.domain.dto.bookmark.BookmarkRequestDTO;
+import com.newSummary.domain.dto.bookmark.BookmarkResponseDTO;
+import com.newSummary.domain.entity.Bookmark;
 import com.newSummary.repository.BookmarkRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -14,23 +19,12 @@ public class BookmarkService {
 	@Autowired 
 	BookmarkRepository bookmarkRepository;
 	
-
-//	public class UserMapper {
-//
-//	    public static User convertDtoToEntity(UserDTO userDTO) {
-//	        User user = new User();
-//	    	
-//	        BeanUtils.copyProperties(userDTO, user);
-//	        return user;
-//	    }
-//	}
-//	public void createBookmark(String newsObjectId, UserDTO userDTO) {
-//		User user = UserMapper.convertDtoToEntity(userDTO);
-//		Bookmark b = Bookmark.builder()
-//				.newsObjectId(newsObjectId)
-//				.user(user)
-//				.build();
-//		bookmarkRepository.save(b);
-//	}
+	// 북마크 생성
+	@Transactional
+	public BookmarkResponseDTO createBookmark(BookmarkRequestDTO bookmarkRequestDTO) {
+		Bookmark bookmark = new Bookmark(bookmarkRequestDTO);
+		bookmarkRepository.save(bookmark);
+		return new BookmarkResponseDTO(bookmark);
+	}
 
 }
