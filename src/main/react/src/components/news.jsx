@@ -14,7 +14,6 @@ import { useNewsContext, useNewsViewContext } from '../data/news-data.context';
 // -- Home Main news component -- //
 const Main = styled.div`
   width: 100%;
-  padding: 0px 0 150px 0;
 `;
 
 const MainHeader = styled.div`
@@ -44,7 +43,7 @@ const MainTrendBox = styled.div`
     width: 100%;
     padding: 30px 140px;
     gap: 20px 30px;
-    margin-bottom: 100px;
+    /* margin-bottom: 100px; */
     display: flex;
     align-items: center;
     position: relative;
@@ -142,6 +141,10 @@ const MainCardImage = styled.img`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  &:hover{
+    transition: .5s;
+    height: 110%;
+  }
   `;
 
 const MainCardKey = styled.div`
@@ -341,7 +344,6 @@ const MainBoxBottom = styled.div`
   flex-direction: row;
   background-color: #ffffff;
   border: 1px solid #99999944;
-  box-shadow: 5px 5px 5px 2px #99999944;
 `;
 
 const MainBoxCategory = styled.div`
@@ -895,7 +897,7 @@ export function HomeMainNews() {
                     <MainCardTextArea>
                         <MainCardTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainCardTitle>
                         <MainCardContent>
-                            뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.
+                        12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
