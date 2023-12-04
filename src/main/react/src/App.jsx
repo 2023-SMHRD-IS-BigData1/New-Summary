@@ -11,6 +11,7 @@ import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
 import { NewsProvider, NewsViewProvider } from './data/news-data.context';
 import { AuthProvider } from './data/user-login';
+import { BoardProvider, BoardViewProvider } from './data/board-data';
 import TopButtonLogo from '../src/assets/top-logo.svg'
 import BoardWrite from './routes/board-write';
 
@@ -105,20 +106,30 @@ function App() {
   const init = () => {
     setLoading(false);
   }
+
   useEffect(() => {
     init();
   }, []);
+
+  const handlePage = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <NewsProvider>
       <NewsViewProvider>
         <AuthProvider>
-          <Wrapper>
-            <GlobalStyles />
-            {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-            <TopButton href="javascript:window.scrollTo(0,0);">
-              <TopButtonImage src={TopButtonLogo} />
-            </TopButton>
-          </Wrapper>
+          <BoardProvider>
+            <BoardViewProvider>
+            <Wrapper>
+              <GlobalStyles />
+              {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+              <TopButton onClick={handlePage}>
+                <TopButtonImage src={TopButtonLogo} />
+              </TopButton>
+            </Wrapper>
+            </BoardViewProvider>
+          </BoardProvider>
         </AuthProvider>
       </NewsViewProvider>
     </NewsProvider>

@@ -16,7 +16,11 @@ export const NewsProvider = ({ children }) => {
       try {
         const response = await axios.get('/api/news/list');
         setNewsData(response.data);
-        console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+        const filteredData = response.data.filter(item => 
+          item.picture !== null && item.picture !== "" && 
+          item.articleContent !== null && item.articleContent !== ""
+        );
+        console.log('데이터가 성공적으로 로드되었습니다:', filteredData);
       } catch (error) {
         console.error('데이터 로드 중 오류 발생:', error);
       } finally {
@@ -66,5 +70,5 @@ export const useNewsContext = () => {
 };
 
 export const useNewsViewContext = () => {
-  return useContext(NewsContext);
+  return useContext(NewsViewContext);
 };

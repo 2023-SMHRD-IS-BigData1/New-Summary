@@ -243,24 +243,38 @@ export default function Login() {
   const [data, setData] = useState('');
   const [isActive, setIsActive] = useState(false);
   const [isDuplicateEmail, setIsDuplicateEmail] = useState(false);
+  const [isDuplicatePhone, setIsDuplicatePhone] = useState(false);
   const { isLoggedIn, setIsLoggedIn, userData, login, logout } = useAuth();
 
   // 중복 확인 함수
   const checkDuplicateEmail = async () => {
     const email = signupFormData.userEmail;
-
-    const url = `/api/users/duplication-email?email=${email}`;
-
+    const url = `/api/users/duplication-email/${email}`;
     try {
       const response = await axios.get(url);
-
-      // 서버 응답 처리
       if (response.data.isDuplicate) {
-        // 중복된 이메일인 경우
         setIsDuplicateEmail(true);
+        console.log("이메일 중복");
       } else {
-        // 중복되지 않은 이메일인 경우
         setIsDuplicateEmail(false);
+        console.log("사용가능한 이메일")
+      }
+    } catch (error) {
+      console.error('중복 확인 에러:', error);
+    }
+  };
+
+  const checkDuplicatePhone = async () => {
+    const phone = signupFormData.userPhone;
+    const url = `/api/users/duplication-phone/${phone}`;
+    try {
+      const response = await axios.get(url);
+      if (response.data.isDuplicate) {
+        setIsDuplicatePhone(true);
+        console.log("핸드폰번호 중복");
+      } else {
+        setIsDuplicatePhone(false);
+        console.log("사용가능한 핸드폰번호")
       }
     } catch (error) {
       console.error('중복 확인 에러:', error);
@@ -292,13 +306,13 @@ export default function Login() {
   const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('/api/api/login', loginFormData)
+    axios.post('/api/api/login', loginFormData, { withCredentials: true })
       .then(response => {
         console.log('로그인 응답 받음:', response.data);
         setIsLoggedIn(true);
         console.log("유저 로그인 성공");
         // 로그인 성공 후 유저 정보를 가져오는 요청
-        axios.get('/api/users/me')
+        axios.get('/api/users/me', { withCredentials: true })
           .then(userResponse => {
             console.log('유저 정보 응답 받음:', userResponse.data);
             sessionStorage.setItem('userData', JSON.stringify(userResponse.data));
@@ -384,6 +398,8 @@ export default function Login() {
                 id="userPhone"
                 value={signupFormData.userPhone}
                 onChange={(e) => setSignupFormData({ ...signupFormData, userPhone: e.target.value })}
+                onBlur={checkDuplicatePhone} //focus가 해제될 때 중복 확인
+                isDuplicate={isDuplicatePhone} // 추가: 중복 여부에 따라 스타일을 변경하기 위한 속성
               />
               <SubmitBox>
                 <SubmitButton type="submit" value="Sign Up" />
