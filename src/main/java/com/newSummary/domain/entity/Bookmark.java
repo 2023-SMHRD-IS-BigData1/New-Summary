@@ -1,5 +1,8 @@
 package com.newSummary.domain.entity;
 
+
+import com.newSummary.domain.dto.bookmark.BookmarkRequestDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,7 +25,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "tb_bookmark")
 public class Bookmark {
-    @Id
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookmarkIdx;
 
@@ -32,5 +36,12 @@ public class Bookmark {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_email")
     private User user;
+    
+
+    public Bookmark(BookmarkRequestDTO bookmarkRequestDTO) {
+        this.newsObjectId = bookmarkRequestDTO.getNewsObjectId();
+        this.user = bookmarkRequestDTO.getUser();
+    }
+
 }
 
