@@ -21,6 +21,7 @@
     "d3-cloud": "^1.2.7",
     "faker": "^6.6.6",
     "faker-js": "^1.0.0",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",

@@ -3,10 +3,16 @@ import Masonry from '@mui/lab/Masonry';
 import styled from "styled-components"
 import Like from "../assets/heart-icon.svg"
 import Comment from "../assets/comment-icon.svg"
+import ViewsLogo from "../assets/views.svg"
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Pagination from 'react-js-pagination';
 import { Link } from 'react-router-dom';
+import { useBoardContext, useBoardViewContext } from '../data/board-data';
+import LoadingScreen from './loading-screen';
+import { BoardModalPortal } from './portal';
+import { BoardModal } from './modal';
+import moment from 'moment';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -84,6 +90,12 @@ const Comments = styled.img`
 `;
 
 const Likes = styled.img`
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
+`;
+
+const Views = styled.img`
     width: 25px;
     height: 25px;
     margin-left: 20px;
@@ -169,24 +181,28 @@ const PaginationBox = styled.div`
 
 
 export function BoardSNS() {
-    const [columns, setColumns] = React.useState(3);
+    const { boardData, loading } = useBoardContext();
+    const { boardViewData, loadingViews } = useBoardViewContext();
+    const [columns, setColumns] = useState(3);
     const [page, setPage] = useState(1);
     const [items, setItems] = useState(20);
+    const [modalOn, setModalOn] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
+    const [selectedItem, setSelectedItem] = useState(null);
 
-    const data = [600, 300, 600, 900, 600, 600, 600, 300, 600, 900, 600, 600];
-    const imageUrl = [
-        "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
-        undefined,
-        "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
-        "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
-        "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
-        "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
-        undefined,
-        "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
-        "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
-        "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
-    ]
+    // const data = [600, 300, 600, 900, 600, 600, 600, 300, 600, 900, 600, 600];
+    // const imageUrl = [
+    //     "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
+    //     undefined,
+    //     "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
+    //     "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
+    //     "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
+    //     "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
+    //     undefined,
+    //     "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
+    //     "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
+    //     "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
+    // ]
 
 
 
@@ -197,9 +213,9 @@ export function BoardSNS() {
         };
 
         const handleImageLoad = (index, height) => {
-            const newData = [...data];
-            newData[index] = 300 + height;
-            setData(newData);
+            const boardData = [...data];
+            boardData[index] = 300 + height;
+            setData(boardData);
         };
 
         handleResize();
@@ -213,6 +229,7 @@ export function BoardSNS() {
 
     // 페이징 코드
     const handlePageChange = (page) => {
+        window.scrollTo({ top: 0 });
         setPage(page);
     };
 
@@ -225,13 +242,68 @@ export function BoardSNS() {
     const startIndex = (page - 1) * items;
     const endIndex = startIndex + items;
     // data에 게시판 데이터 넣기
-    const paginatedData = data.slice(startIndex, endIndex);
+    const paginatedData = boardData.slice(startIndex, endIndex);
 
     const searchList = () => {
         return paginatedData.filter((itemData) =>
             itemData.title.toUpperCase().includes(searchTerm.toUpperCase())
         );
     };
+
+    const handleModal = async (item) => {
+        setSelectedItem(item);
+        setModalOn(!modalOn);
+
+        // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+        try {
+            const response = await axios.get(`/api/board/detail/${bdIdx}`);
+            useEffect(() => {
+                setNewsData(response.data);
+                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+            }, [response.data, setNewsData]);
+
+        } catch (error) {
+            console.error('데이터 로드 중 오류 발생:', error);
+        }
+    };
+
+    // 가져온 데이터를 사용하여 UI를 렌더링
+    const boardItems = boardData && boardData.map((item, index) => {
+        // ISO 8601 형식의 날짜를 JavaScript Date 객체로 변환
+        const createdAtDate = new Date(item.createdAt);
+
+        // 원하는 날짜 포맷으로 변환 (YYYY-MM-DD HH:mm:ss)
+        const formattedDate = `${createdAtDate.getFullYear()}-${(createdAtDate.getMonth() + 1).toString().padStart(2, '0')}-${createdAtDate.getDate().toString().padStart(2, '0')} ${createdAtDate.getHours().toString().padStart(2, '0')}:${createdAtDate.getMinutes().toString().padStart(2, '0')}:${createdAtDate.getSeconds().toString().padStart(2, '0')}`;
+
+        return (
+            <>
+                <Item key={item.id} style={{ height: `auto` }} onClick={() => handleModal(item)}>
+                    {/* 이미지 추가시 들어갈 코드 */}
+                    {/* {imageUrl[item.id] && <ItemImage src={imageUrl[item.id]} />} */}
+                    <ItemTextBox>
+                        <TextDate>{formattedDate}</TextDate>
+                        <TextContent>{item.bdContent}</TextContent>
+                        <TextUrl>{item.bdUrl}</TextUrl>
+                        <LikeBox>
+                            {/* 댓글추가시 댓글 카운트해서 넣을것 */}
+                            <Comments src={Comment} /> 10
+                            <Likes src={Like} /> {item.bdLikes}
+                            <Views src={ViewsLogo} /> {item.bdViews}
+                        </LikeBox>
+                        <UserBox>
+                            {/*  유저 프로필사진 들어가기 */}
+                            <UserBoxImage></UserBoxImage>
+                            {/* 유저이름 출력 / 아직 시큐리티 적용안되서 null 받는중 */}
+                            <UserBoxName>{item.user}</UserBoxName>
+                        </UserBox>
+                    </ItemTextBox>
+                </Item>
+                <BoardModalPortal>
+                    {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+                </BoardModalPortal>
+            </>
+        );
+    });
 
 
     return (
@@ -243,7 +315,13 @@ export function BoardSNS() {
                 defaultColumns={1}
                 defaultSpacing={2}
             >
-                {data.map((data, index) => (
+                {loading ? (
+                    <LoadingScreen />
+                ) : (
+                    boardItems
+                )}
+                {/* 테스트 데이터 출력용 */}
+                {/* {data.map((data, index) => (
                     <Item key={index} style={{ height: `auto` }}>
                         {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
                         <ItemTextBox>
@@ -262,10 +340,10 @@ export function BoardSNS() {
                             </UserBox>
                         </ItemTextBox>
                     </Item>
-                ))}
+                ))} */}
             </Masonry>
             <BoardWriteBox>
-                <Link  to="/board-write" style={{ textDecoration: "none", color: "black" }}>
+                <Link to="/board-write" style={{ textDecoration: "none", color: "black" }}>
                     <BoardWriteButton>글쓰기</BoardWriteButton>
                 </Link>
             </BoardWriteBox>
@@ -273,7 +351,7 @@ export function BoardSNS() {
                 <Pagination
                     activePage={page}
                     itemsCountPerPage={items}
-                    totalItemsCount={data.length - 6}
+                    totalItemsCount={boardData.length}
                     pageRangeDisplayed={5}
                     onChange={handlePageChange}>
                 </Pagination>
@@ -283,17 +361,26 @@ export function BoardSNS() {
 }
 
 export function BoardMain() {
-    const [columns, setColumns] = React.useState(3);
-    React.useEffect(() => {
+    const { boardData, loading } = useBoardContext();
+    const { boardViewData, loadingViews } = useBoardViewContext();
+    const [columns, setColumns] = useState(3);
+    const [page, setPage] = useState(1);
+    const [items, setItems] = useState(20);
+    const [modalOn, setModalOn] = useState(false);
+    const [totalPages, setTotalPages] = useState(1);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    // 반응형으로 사이즈 조절
+    useEffect(() => {
         const handleResize = () => {
             const newColumns = window.innerWidth <= 700 ? 1 : window.innerWidth <= 1100 ? 2 : 3;
             setColumns(newColumns);
         };
 
         const handleImageLoad = (index, height) => {
-            const newData = [...data];
-            newData[index] = 300 + height;
-            setData(newData);
+            const boardData = [...data];
+            boardData[index] = 300 + height;
+            setData(boardData);
         };
 
         handleResize();
@@ -305,25 +392,84 @@ export function BoardMain() {
         };
     }, []);
 
-    const heights = [600, 300, 600, 900, 600, 600];
-    const imageUrl = [
-        "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
-        undefined,
-        "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
-        "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
-        "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
-        "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
-    ]
+    const handleModal = async (item) => {
+        setSelectedItem(item);
+        setModalOn(!modalOn);
+
+        // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+        try {
+            const response = await axios.get(`/api/news/detail/${item.id}`);
+            const { setBoardViewData } = useBoardViewContext();
+            useEffect(() => {
+                setNewsData(response.data);
+                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+            }, [response.data, setNewsData]);
+
+        } catch (error) {
+            console.error('데이터 로드 중 오류 발생:', error);
+        }
+    };
+
+    // 가져온 데이터를 사용하여 UI를 렌더링
+    const boardMainItems = boardData && boardData.map((item, index) => {
+        // Moment.js를 사용하여 날짜 포맷 변경
+        const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
+        return (
+            <>
+                <Item key={item.id} style={{ height: `auto` }} onClick={() => handleModal(item)}>
+                    {/* 이미지 추가시 들어갈 코드 */}
+                    {/* {imageUrl[item.id] && <ItemImage src={imageUrl[item.id]} />} */}
+                    <ItemTextBox>
+                        <TextDate>{formattedDate}</TextDate>
+                        <TextContent>{item.bdContent}</TextContent>
+                        <TextUrl>{item.bdUrl}</TextUrl>
+                        <LikeBox>
+                            {/* 댓글추가시 댓글 카운트해서 넣을것 */}
+                            <Comments src={Comment} /> 10
+                            <Likes src={Like} /> {item.bdLikes}
+                            <Views src={ViewsLogo} /> {item.bdViews}
+                        </LikeBox>
+                        <UserBox>
+                            {/*  유저 프로필사진 들어가기 */}
+                            <UserBoxImage></UserBoxImage>
+                            {/* 유저이름 출력 / 아직 시큐리티 적용안되서 null 받는중 */}
+                            <UserBoxName>{item.user}</UserBoxName>
+                        </UserBox>
+                    </ItemTextBox>
+                </Item>
+                <BoardModalPortal>
+                    {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+                </BoardModalPortal>
+            </>
+        );
+    });
+
+    // const heights = [600, 300, 600, 900, 600, 600];
+    // const imageUrl = [
+    //     "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
+    //     undefined,
+    //     "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
+    //     "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
+    //     "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
+    //     "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
+    // ]
 
     return (
-        <Masonry
-            columns={columns}
-            spacing={2}
-            defaultHeight={300}
-            defaultColumns={1}
-            defaultSpacing={2}
-        >
-            {heights.map((height, index) => (
+        <>
+            <Masonry
+                columns={columns}
+                spacing={2}
+                defaultHeight={300}
+                defaultColumns={1}
+                defaultSpacing={2}
+            >
+                {loading ? (
+                    <LoadingScreen />
+                ) : (
+                    boardMainItems
+                )}
+                {/* 테스트용 데이터 */}
+                {/* {heights.map((height, index) => (
                 <Item key={index} style={{ height: `${height}px` }}>
                     {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
                     <ItemTextBox>
@@ -342,7 +488,11 @@ export function BoardMain() {
                         </UserBox>
                     </ItemTextBox>
                 </Item>
-            ))}
-        </Masonry>
+            ))} */}
+            </Masonry>
+            <BoardModalPortal>
+                {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+            </BoardModalPortal>
+        </>
     )
 }

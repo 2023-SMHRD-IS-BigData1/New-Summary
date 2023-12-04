@@ -120,7 +120,6 @@ const MenuItem = styled.div`
 `;
 
 
-
 export default function Header({ ...props }) {
     const location = useLocation();
 
@@ -130,6 +129,13 @@ export default function Header({ ...props }) {
     const curruntURL = location.pathname;
     const storedData = localStorage.getItem('accessToken');
     console.log('Stored Data:', storedData);
+
+    
+      // 로그아웃을 처리하는 함수
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    console.log('로그아웃 성공!');
+  };
 
 
     return (
@@ -141,6 +147,9 @@ export default function Header({ ...props }) {
                 <LoginBox>
                     <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
                         <UserButton>로그인 {storedData}</UserButton>
+                    </Link>
+                    <Link to="/" onClick={handleLogout()} style={{ textDecoration: "none", color: "black" }}>
+                        <UserButton>로그아웃 {storedData}</UserButton>
                     </Link>
                     {/* <a href="https://kauth.kakao.com/oauth/logout?client_id=a5336752ae75dfa19b52019c374a13c6&logout_redirect_uri=http://localhost:8081/member/do">
                         <UserButton>카카오로그아웃</UserButton>

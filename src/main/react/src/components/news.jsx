@@ -115,7 +115,7 @@ const MainCardHeader = styled.div`
 `;
 
 const MainCardNews = styled.div`
-   width: ${(props) => (props.isFirst ? '440px' : '360px')};
+   width: ${(props) => (props.isFirst ? '440px' : '320px')};
    height: ${(props) => (props.isFirst ? '560px' : '440px')};
   perspective: 1100px;
   display: flex;
@@ -127,7 +127,7 @@ const MainCardNews = styled.div`
   `;
 
 const MainCardImageBox = styled.div`
-   width: ${(props) => (props.isFirst ? '440px' : '360px')};
+   width: ${(props) => (props.isFirst ? '440px' : '320px')};
    height: ${(props) => (props.isFirst ? '560px' : '440px')};
    border: 1px solid #999999;
   border-radius: 30px;
@@ -161,7 +161,7 @@ const MainCardKey = styled.div`
 
 
 const MainCardTextArea = styled.div`
-   width: ${(props) => (props.isFirst ? '440px' : '360px')};
+   width: ${(props) => (props.isFirst ? '440px' : '320px')};
   height: ${(props) => (props.isFirst ? '560px' : '440px')};
   border: 1px solid #999999;
   border-radius: 30px;
@@ -934,31 +934,6 @@ export function HomeMainNews() {
     )
 }
 
-// export function HomeTrendNews() {
-//     return (
-//         <TrendBox>
-//             <GraphHeader>
-//                 <GraphTextBox>
-//                     <GraphTitle>오늘의 트렌드</GraphTitle>
-//                     <GraphText>연예 트렌드</GraphText>
-//                 </GraphTextBox>
-//                 <GraphBtn>
-//                     <ArrowButton src={ArrowLeft} />
-//                     <ArrowButton src={ArrowRight} />
-//                 </GraphBtn>
-//             </GraphHeader>
-//             <GraphBox>
-//                 <WordCloudBox>
-//                     <WordcloudResult />
-//                 </WordCloudBox>
-//                 <GraphContent>
-//                     <MyBarChart />
-//                 </GraphContent>
-//             </GraphBox>
-//         </TrendBox>
-//     )
-// }
-
 export function CategoryNewsComponent() {
     const { newsData, loading } = useNewsContext();
     const { newsViewData, viewLoading } = useNewsViewContext();
@@ -1007,9 +982,9 @@ export function CategoryNewsComponent() {
     // 날짜에 해당하는 데이터만 필터링
     const filteredNewsByDate = filterDataByDate(newsData, currentDate);
 
-
     // 페이징 코드
     const handlePageChange = (page) => {
+        window.scrollTo({ top: 0 });
         setPage(page);
     };
 
@@ -1236,10 +1211,12 @@ export function SearchNewsComponent() {
     const handleSearchInputChange = (e) => {
         const newSearchTerm = e.target.value;
         setSearchTerm(newSearchTerm);
+        console.log(newsData);
 
         // 검색어에 따라 전체 데이터 필터링
         const filteredResults = newsData.filter((item) =>
-            item.title.toLowerCase().includes(newSearchTerm.toLowerCase())
+            (item.articleContent && item.articleContent.toLowerCase().includes(newSearchTerm.toLowerCase())) ||
+            (item.title && item.title.toLowerCase().includes(newSearchTerm.toLowerCase()))
         );
 
         // 페이지 수 다시 계산하여 업데이트
@@ -1254,6 +1231,7 @@ export function SearchNewsComponent() {
 
     // 페이징 코드
     const handlePageChange = (page) => {
+        window.scrollTo({ top: 0 });
         setPage(page);
     };
 
@@ -1275,7 +1253,8 @@ export function SearchNewsComponent() {
 
     const searchList = () => {
         return paginatedData.filter((itemData) =>
-            itemData.title.toUpperCase().includes(searchTerm.toUpperCase())
+            (itemData.articleContent && itemData.articleContent.toUpperCase().includes(searchTerm.toUpperCase())) ||
+            (itemData.title && itemData.title.toUpperCase().includes(searchTerm.toUpperCase()))
         );
     };
 
@@ -1285,14 +1264,10 @@ export function SearchNewsComponent() {
         setSelectedItem(item);
         setModalOn(!modalOn);
 
+        // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
             const response = await axios.get(`/api/news/detail/${item.id}`);
-
-            // useNewsViewContext 훅을 함수 컴포넌트 내에서 호출
             const { setNewsData } = useNewsViewContext();
-
-            // 훅을 호출하는 함수를 useEffect 내에서 실행
             useEffect(() => {
                 setNewsData(response.data);
                 console.log('데이터가 성공적으로 로드되었습니다:', response.data);

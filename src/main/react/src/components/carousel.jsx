@@ -129,7 +129,7 @@ export default function AutoPlayCarousel() {
     // 만약 sortedNewsData가 존재하고 길이가 1 이상인 경우에만 실행
     if (newsData && newsData.length > 0) {
       // 현재 activeItemIndex를 업데이트하여 다음 항목으로 이동
-      setActiveItemIndex((prevIndex) => (prevIndex + 2) % (noOfItems - noOfCards + 1));
+      setActiveItemIndex((prevIndex) => (prevIndex + 1) % (noOfItems - noOfCards + 1));
     }
   };
 

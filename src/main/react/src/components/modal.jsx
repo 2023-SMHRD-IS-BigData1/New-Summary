@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import Close from "../assets/x-logo.svg"
+import moment from 'moment';
 
 const Background = styled.div`
   height: 100%;
@@ -48,6 +49,8 @@ const CloseButtonImage = styled.img`
   width: 100%;
 `;
 
+
+// 뉴스 컴포넌트
 const HeadBox = styled.div`
   width: 100%;
   margin-top: 20px;
@@ -124,26 +127,41 @@ const NewsUrl = styled.a`
 
 
 
+// 게시판 컴포넌트
+const BoardArea = styled.div``;
+const CommentArea = styled.div``;
+const BoardHeadBox = styled.div``;
+const BoardUserBox = styled.div``;
+const BoardDateBox = styled.div``;
+const BoardImageBox = styled.div``;
+const BoardTextBox = styled.div``;
+const BoardUrlBox = styled.div``;
+const BoardCommentBox = styled.div``;
+const BoardUserImage = styled.img``;
+const BoardUserName = styled.div``;
+const BoardImage = styled.img``;
+const BoardCommentIcon = styled.img``;
+const BoardCommentText = styled.div``;
 
 
 const Modal = ({ onClose, item }) => {
-    // 모달이 열릴 때 body에 스타일을 추가하여 스크롤을 막음
-    useEffect(() => {
-      document.body.style.overflow = "hidden";
-      return () => {
-        // 모달이 닫힐 때 body 스타일을 초기화하여 스크롤을 활성화
-        document.body.style.overflow = "visible";
-      };
-    }, []);
-
-    const handleModalClick = (e) => {
-      // 모달 내부의 클릭 이벤트일 경우 이벤트 전파 중지
-      e.stopPropagation();
+  // 모달이 열릴 때 body에 스타일을 추가하여 스크롤을 막음
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      // 모달이 닫힐 때 body 스타일을 초기화하여 스크롤을 활성화
+      document.body.style.overflow = "visible";
     };
+  }, []);
+
+  const handleModalClick = (e) => {
+    // 모달 내부의 클릭 이벤트일 경우 이벤트 전파 중지
+    e.stopPropagation();
+  };
 
   return (
-      <Background onClick={onClose}>
-        <Content onClick={handleModalClick}>
+    <Background onClick={onClose}>
+      <Content onClick={handleModalClick}>
         <CloseButton onClick={onClose}>
           <CloseButtonImage src={Close} />
         </CloseButton>
@@ -160,14 +178,80 @@ const Modal = ({ onClose, item }) => {
         <ContentBox>
           <ContentText>{item.articleContent}</ContentText>
           <NewsUrlBox>
-            기사 원문 :  
+            기사 원문 :
             <NewsUrl href={item.url} target="_blank">{item.url}</NewsUrl>
           </NewsUrlBox>
         </ContentBox>
-         </ Content>
-      </Background>
+      </ Content>
+    </Background>
   );
 };
 
 export default Modal;
 
+const BoardModal = ({ onClose, item }) => {
+  // 모달이 열릴 때 body에 스타일을 추가하여 스크롤을 막음
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      // 모달이 닫힐 때 body 스타일을 초기화하여 스크롤을 활성화
+      document.body.style.overflow = "visible";
+    };
+  }, []);
+
+  const handleModalClick = (e) => {
+    // 모달 내부의 클릭 이벤트일 경우 이벤트 전파 중지
+    e.stopPropagation();
+  };
+
+   // Moment.js를 사용하여 날짜 포맷 변경
+   const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
+
+  return (
+    <Background onClick={onClose}>
+      <Content onClick={handleModalClick}>
+        <CloseButton onClick={onClose}>
+          <CloseButtonImage src={Close} />
+        </CloseButton>
+        <BoardArea>
+          <BoardHeadBox>
+            <BoardUserBox>
+              <BoardUserImage />
+              <BoardUserName>{item.user}</BoardUserName>
+            </BoardUserBox>
+            <BoardDateBox>{formattedDate}</BoardDateBox>
+          </BoardHeadBox>
+          <BoardImageBox>
+            <BoardImage />
+          </BoardImageBox>
+          <BoardTextBox></BoardTextBox>
+          <BoardUrlBox href={item.bdUrl} target="_blank">{item.bdUrl}</BoardUrlBox>
+          <BoardCommentBox>
+            <BoardCommentIcon /><BoardCommentText></BoardCommentText>
+          </BoardCommentBox>
+        </BoardArea>
+        <CommentArea>
+          
+        </CommentArea>
+
+        <DateBox>
+          <Media>{item.user}</Media>
+          <Date>{formattedDate}</Date>
+        </DateBox>
+        {/* 이미지 추가시 작업할 영역 */}
+        {/* <ImageBox>
+          <ImageUrl src={item.picture} />
+        </ImageBox> */}
+        <ContentBox>
+          <ContentText>{item.bdContent}</ContentText>
+          <NewsUrlBox>
+            인용한 뉴스 :
+            <NewsUrl href={item.bdUrl} target="_blank">{item.bdUrl}</NewsUrl>
+          </NewsUrlBox>
+        </ContentBox>
+      </Content>
+    </Background>
+  );
+};
+
+export { BoardModal };
