@@ -252,7 +252,10 @@ export default function Login() {
     const url = `/api/users/duplication-email/${email}`;
     try {
       const response = await axios.get(url);
-      if (response.data.isDuplicate) {
+      const responseData = response.data;
+    
+      if (responseData === "이메일 중복") {
+      // if (response.data.isDuplicate) {
         setIsDuplicateEmail(true);
         console.log("이메일 중복");
       } else {
@@ -367,6 +370,11 @@ export default function Login() {
                 onBlur={checkDuplicateEmail} //focus가 해제될 때 중복 확인
                 isDuplicate={isDuplicateEmail} // 추가: 중복 여부에 따라 스타일을 변경하기 위한 속성
               />
+              {isDuplicateEmail ? (
+                <p>이미 사용 중인 이메일입니다.</p>
+              ) : (
+                <p>사용 가능한 이메일입니다.</p>
+              )}
               <InputBox
                 type="password"
                 placeholder="Create Password"
@@ -401,6 +409,11 @@ export default function Login() {
                 onBlur={checkDuplicatePhone} //focus가 해제될 때 중복 확인
                 isDuplicate={isDuplicatePhone} // 추가: 중복 여부에 따라 스타일을 변경하기 위한 속성
               />
+              {isDuplicateEmail ? (
+                <p>이미 사용 중인 번호입니다.</p>
+              ) : (
+                <p>사용 가능한 번호입니다.</p>
+              )}
               <SubmitBox>
                 <SubmitButton type="submit" value="Sign Up" />
               </SubmitBox>

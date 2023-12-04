@@ -268,12 +268,9 @@ export function BoardSNS() {
     };
 
     // 가져온 데이터를 사용하여 UI를 렌더링
-    const boardItems = boardData && boardData.map((item, index) => {
-        // ISO 8601 형식의 날짜를 JavaScript Date 객체로 변환
-        const createdAtDate = new Date(item.createdAt);
-
-        // 원하는 날짜 포맷으로 변환 (YYYY-MM-DD HH:mm:ss)
-        const formattedDate = `${createdAtDate.getFullYear()}-${(createdAtDate.getMonth() + 1).toString().padStart(2, '0')}-${createdAtDate.getDate().toString().padStart(2, '0')} ${createdAtDate.getHours().toString().padStart(2, '0')}:${createdAtDate.getMinutes().toString().padStart(2, '0')}:${createdAtDate.getSeconds().toString().padStart(2, '0')}`;
+    const boardItems = boardData  && boardData.map((item, index) => {
+        // Moment.js를 사용하여 날짜 포맷 변경
+        const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
 
         return (
             <>
@@ -444,18 +441,18 @@ export function BoardMain() {
         );
     });
 
-    // const heights = [600, 300, 600, 900, 600, 600];
-    // const imageUrl = [
-    //     "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
-    //     undefined,
-    //     "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
-    //     "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
-    //     "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
-    //     "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
-    // ]
+    const heights = [600, 300, 600, 900, 600, 600];
+    const imageUrl = [
+        "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
+        undefined,
+        "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
+        "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
+        "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
+        "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
+    ]
 
     return (
-        <>
+        <Link to="/board" style={{width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000"}}>
             <Masonry
                 columns={columns}
                 spacing={2}
@@ -463,13 +460,13 @@ export function BoardMain() {
                 defaultColumns={1}
                 defaultSpacing={2}
             >
-                {loading ? (
+                {/* {loading ? (
                     <LoadingScreen />
                 ) : (
                     boardMainItems
-                )}
+                )} */}
                 {/* 테스트용 데이터 */}
-                {/* {heights.map((height, index) => (
+                {heights.map((height, index) => (
                 <Item key={index} style={{ height: `${height}px` }}>
                     {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
                     <ItemTextBox>
@@ -488,11 +485,11 @@ export function BoardMain() {
                         </UserBox>
                     </ItemTextBox>
                 </Item>
-            ))} */}
+            ))}
             </Masonry>
             <BoardModalPortal>
                 {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
             </BoardModalPortal>
-        </>
+        </Link>
     )
 }
