@@ -10,6 +10,7 @@ import Board from './routes/board';
 import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
 import { NewsProvider, NewsViewProvider } from './data/news-data.context';
+import { AuthProvider } from './data/user-login';
 import TopButtonLogo from '../src/assets/top-logo.svg'
 import BoardWrite from './routes/board-write';
 
@@ -110,13 +111,15 @@ function App() {
   return (
     <NewsProvider>
       <NewsViewProvider>
-        <Wrapper>
-          <GlobalStyles />
-          {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-          <TopButton href="javascript:window.scrollTo(0,0);">
-            <TopButtonImage src={TopButtonLogo} />
-          </TopButton>
-        </Wrapper>
+        <AuthProvider>
+          <Wrapper>
+            <GlobalStyles />
+            {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+            <TopButton href="javascript:window.scrollTo(0,0);">
+              <TopButtonImage src={TopButtonLogo} />
+            </TopButton>
+          </Wrapper>
+        </AuthProvider>
       </NewsViewProvider>
     </NewsProvider>
   )

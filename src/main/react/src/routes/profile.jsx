@@ -80,7 +80,7 @@ const UserNickname = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px 10px 30px 25px;
+  padding: 30px 10px;
   margin-bottom: 10px;
   font-size: 24px;
   border-bottom: 1px solid #99999944;
@@ -199,26 +199,7 @@ const BookMarkImageBox = styled.img`
 `;
 
 export default function Profile() {
-  const [data, setData] = useState('');
   const [onMenu, setOnMenu] = useState('content1');
-  useEffect(() => {
-    //java에서 데이터 가져오기
-    axios.get('/api/data')
-      .then(res => setData(res.data))
-      .catch(error => {
-        if (error.response) {
-          // 서버에서 응답이 왔으나 응답 코드가 2xx가 아닌 경우
-          console.error('에러 응답:', error.response.data);
-          console.error('에러 상태 코드:', error.response.status);
-        } else if (error.request) {
-          // 요청이 서버에 도달하지 않은 경우
-          console.error('요청이 서버에 도달하지 않음:', error.request);
-        } else {
-          // 요청을 보내기 전에 발생한 에러
-          console.error('에러 설정:', error.config);
-        }
-      })
-  }, []);
 
   const handleContentClick = (contentClass) => {
     setOnMenu(contentClass);
@@ -229,7 +210,7 @@ export default function Profile() {
       <WrapperBox>
         <LeftMenu>
           <UserImage src={UserDefault} />
-          <UserNickname>UserNickname<UserInputButton src={Pencil} /></UserNickname>
+          <UserNickname>UserNickname</UserNickname>
           <LeftMenuItem onClick={() => handleContentClick('content1')}>뉴스 시청기록</LeftMenuItem>
           <LeftMenuItem onClick={() => handleContentClick('content2')}>북마크 뉴스</LeftMenuItem>
           <LeftMenuItem onClick={() => handleContentClick('content3')}>포인트 획득내역</LeftMenuItem>
