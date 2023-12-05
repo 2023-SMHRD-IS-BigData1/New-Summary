@@ -1,17 +1,18 @@
 package com.newSummary.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.newSummary.auth.PrincipalDetails;
 import com.newSummary.domain.dto.user.JoinRequest;
+import com.newSummary.domain.dto.user.LoginRequest;
 import com.newSummary.domain.dto.user.UserDTO;
 import com.newSummary.domain.entity.User;
 import com.newSummary.service.UserService;
@@ -52,59 +53,75 @@ public class UserController {
 
 	// 이메일 중복체크
 	@GetMapping("/users/duplication-email/{userEmail}")
-	public ResponseEntity<?> checkUserEmail(@PathVariable("userEmail") String userEmail) {
-		if (userService.checkUserEmailDuplicate(userEmail)) {
-			log.info("userEmail={},message={}",userEmail,"이메일이 중복됩니다.다시 확인해주세요.");
-			return  ResponseEntity.ok("이메일 중복");
+	public Boolean checkUserEmail(@PathVariable("userEmail") String userEmail) {
+		if (userService.checkUserEmailDuplicate(userEmail) == true) {
+			log.info("userEmail={},message={}", userEmail, "이메일이 중복됩니다.다시 확인해주세요.");
+			return true;
 		} else {
-			log.info("userEmail={},message={}",userEmail,"이메일 사용 가능합니다.");
-			return  ResponseEntity.ok("이메일 사용가능");
+			log.info("userEmail={},message={}", userEmail, "이메일 사용 가능합니다.");
+			return false;
 		}
 
 	}
 
 	// 전화번호 중복확인
 	@GetMapping("/users/duplication-phone/{userPhone}")
-	public ResponseEntity<?> checkNickname(@PathVariable("userPhone") String userPhone) {
-		if (userService.checkUserPhoneDuplicate(userPhone)) {
-			log.info("userPhone={},message={}",userPhone,"전화번호가 중복됩니다.다시 확인해주세요.");
-			return  ResponseEntity.ok("전화번호정보 중복");
+	public Boolean checkNickname(@PathVariable("userPhone") String userPhone) {
+		if (userService.checkUserPhoneDuplicate(userPhone) == true) {
+			log.info("userPhone={},message={}", userPhone, "전화번호가 중복됩니다.다시 확인해주세요.");
+			return true;
 		} else {
-			log.info("userPhone={},message={}",userPhone,"전화번호 사용가능합니다.");
-			return ResponseEntity.ok("전화번호 사용가능");
+			log.info("userPhone={},message={}", userPhone, "전화번호 사용가능합니다.");
+			return false;
 		}
 	}
 
-
-	// 로그인한 데이터
-	@GetMapping("/users/me")
-	public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal PrincipalDetails principalDetails ) {
-		if (principalDetails == null) {
-			return ResponseEntity.badRequest().body(null);
+	// 로그인 요청
+	@PostMapping("/users/login")
+	public UserDTO login(@Valid @RequestBody LoginRequest req) {
+		User user = userService.login(req);
+		if (user == null) {
+			log.info("login: 실패");
+			return null;
 		}
-		User user = userService.getLoginUserByEmail(principalDetails.getUsername());
 		UserDTO userDTO = UserDTO.toUserDTO(user);
-		return ResponseEntity.ok(userDTO);
+		log.info("login: 성공");
+		return userDTO;
+	}
+
+	// 회원 정보 요청
+	@GetMapping("/users/{userEmail}")
+	public UserDTO userInfo(@PathVariable("userEmail") String userEmail) {
+		UserDTO userDTO = userService.findByUserEmail(userEmail);
+		return userDTO;
 	}
 
 	// 회원정보 수정
-//	 @PatchMapping("/users/{userEmail}")
-//	 public ResponseEntity<UserDTO> editMypageUser(@PathVariable("userEmail") String userEmail,
-//			 									   @RequestBody UserDTO userDTO){
-//	 UserDTO originUserDTO = userService.findByUserEmail(userDTO.getUserEmail());
-//	 if(userService.checkUserPhoneDuplicate(userDTO.getUserPhone())==false) {
-//	 userService.updateUserInfo(originUserDTO);
-//	 }
-//	
-//	 User user = userService.getLoginUserByEmail(userDTO.getUserEmail());
-//	 UserDTO UpdateuserDTO = UserDTO.toUserDTO(user);
-//	 return ResponseEntity.ok(UpdateuserDTO);
-//	
-//	 }
-//	 // 회원 정보 삭제
-//	 @DeleteMapping("/users/{userEmail}")
-//	 public String deleteUser (@PathVariable("userEmail") String userEmail) {
-//		 
-//	 }
-	
+	@PatchMapping("/users/{userEmail}")
+	public UserDTO editMypageUser(@PathVariable("userEmail") String userEmail,
+								  @RequestBody UserDTO userDTO) {
+		if (userService.checkUserPhoneDuplicate(userDTO.getUserPhone()) == false) {
+			log.info("userUpdate : userEmail={}, message={} ", userEmail,"회원정보 update 성공");
+			UserDTO originUserDTO = userService.findByUserEmail(userEmail);
+			userService.updateUserInfo(originUserDTO, userDTO);
+
+			User user = userService.getLoginUserByEmail(userDTO.getUserEmail());
+			UserDTO UpdateuserDTO = UserDTO.toUserDTO(user);
+			return UpdateuserDTO;
+		} else {
+			log.info("userUpdate : userEmail={}, message={} ", userEmail,"회원정보 update 실패");
+			return null;
+		}
+
+	}
+
+	// 회원 정보 삭제
+	@DeleteMapping("/users/{userEmail}")
+	public void deleteUser(@PathVariable("userEmail") String userEmail) {
+		log.info("delete : userEmail={}, message={}", userEmail,"삭제 성공");
+		userService.userDelete(userEmail);
+	}
+
+	// 회원 프로필 업로드
+
 }

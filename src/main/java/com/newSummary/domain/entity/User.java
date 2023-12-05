@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.newSummary.config.PasswordEncyptor;
 import com.newSummary.domain.UserRole;
+import com.newSummary.domain.dto.user.UserDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -80,7 +82,20 @@ public class User {
     private List<NewsLog> newsLogs;
     
 
-    
+    // 회원 정보 수정
+    public static User toEditUserEntity(UserDTO userDTO, PasswordEncyptor passwordEncoder){
+    	User user = User.builder()
+    			.userEmail(userDTO.getUserEmail())
+                .userName(userDTO.getUserName())
+                .userPw(PasswordEncyptor.encryptPassword(userDTO.getUserPw()))
+                .userPhone(userDTO.getUserPhone())
+                .userRole(userDTO.getUserRole())
+                .joinedAt(userDTO.getJoinedAt())
+                .userProfile(userDTO.getUserProfile())
+                .build();
+        return user;
+    }
+
 
 }
     
