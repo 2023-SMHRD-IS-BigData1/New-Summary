@@ -23,19 +23,18 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncyptor encoder;
 
-	 
 	// userEmail 중복 체크 중복되면 true return
-	@Transactional(readOnly =true)
+	@Transactional(readOnly = true)
 	public boolean checkUserEmailDuplicate(String userEmail) {
 		return userRepository.existsByUserEmail(userEmail);
 	}
+
 	// userPhone 중복 체크 중복되면 true return
-	@Transactional(readOnly =true)
+	@Transactional(readOnly = true)
 	public boolean checkUserPhoneDuplicate(String userPhone) {
 		return userRepository.existsByUserPhone(userPhone);
 	}
 
-	
 	// 암호화 안된 회원가입(확인용)
 	public void join(JoinRequest req) {
 		userRepository.save(req.toEntity());
@@ -52,10 +51,9 @@ public class UserService {
 		return userDTO;
 	}
 
-
 	/**
-	 * 로그인 기능 화면에서 LoginRequest(userEmail, userPw)을 입력받아 
-	 * userEmail과 userPw가 일치하면 User return 
+	 * 로그인 기능 화면에서 LoginRequest(userEmail, userPw)을 입력받아
+	 * userEmail과 userPw가 일치하면 User return
 	 * userEmail이 존재하지 않거나 userPw가 일치하지 않으면 null return
 	 * 안씀
 	 */
@@ -78,22 +76,22 @@ public class UserService {
 	}
 
 	/**
-	 * userEmail(String)를 입력받아 User을 return 해주는 기능 인증, 
-	 * 인가 시 사용 userEmail가 null이거나(로그인 X) 
-	 * userEmail로 찾아온 User가 없으면 null return 
+	 * userEmail(String)를 입력받아 User을 return 해주는 기능 인증,
+	 * 인가 시 사용 userEmail가 null이거나(로그인 X)
+	 * userEmail로 찾아온 User가 없으면 null return
 	 * userEmail로 찾아온 User가 존재하면 User return
 	 */
 	public User getLoginUserByEmail(String userEmail) {
 		if (userEmail == null) {
 			return null;
-	    }
+		}
 		Optional<User> optionalUser = userRepository.findByUserEmail(userEmail);
 		if (optionalUser.isEmpty()) {
 			return null;
 		}
 		return optionalUser.get();
 	}
-	
+
 	// 회원 정보 수정
 	public void updateUserInfo(UserDTO originUserDTO, UserDTO userDTO) {
 		originUserDTO.setUserEmail(userDTO.getUserEmail());
@@ -101,10 +99,10 @@ public class UserService {
 		originUserDTO.setUserName(userDTO.getUserName());
 		originUserDTO.setUserPw(userDTO.getUserPw());
 		originUserDTO.setUserPhone(userDTO.getUserPhone());
-	    userRepository.save(User.toEditUserEntity(originUserDTO, encoder));
-	    
+		userRepository.save(User.toEditUserEntity(originUserDTO, encoder));
+
 	}
-	
+
 	// 회원 정보 삭제
 	public void userDelete(String userEmail) {
 		userRepository.deleteByUserEmail(userEmail);
