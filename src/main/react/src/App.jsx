@@ -9,7 +9,7 @@ import Login from './routes/login';
 import Board from './routes/board';
 import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
-import { NewsProvider, NewsViewProvider } from './data/news-data.context';
+import { CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider } from './data/news-data.context';
 import { AuthProvider } from './data/user-login';
 import { BoardProvider, BoardViewProvider } from './data/board-data';
 import TopButtonLogo from '../src/assets/top-logo.svg'
@@ -116,23 +116,34 @@ function App() {
   };
 
   return (
-    <NewsProvider>
-      <NewsViewProvider>
-        <AuthProvider>
-          <BoardProvider>
-            <BoardViewProvider>
-            <Wrapper>
-              <GlobalStyles />
-              {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-              <TopButton onClick={handlePage}>
-                <TopButtonImage src={TopButtonLogo} />
-              </TopButton>
-            </Wrapper>
-            </BoardViewProvider>
-          </BoardProvider>
-        </AuthProvider>
-      </NewsViewProvider>
-    </NewsProvider>
+    // 오늘의 키워드
+    <CategoryProvider>
+      {/* 1분카드뉴스 */}
+      <CategoryNewsProvider>
+        {/* 전체뉴스 */}
+        <NewsProvider>
+          {/* 조회수 뉴스 */}
+          <NewsViewProvider>
+            {/* 유저 로그인 */}
+            <AuthProvider>
+              {/* 게시판 */}
+              <BoardProvider>
+                {/* 게시판 상세글 */}
+                <BoardViewProvider>
+                  <Wrapper>
+                    <GlobalStyles />
+                    {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+                    <TopButton onClick={handlePage}>
+                      <TopButtonImage src={TopButtonLogo} />
+                    </TopButton>
+                  </Wrapper>
+                </BoardViewProvider>
+              </BoardProvider>
+            </AuthProvider>
+          </NewsViewProvider>
+        </NewsProvider>
+      </CategoryNewsProvider>
+    </CategoryProvider>
   )
 }
 
