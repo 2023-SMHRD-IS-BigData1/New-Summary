@@ -77,7 +77,7 @@ public class UserController {
 	}
 
 	// 로그인 요청
-	@PostMapping("/users/login")
+	@PostMapping("/users/loginuser")
 	public UserDTO login(@Valid @RequestBody LoginRequest req) {
 		User user = userService.login(req);
 		if (user == null) {

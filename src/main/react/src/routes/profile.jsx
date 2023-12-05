@@ -7,6 +7,8 @@ import DoughnutComponent from '../components/doughnut';
 import { LineComponent } from '../components/linechart';
 import UserDefault from '../assets/image/user-avatar.png';
 import Pencil from '../assets/pencil-logo.svg'
+import Coin from '../assets/coin-logo.svg'
+import Exclamation from '../assets/exclamation-circle.svg'
 import MypagePaging from '../components/pagination';
 
 const Wrapper = styled.div`
@@ -50,7 +52,7 @@ const Content = styled.div`
   max-width: 1200px;
   height: auto;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   display: ${({ active }) => (active ? 'flex' : 'none')};
 `;
 
@@ -97,11 +99,70 @@ const UserNickname = styled.div`
 const UserPoint = styled.div`
   width: 100%;
   padding: 10px;
+  font-size: 18px;
   display: flex;
   justify-content: right;
   align-items: center;
   border-bottom: 1px solid #99999944;
   margin-bottom: 30px;
+`;
+
+const PointImage = styled.img`
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+`;
+
+const PointexplanationBox = styled.div`
+  width: 25px;
+  height: 25px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  &:hover {
+    .tip {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.7s;
+    }
+  }
+`;
+
+const Pointexplanation = styled.img`
+  width: 25px;
+  height: 25px;
+  margin-left: 10px;
+`;
+
+const ExplanationTip = styled.div`
+    visibility: hidden;
+    width: 240px;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 7px;
+    position: absolute;
+    line-height: 1.2;
+    z-index: 100;
+    top: -28px;
+    left: 210%;
+    opacity: 0.1;
+    &::after {
+      content: "";
+      position: absolute;
+      border-top: 6px solid transparent;
+      border-right: 12px solid #333;
+      border-bottom: 6px solid transparent;
+      border-left: 12px solid transparent;
+      top: 31%;
+      right: 100%;
+    }
+`;
+
+const TipHead = styled.div`
+  width: 100%;
+  padding-bottom: 10px;
 `;
 
 const LeftMenuItem = styled.div`
@@ -224,6 +285,62 @@ const ProfileBack = styled.div`
   background-color: #F4A261;
 `;
 
+
+// 프로필 수정 페이지 컴포넌트
+const ProfileUpdateForm = styled.form`
+  width: 100%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 100px;
+  background-color: #ffffff;
+`;
+
+const ProfileUpdateBox = styled.div`
+  width: 100%;
+  height: 80px;
+  padding: 0 60px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid #99999944;
+  &:last-child {
+    border: none;
+  }
+`;
+
+const ProfileUpdateText = styled.div`
+  width: 50%;
+  max-width: 150px;
+  height: 30px;
+  font-size: 18px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding-right: 20px;
+`;
+
+const ProfileUpdateInput = styled.input`
+  width: 100%;
+  height: 30px;
+  font-size: 18px;
+  padding-left: 20px;
+`;
+
+const ProfileUpdateBtn = styled.div`
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: aqua;
+`;
+
+
+
+
 export default function Profile() {
   const [onMenu, setOnMenu] = useState('content1');
 
@@ -240,12 +357,23 @@ export default function Profile() {
             <UserImage src={UserDefault} />
           </UserImageBox>
           <UserNickname>UserNickname</UserNickname>
-          <UserPoint>2000 point</UserPoint>
+          <UserPoint>
+            <PointImage src={Coin} />2000 P
+            <PointexplanationBox>
+              <Pointexplanation src={Exclamation} />
+              <ExplanationTip className="tip">
+                <TipHead>포인트 획득 기준</TipHead>
+                일일 로그인시 : 50 P<br />
+                뉴스 조회시 : 10 P<br />
+                커뮤니티 글작성 : 20 P<br />
+              </ExplanationTip>
+            </PointexplanationBox>
+          </UserPoint>
           <LeftMenuItem onClick={() => handleContentClick('content1')} active={onMenu === 'content1'}>뉴스 시청기록</LeftMenuItem>
           <LeftMenuItem onClick={() => handleContentClick('content2')} active={onMenu === 'content2'}>북마크 뉴스</LeftMenuItem>
-          <LeftMenuItem onClick={() => handleContentClick('content3')} active={onMenu === 'content3'}>포인트 획득내역</LeftMenuItem>
+          <LeftMenuItem onClick={() => handleContentClick('content3')} active={onMenu === 'content3'}>내가 작성한글</LeftMenuItem>
           <LeftMenuItem onClick={() => handleContentClick('content4')} active={onMenu === 'content4'}>개인정보수정</LeftMenuItem>
-            <SecessionBtn>회원탈퇴</SecessionBtn>
+          <SecessionBtn>회원탈퇴</SecessionBtn>
         </LeftMenu>
         {/* 뉴스 시청기록 */}
         <Content className={onMenu} active={onMenu === 'content1'}>
@@ -268,59 +396,45 @@ export default function Profile() {
               </BookMarkDateBox>
               <BookMarkTitle>시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?</BookMarkTitle>
               <BookMarkContent>
-              강원도 평창경찰서와 춘천지검 영월지청은 케타민과 필로폰 등 30kg 시가 600억 원어치의 마약을 밀수해 서울의 강남지역 클럽 등에 유통시킨 조직원 30여 명을 검거했다고 밝혔습니다. 이 조직은 밀수 담당과 유통 담당으로 나뉘어 체계적으로 움직였습니다. 각 조직원은 또 '탈퇴 시 보복' 등 엄격한 행동강령 아래 역할을 분담한 것으로 드러났습니다.
-              </BookMarkContent>
-            </BookMarkTextBox>
-            <BookMarkImageBox src='https://imgnews.pstatic.net/image/056/2023/11/20/0011605744_001_20231120153305436.jpg?type=w647' />
-          </BookMarkBox>
-          <BookMarkBox>
-            <BookMarkTextBox>
-              <BookMarkDateBox>
-                <BookMarkMedia> KBS </BookMarkMedia>
-                <BookMarkDate>2023.11.20 15:22</BookMarkDate>
-              </BookMarkDateBox>
-              <BookMarkTitle>시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?</BookMarkTitle>
-              <BookMarkContent>
-              강원도 평창경찰서와 춘천지검 영월지청은 케타민과 필로폰 등 30kg 시가 600억 원어치의 마약을 밀수해 서울의 강남지역 클럽 등에 유통시킨 조직원 30여 명을 검거했다고 밝혔습니다. 이 조직은 밀수 담당과 유통 담당으로 나뉘어 체계적으로 움직였습니다. 각 조직원은 또 '탈퇴 시 보복' 등 엄격한 행동강령 아래 역할을 분담한 것으로 드러났습니다.
-              </BookMarkContent>
-            </BookMarkTextBox>
-            <BookMarkImageBox src='https://imgnews.pstatic.net/image/056/2023/11/20/0011605744_001_20231120153305436.jpg?type=w647' />
-          </BookMarkBox>
-          <BookMarkBox>
-            <BookMarkTextBox>
-              <BookMarkDateBox>
-                <BookMarkMedia> KBS </BookMarkMedia>
-                <BookMarkDate>2023.11.20 15:22</BookMarkDate>
-              </BookMarkDateBox>
-              <BookMarkTitle>시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?</BookMarkTitle>
-              <BookMarkContent>
-              강원도 평창경찰서와 춘천지검 영월지청은 케타민과 필로폰 등 30kg 시가 600억 원어치의 마약을 밀수해 서울의 강남지역 클럽 등에 유통시킨 조직원 30여 명을 검거했다고 밝혔습니다. 이 조직은 밀수 담당과 유통 담당으로 나뉘어 체계적으로 움직였습니다. 각 조직원은 또 '탈퇴 시 보복' 등 엄격한 행동강령 아래 역할을 분담한 것으로 드러났습니다.
-              </BookMarkContent>
-            </BookMarkTextBox>
-            <BookMarkImageBox src='https://imgnews.pstatic.net/image/056/2023/11/20/0011605744_001_20231120153305436.jpg?type=w647' />
-          </BookMarkBox>
-          <BookMarkBox>
-            <BookMarkTextBox>
-              <BookMarkDateBox>
-                <BookMarkMedia> KBS </BookMarkMedia>
-                <BookMarkDate>2023.11.20 15:22</BookMarkDate>
-              </BookMarkDateBox>
-              <BookMarkTitle>시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?</BookMarkTitle>
-              <BookMarkContent>
-              강원도 평창경찰서와 춘천지검 영월지청은 케타민과 필로폰 등 30kg 시가 600억 원어치의 마약을 밀수해 서울의 강남지역 클럽 등에 유통시킨 조직원 30여 명을 검거했다고 밝혔습니다. 이 조직은 밀수 담당과 유통 담당으로 나뉘어 체계적으로 움직였습니다. 각 조직원은 또 '탈퇴 시 보복' 등 엄격한 행동강령 아래 역할을 분담한 것으로 드러났습니다.
+                강원도 평창경찰서와 춘천지검 영월지청은 케타민과 필로폰 등 30kg 시가 600억 원어치의 마약을 밀수해 서울의 강남지역 클럽 등에 유통시킨 조직원 30여 명을 검거했다고 밝혔습니다. 이 조직은 밀수 담당과 유통 담당으로 나뉘어 체계적으로 움직였습니다. 각 조직원은 또 '탈퇴 시 보복' 등 엄격한 행동강령 아래 역할을 분담한 것으로 드러났습니다.
               </BookMarkContent>
             </BookMarkTextBox>
             <BookMarkImageBox src='https://imgnews.pstatic.net/image/056/2023/11/20/0011605744_001_20231120153305436.jpg?type=w647' />
           </BookMarkBox>
         </Content>
-        {/* 포인트 획득내역 */}
+        {/* 내가 작성한 글 */}
         <Content className={`content3 ${onMenu === 'content3' ? 'active' : ''}`} active={onMenu === 'content3'}>
         </Content>
         {/* 개인정보 수정 */}
         <Content className={`content4 ${onMenu === 'content4' ? 'active' : ''}`} active={onMenu === 'content4'}>
+          <ProfileUpdateForm action=''>
+            <ProfileUpdateBox>
+              <ProfileUpdateText>Email : </ProfileUpdateText>
+              <ProfileUpdateInput value="email" readOnly/>
+            </ProfileUpdateBox>
+            <ProfileUpdateBox>
+              <ProfileUpdateText>닉네임 : </ProfileUpdateText>
+              <ProfileUpdateInput value="" placeholder=''/>
+            </ProfileUpdateBox>
+            <ProfileUpdateBox>
+              <ProfileUpdateText>비밀번호 : </ProfileUpdateText>
+              <ProfileUpdateInput value=""/>
+            </ProfileUpdateBox>
+            <ProfileUpdateBox>
+              <ProfileUpdateText>비밀번호 확인 : </ProfileUpdateText>
+              <ProfileUpdateInput value=""/>
+            </ProfileUpdateBox>
+            <ProfileUpdateBox>
+              <ProfileUpdateText>연락처 : </ProfileUpdateText>
+              <ProfileUpdateInput value=""/>
+            </ProfileUpdateBox>
+            <ProfileUpdateBox>
+              <ProfileUpdateBtn>수정하기</ProfileUpdateBtn>
+            </ProfileUpdateBox>
+          </ProfileUpdateForm>
         </Content>
       </WrapperBox>
-        <Footer></Footer>
+      <Footer></Footer>
     </Wrapper>
   )
 }
