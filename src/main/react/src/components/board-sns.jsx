@@ -185,7 +185,7 @@ export function BoardSNS() {
     const { boardViewData, loadingViews } = useBoardViewContext();
     const [columns, setColumns] = useState(3);
     const [page, setPage] = useState(1);
-    const [items, setItems] = useState(20);
+    const [itemsBoard, setItemsBoard] = useState(20);
     const [modalOn, setModalOn] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -239,8 +239,8 @@ export function BoardSNS() {
     };
 
     // 검색 결과에 대해 페이징된 데이터 가져오기
-    const startIndex = (page - 1) * items;
-    const endIndex = startIndex + items;
+    const startIndex = (page - 1) * itemsBoard;
+    const endIndex = startIndex + itemsBoard;
     // data에 게시판 데이터 넣기
     const paginatedData = boardData.slice(startIndex, endIndex);
 
@@ -347,7 +347,7 @@ export function BoardSNS() {
             <PaginationBox>
                 <Pagination
                     activePage={page}
-                    itemsCountPerPage={items}
+                    itemsCountPerPage={itemsBoard}
                     totalItemsCount={boardData.length}
                     pageRangeDisplayed={5}
                     onChange={handlePageChange}>
@@ -361,10 +361,7 @@ export function BoardMain() {
     const { boardData, loading } = useBoardContext();
     const { boardViewData, loadingViews } = useBoardViewContext();
     const [columns, setColumns] = useState(3);
-    const [page, setPage] = useState(1);
-    const [items, setItems] = useState(20);
     const [modalOn, setModalOn] = useState(false);
-    const [totalPages, setTotalPages] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
 
     // 반응형으로 사이즈 조절
