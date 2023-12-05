@@ -4,8 +4,68 @@ import axios from 'axios';
 
 
 
+const CategoryContext = createContext();
+const CategoryNewsContext = createContext();
 const NewsContext = createContext();
 const NewsViewContext = createContext();
+
+export const CategoryProvider = ({ children }) => {
+  const [categoryData, setCategoryData] = useState([]);
+  const [loadingCategory, setLoadingCategory] = useState(true);
+
+  useEffect(() => {
+    const aixosData = async () => {
+      try {
+        // 전체기간 키워드 요청 url
+        const response = await axios.get('/api/keyword/list');
+        // 오늘의 키워드 요청 url
+        // const response = await axios.get('/api/keyword/today');
+        setCategoryData(response.data);
+        console.log('키워드 데이터가 성공적으로 로드되었습니다:', response.data);
+      } catch (error) {
+        console.error('키워드 데이터 로드 중 오류 발생:', error);
+      } finally {
+        setLoadingCategory(false);
+      }
+    };
+
+    aixosData();
+  }, []);
+
+  return (
+    <CategoryContext.Provider value={{ categoryData, loadingCategory }}>
+      {children}
+    </CategoryContext.Provider>
+  );
+};
+
+export const CategoryNewsProvider = ({ children }) => {
+  const [categoryNewsData, setCategoryNewsData] = useState([]);
+  const [loadingCategoryNews, setLoadingCategoryNews] = useState(true);
+
+  useEffect(() => {
+    const aixosData = async () => {
+      try {
+        // 키워드뉴스 요청 url
+        const response = await axios.get('/api/news/keyword');
+        setCategoryNewsData(response.data);
+        console.log('키워드 뉴스 데이터가 성공적으로 로드되었습니다:', response.data);
+      } catch (error) {
+        console.error('키워드 뉴스 데이터 로드 중 오류 발생:', error);
+      } finally {
+        setLoadingCategoryNews(false);
+      }
+    };
+
+    aixosData();
+  }, []);
+
+  return (
+    <CategoryNewsContext.Provider value={{ categoryNewsData, loadingCategoryNews }}>
+      {children}
+    </CategoryNewsContext.Provider>
+  );
+};
 
 export const NewsProvider = ({ children }) => {
   const [newsData, setNewsData] = useState([]);
@@ -63,6 +123,14 @@ export const NewsViewProvider = ({ children }) => {
       {children}
     </NewsViewContext.Provider>
   );
+};
+
+export const useCategoryContext = () => {
+  return useContext(CategoryContext);
+};
+
+export const useCategoryNewsContext = () => {
+  return useContext(CategoryNewsContext);
 };
 
 export const useNewsContext = () => {

@@ -5,11 +5,12 @@ import AutoPlayCarousel from '../components/carousel';
 import ViewsCarousel from '../components/views-carousel';
 import Bookmark from '../assets/bookmark.svg';
 import BookmarkOn from '../assets/bookmark-on.svg';
+import SearchLogo from '../assets/search-logo.svg';
 import Pagination from "react-js-pagination";
 import LoadingScreen from './loading-screen';
 import ModalPortal from './portal';
 import Modal from './modal';
-import { useNewsContext, useNewsViewContext } from '../data/news-data.context';
+import { useCategoryContext, useCategoryNewsContext, useNewsContext, useNewsViewContext } from '../data/news-data.context';
 
 // -- Home Main news component -- //
 const Main = styled.div`
@@ -242,22 +243,6 @@ const MainNewsViewsBox = styled.div`
 
 
 // -- Home Trend news component -- //
-const TrendBox = styled.div`
-  width: 100%;
-  max-width: 1400px;
-  height: 800px;
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1px solid #99999944;
-  box-shadow: 5px 5px 5px 2px #99999944;
-`;
-
-const ArrowButton = styled.img`
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-`;
-
 const NewsMediaBottom = styled.div`
 `;
 
@@ -277,73 +262,18 @@ const NewsHeaderItem = styled.div`
 
 
 
-// -- Home Trend Graph & WordCloud component -- //
-
-const WordCloudBox = styled.div`
-  width: 600px;
-  height: 800px;
-`;
-
-const GraphBox = styled.div`
-  width: 100%;
-  height: 850px;
-  padding-right: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const GraphHeader = styled.div`
-  width: 500px;
-  height: 100px;
-  padding: 20px 0 0 80px  ;
-  display: flex;
-  gap: 50px;
-`;
-
-const GraphContent = styled.div`
-  width: 600px;
-  height: 800px;
-`;
-
-const GraphTextBox = styled.div`
-  width: 60%;
-  height: 100px;
-`;
-
-const GraphTitle = styled.div`
-  white-space: nowrap;
-  padding-bottom: 20px;
-  font-size: 36px;
-`;
-
-const GraphText = styled.div`
-  font-size: 24px;
-`;
-
-const GraphBtn = styled.div`
-  width: 40%;
-  height: 100px;
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  gap: 20px;
-`;
-
-
-
 // -- Home Sub news component -- //
 
 const MainBoxBottom = styled.div`
   width: 100%;
-  max-width: 1400px;
+  max-width: 1401px;
   height: 680px;
   padding: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: row;
   background-color: #ffffff;
-  border: 1px solid #99999944;
+  /* border: 1px solid #99999944; */
 `;
 
 const MainBoxCategory = styled.div`
@@ -361,8 +291,8 @@ const CategoryNewsList = styled.div`
 
 const CategoryNewsMain = styled.div`
   width: 100%;
-  max-width: 650px;
-  height: 660px;
+  max-width: 850px;
+  height: 600px;
   padding: 0 20px;
   display: flex;
   align-items: flex-start;
@@ -408,16 +338,26 @@ const ListNewsTitle = styled.div`
 
 const SubNewsImageBox = styled.div`
   width: 100%;
-  max-height: 520px;
+  height: 100%;
   margin-top: 30px;
-  padding-top: 60px;
-  overflow: hidden;
   display: flex;
   align-items: center;
-`;
+  overflow: hidden;
+  position: relative;
+  border-radius: 10px;
+  `;
 
 const SubNewsImage = styled.img`
-    width: 100%;
+  position: absolute;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  &:hover{
+    transition: .5s;
+    height: 110%;
+  }
 `;
 
 const SubNewsTextBox = styled.div`
@@ -427,7 +367,7 @@ const SubNewsTextBox = styled.div`
   padding: 20px 30px;
   position: absolute;
   bottom: 30px;
-  right: -150px;
+  right: 0px;
   border: 1px solid #99999944;
   box-shadow: 5px 5px 5px 5px #99999944;
   background-color: #ffffff;
@@ -451,32 +391,35 @@ const SubNewsTitle = styled.div`
 
 
 // -- Home Sub news Category component -- //
+const BottomCategoryBox = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+`;
 
 const BottomCategory = styled.div`
   width: 100%;
-  max-width: 250px;
-  height: 660px;
-  padding: 0 20px 0 20px;
-  text-align: right;
+  max-width: 1400px;
   display: flex;
-  flex-direction: column;
-  justify-content: right;
-`;
-
-const BottomCategoryTitle = styled.div`
-  font-size: 40px;
-  padding-bottom: 30px;
+  justify-content: center;
+  gap: 5px;
+  align-items: flex-end;
 `;
 
 const BottomCategoryItem = styled.div`
-    width: 100%;
+    width: ${(props) => (props.active ? '100%' : '60%')};
     height: 40px;
-    padding: 25px;
+    padding: 0px 25px;
     display: flex;
     align-items: center;
-    justify-content: right;
-    font-size: 28px;
+    justify-content: center;
+    font-size: 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: ${(props) => (props.active ? 'none' : '1px solid #999999;')};
     cursor: pointer;
+    color: ${(props) => (props.active ? '#000000' : '#999999')};
+    background-color: ${(props) => (props.active ? '#FFFFFF' : '#f0f0f0')};
     &:hover {
       background: #F0BE4D;
       color: white;
@@ -501,9 +444,19 @@ const WrapperBox = styled.div`
   position: relative;
   `;
 
+const CategoryNewsBack = styled.div`
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    background-color: #2A9D8F;
+    position: absolute;
+    z-index: -1;
+`;
+
 const DateHead = styled.div`
     width: 100%;
-    margin-top: 30px;
+    margin: 30px 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -564,6 +517,15 @@ const SearchNewsBox = styled.div`
     &:last-child {
         margin-bottom: 300px;
     }
+`;
+
+const SearchBack = styled.div`
+    width: 100%;
+    height: 300px;
+    position: absolute;
+    top: 120px;
+    background-color: #2A9D8F;
+    z-index: -1;
 `;
 
 const SearchNewsContentBox = styled.div`
@@ -629,37 +591,11 @@ const SearchNewsContent = styled.div`
     -webkit-box-orient: vertical;
 `;
 
-const SearchNewsSideSlide = styled.div`
-    width: 200px;
-    height: 100%;
-    padding: 20px 20px 0 0;
-    display: flex;
-    justify-content: right;
-    background-image: linear-gradient(to right, #00000000, #00000055);
-    position: absolute;
-    right: 0;
-    opacity: 0;
-    transform: translateX(100%);
-`;
-
-const SearchNewsSideBtn = styled.img`
-    width: 50px;
-    height: 50px;
-    background-color: #ffffff;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-    &:hover{
-        padding: 6px;
-        transition: 0.5s;
-    }
-`;
-
 const SearchInputBox = styled.div`
     width: 100%;
     max-width: 1400px;
     height: 100px;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -673,7 +609,6 @@ const SearchInputBack = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-
 `;
 
 const SearchInput = styled.input`
@@ -682,10 +617,10 @@ const SearchInput = styled.input`
     height: 40px;
     font-size: 20px;
     padding: 0 30px;
+    border: none;
     &:focus {
 	    outline: none;  
-        border: none;
-        box-shadow: 0 0 20px #F4A261;
+        border: 1px solid #999999;
         transition: 0.5s;
     }
 `;
@@ -823,26 +758,17 @@ const PaginationBox = styled.div`
   ul.pagination li a.active { color: black; }
 `
 
-const CategoryData = [
-    { id: "value0", name: "전체" },
-    { id: "value1", name: "사회" },
-    { id: "value2", name: "정치" },
-    { id: "value3", name: "경제" },
-    { id: "value4", name: "국제" },
-    { id: "value5", name: "문화" },
-    { id: "value6", name: "IT" },
-    { id: "value7", name: "연예" },
-    { id: "value8", name: "스포츠" },
-]
-
 export function HomeMainNews() {
+    const { categoryData, loadingCategory } = useCategoryContext();
+    const { categoryNewsData, loadingCategoryNews } = useCategoryNewsContext();
     const { newsData, loading } = useNewsContext();
     const [isFirst, setIsFirst] = useState(true);
 
+
+    // 카드뉴스 뒤집기 핸들러
     const handleCardClick = (event) => {
         const target = event.currentTarget;
         const currentRotation = target.style.transform;
-
         if (currentRotation === "rotateY(180deg)") {
             target.style.transform = "rotateY(0deg)";
         } else {
@@ -850,9 +776,24 @@ export function HomeMainNews() {
         }
     };
 
+    const CategoryKeyword = categoryData.slice(0, 10);
+
+    // 가져온 데이터를 사용하여 UI를 렌더링  
+    const CategoryItems = CategoryKeyword.map((item, index) => (
+        <MainTrendBox key={item.id} >
+            <MainTrendBadge># {item.keywordsData}</MainTrendBadge>
+        </MainTrendBox>
+    ));
+
     return (
         <Main>
             <MainDailyHeader>오늘의 키워드</MainDailyHeader>
+            {/* {loading ? (
+                <LoadingScreen />
+            ) : (
+                CategoryItems
+            )} */}
+            {/* 테스트용 키워드 */}
             <MainTrendBox>
                 <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
                 <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
@@ -897,7 +838,7 @@ export function HomeMainNews() {
                     <MainCardTextArea>
                         <MainCardTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainCardTitle>
                         <MainCardContent>
-                        12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.
+                            12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
@@ -943,33 +884,29 @@ export function CategoryNewsComponent() {
     const [items, setItems] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const [sortedNewsData, setSortedNewsData] = useState([]);
-    const [searchTerm, setSearchTerm] = useState(''); // searchTerm 정의 및 초기값 설정
+    const [searchTerm, setSearchTerm] = useState('');
     const [filteredNewsData, setFilteredNewsData] = useState([]);
     const [modalOn, setModalOn] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [onMenu, setOnMenu] = useState('content1');
+    const [totalItemsCount, setTotalItemsCount] = useState()
 
     // 데이터를 최근 날짜순으로 정렬 및 검색어에 따라 초기 데이터 필터링
     useEffect(() => {
         if (newsData.length > 0) {
-            // 최근 날짜순으로 정렬
             const sortedData = [...newsData].sort((a, b) => {
                 const dateA = new Date(a.articleWriteTime);
                 const dateB = new Date(b.articleWriteTime);
                 return dateB - dateA;
             });
-
-            // 검색어에 따라 초기 데이터 필터링
             const filteredResults = sortedData.filter((item) =>
                 item.title.toLowerCase().includes(searchTerm.toLowerCase())
             );
-
-            // 초기화된 데이터를 상태에 설정
             setSortedNewsData(sortedData);
             setFilteredNewsData(filteredResults);
-
-            // 페이지 수 다시 계산하여 업데이트
             calculateTotalPages(filteredResults.length, items);
+            setTotalItemsCount(filteredResults.length - 6)
         }
     }, [newsData, searchTerm, items]);
 
@@ -1019,14 +956,10 @@ export function CategoryNewsComponent() {
         setSelectedItem(item);
         setModalOn(!modalOn);
 
+        // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
             const response = await axios.get(`/api/news/detail/${item.id}`);
-
-            // useNewsViewContext 훅을 함수 컴포넌트 내에서 호출
             const { setNewsData } = useNewsViewContext();
-
-            // 훅을 호출하는 함수를 useEffect 내에서 실행
             useEffect(() => {
                 setNewsData(response.data);
                 console.log('데이터가 성공적으로 로드되었습니다:', response.data);
@@ -1050,23 +983,60 @@ export function CategoryNewsComponent() {
     const handleDateChange = (amount) => {
         const newDate = new Date(currentDate);
         newDate.setDate(currentDate.getDate() + amount);
-
-        // 확인하려는 날짜
         const today = new Date();
 
         // 오늘 이후로는 변경하지 않도록 함
         if (newDate <= today) {
             setCurrentDate(newDate);
-
-            // 날짜에 해당하는 데이터만 필터링
             const filteredData = filterDataByDate(newsData, newDate);
-
-            // 필터링된 데이터를 상태에 설정
             setFilteredNewsData(filteredData);
-
-            // 페이지 수 다시 계산하여 업데이트
             calculateTotalPages(filteredData.length, items);
         }
+    };
+
+    const handleContentClick = (contentClass) => {
+        // 카테고리 메뉴 클릭시 css 제어
+        setOnMenu(contentClass);
+        // 카테고리에 따라 데이터 필터링 수행
+        let filteredData;
+        switch (contentClass) {
+            case 'content1':
+                filteredData = sortedNewsData;
+                break;
+            case 'content2':
+                filteredData = sortedNewsData.filter(item => item.category === '사회');
+                break;
+            case 'content3':
+                filteredData = sortedNewsData.filter(item => item.category === '정치');
+                break;
+            case 'content4':
+                filteredData = sortedNewsData.filter(item => item.category === '경제');
+                break;
+            case 'content5':
+                filteredData = sortedNewsData.filter(item => item.category === '국제');
+                break;
+            case 'content6':
+                filteredData = sortedNewsData.filter(item => item.category === '문화');
+                break;
+            case 'content7':
+                filteredData = sortedNewsData.filter(item => item.category === '연예');
+                break;
+            case 'content8':
+                filteredData = sortedNewsData.filter(item => item.category === '스포츠');
+                break;
+            case 'content9':
+                filteredData = sortedNewsData.filter(item => item.category === 'IT');
+                break;
+
+            default:
+                filteredData = sortedNewsData;
+        }
+
+        // 필터링된 데이터를 업데이트하고 페이지 등을 계산
+        setFilteredNewsData(filteredData);
+        calculateTotalPages(filteredData.length, items);
+        setTotalItemsCount(filteredData.length - 6)
+        setPage(1);
     };
 
 
@@ -1117,6 +1087,8 @@ export function CategoryNewsComponent() {
 
     return (
         <>
+            <CategoryNewsBack>
+            </CategoryNewsBack>
             <DateHead>
                 <DateBox>
                     <ArrowBox onClick={() => handleDateChange(-1)}>&lt;</ArrowBox>
@@ -1124,6 +1096,19 @@ export function CategoryNewsComponent() {
                     <ArrowBox onClick={() => handleDateChange(1)}>&gt;</ArrowBox>
                 </DateBox>
             </DateHead>
+            <BottomCategoryBox>
+                <BottomCategory>
+                    <BottomCategoryItem onClick={() => handleContentClick('content1')} active={onMenu === 'content1'}>전체</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content2')} active={onMenu === 'content2'}>사회</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content3')} active={onMenu === 'content3'}>정치</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content4')} active={onMenu === 'content4'}>경제</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content5')} active={onMenu === 'content5'}>국제</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content6')} active={onMenu === 'content6'}>문화</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content7')} active={onMenu === 'content7'}>연예</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content8')} active={onMenu === 'content8'}>스포츠</BottomCategoryItem>
+                    <BottomCategoryItem onClick={() => handleContentClick('content9')} active={onMenu === 'content9'}>IT</BottomCategoryItem>
+                </BottomCategory>
+            </BottomCategoryBox>
             <MainBoxCategory>
                 <MainBoxBottom>
                     <CategoryNewsList>
@@ -1138,11 +1123,7 @@ export function CategoryNewsComponent() {
                     ) : (
                         CategoryNewsMainItems
                     )}
-                    <BottomCategory>
-                        {CategoryData.map(({ id, name }) => (
-                            <BottomCategoryItem key={id} className={id}>{name}</BottomCategoryItem>
-                        ))}
-                    </BottomCategory>
+
                 </MainBoxBottom>
             </MainBoxCategory>
 
@@ -1160,7 +1141,7 @@ export function CategoryNewsComponent() {
                 <Pagination
                     activePage={page}
                     itemsCountPerPage={items}
-                    totalItemsCount={newsData.length - 6}
+                    totalItemsCount={totalItemsCount}
                     pageRangeDisplayed={5}
                     onChange={handlePageChange}>
                 </Pagination>
@@ -1180,7 +1161,7 @@ export function SearchNewsComponent() {
     const [items, setItems] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const [sortedNewsData, setSortedNewsData] = useState([]);
-    const [searchTerm, setSearchTerm] = useState(''); // searchTerm 정의 및 초기값 설정
+    const [searchTerm, setSearchTerm] = useState('');
     const [filteredNewsData, setFilteredNewsData] = useState([]);
     const [modalOn, setModalOn] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -1221,13 +1202,8 @@ export function SearchNewsComponent() {
             (item.title && item.title.toLowerCase().includes(newSearchTerm.toLowerCase()))
         );
 
-        // 페이지 수 다시 계산하여 업데이트
         calculateTotalPages(filteredResults.length, items);
-
-        // 검색된 결과를 저장
         setFilteredNewsData(filteredResults);
-
-        // 첫 번째 페이지로 이동
         setPage(1);
     };
 
@@ -1300,29 +1276,32 @@ export function SearchNewsComponent() {
     ));
 
     return (
-        <WrapperBox>
-            <SearchInputBox>
-                <SearchInputBack>
-                    <SearchInput value={searchTerm} onChange={handleSearchInputChange} placeholder='검색어를 입력해주세요' />
-                </SearchInputBack>
-            </SearchInputBox>
-            {loading ? (
-                <LoadingScreen />
-            ) : (
-                SearchNewsItems
-            )}
-            <PaginationBox>
-                <Pagination
-                    activePage={page}
-                    itemsCountPerPage={items}
-                    totalItemsCount={filteredNewsData.length}
-                    pageRangeDisplayed={5}
-                    onChange={handlePageChange}>
-                </Pagination>
-            </PaginationBox>
-            <ModalPortal>
-                {modalOn && <Modal item={selectedItem} onClose={() => setModalOn(false)} />}
-            </ModalPortal>
-        </WrapperBox>
+        <>
+            <SearchBack></SearchBack>
+            <WrapperBox>
+                <SearchInputBox>
+                    <SearchInputBack>
+                        <SearchInput value={searchTerm} onChange={handleSearchInputChange} placeholder='검색어를 입력해주세요' />
+                    </SearchInputBack>
+                </SearchInputBox>
+                {loading ? (
+                    <LoadingScreen />
+                ) : (
+                    SearchNewsItems
+                )}
+                <PaginationBox>
+                    <Pagination
+                        activePage={page}
+                        itemsCountPerPage={items}
+                        totalItemsCount={filteredNewsData.length}
+                        pageRangeDisplayed={5}
+                        onChange={handlePageChange}>
+                    </Pagination>
+                </PaginationBox>
+                <ModalPortal>
+                    {modalOn && <Modal item={selectedItem} onClose={() => setModalOn(false)} />}
+                </ModalPortal>
+            </WrapperBox>
+        </>
     )
 }

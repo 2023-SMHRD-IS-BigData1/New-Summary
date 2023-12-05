@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   height: 100vh;
   padding-top: 120px;
   gap: 50px;
+  position: relative;
 `;
 
 const WrapperBox = styled.div`
@@ -25,11 +26,19 @@ const WrapperBox = styled.div`
   position: relative;
   `;
 
+const BoardBack = styled.div`
+  width: 100%;
+  height: 300px;
+  position: absolute;
+  background-color: #F4A261;
+`;
+
 export default function Board() {
 
     return(
         <Wrapper>
             <Header></Header>
+            <BoardBack></BoardBack>
             <WrapperBox>
               <BoardSNS />
             </WrapperBox>
