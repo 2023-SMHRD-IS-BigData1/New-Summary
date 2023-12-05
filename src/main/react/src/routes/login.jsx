@@ -253,9 +253,9 @@ export default function Login() {
     try {
       const response = await axios.get(url);
       const responseData = response.data;
-    
-      if (responseData === "이메일 중복") {
-      // if (response.data.isDuplicate) {
+
+      if (responseData === true) {
+        // if (response.data.isDuplicate) {
         setIsDuplicateEmail(true);
         console.log("이메일 중복");
       } else {
@@ -272,7 +272,9 @@ export default function Login() {
     const url = `/api/users/duplication-phone/${phone}`;
     try {
       const response = await axios.get(url);
-      if (response.data.isDuplicate) {
+      const responseData = response.data;
+
+      if (responseData === true) {
         setIsDuplicatePhone(true);
         console.log("핸드폰번호 중복");
       } else {
@@ -295,8 +297,8 @@ export default function Login() {
   });
 
   const [loginFormData, setLoginFormData] = useState({
-    email: '',
-    password: '',
+    userEmail: '',
+    userPw: '',
   });
 
   const navigate = useNavigate();
@@ -309,13 +311,17 @@ export default function Login() {
   const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('/api/api/login', loginFormData, { withCredentials: true })
+    axios.post('/api/users/loginuser', loginFormData)
       .then(response => {
         console.log('로그인 응답 받음:', response.data);
+        if (response.data === null) {
+          alert("아이디와 비밀번호를 확인해주세요");
+          window.location.reload();
+          return;
+        }
         setIsLoggedIn(true);
         console.log("유저 로그인 성공");
-        // 로그인 성공 후 유저 정보를 가져오는 요청
-        axios.get('/api/users/me', { withCredentials: true })
+        axios.get(`/api/users/${userEmail}`)
           .then(userResponse => {
             console.log('유저 정보 응답 받음:', userResponse.data);
             sessionStorage.setItem('userData', JSON.stringify(userResponse.data));
@@ -328,6 +334,7 @@ export default function Login() {
       .catch(error => {
         console.error('로그인 에러 발생:', error);
       });
+      console.log("loginFormData : ", loginFormData);
   };
 
   // 로그아웃을 처리하는 함수
@@ -409,7 +416,7 @@ export default function Login() {
                 onBlur={checkDuplicatePhone} //focus가 해제될 때 중복 확인
                 isDuplicate={isDuplicatePhone} // 추가: 중복 여부에 따라 스타일을 변경하기 위한 속성
               />
-              {isDuplicateEmail ? (
+              {isDuplicatePhone ? (
                 <p>이미 사용 중인 번호입니다.</p>
               ) : (
                 <p>사용 가능한 번호입니다.</p>
@@ -428,7 +435,7 @@ export default function Login() {
           <ImageBox className="inputImage" src={SignupImage} />
           <LoginBox className="login">
             <BoxTextHead>Log In</BoxTextHead>
-            <FormBox action="/api/login" onSubmit={handleLoginSubmit}>
+            <FormBox action="/api/users/loginuser" method="post" onSubmit={handleLoginSubmit}>
               <InputBox
                 type="email"
                 placeholder="Email Address"
