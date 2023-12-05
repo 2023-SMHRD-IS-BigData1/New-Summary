@@ -17,9 +17,9 @@ export const CategoryProvider = ({ children }) => {
     const aixosData = async () => {
       try {
         // 전체기간 키워드 요청 url
-        const response = await axios.get('/api/keyword/list');
+        // const response = await axios.get('/api/keyword/list');
         // 오늘의 키워드 요청 url
-        // const response = await axios.get('/api/keyword/today');
+        const response = await axios.get('/api/keyword/today');
         setCategoryData(response.data);
         console.log('키워드 데이터가 성공적으로 로드되었습니다:', response.data);
       } catch (error) {

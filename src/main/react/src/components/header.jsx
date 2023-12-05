@@ -2,6 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import '../components/font.css';
 import { useEffect, useState } from "react";
+import { useAuth } from "../data/user-login";
+import UserLogo from "../assets/image/user-avatar.png"
 
 const Wrapper = styled.div`
     width: 100%;
@@ -119,24 +121,56 @@ const MenuItem = styled.div`
     }
 `;
 
+// 유저 로그인시 출력하는 데이터
+const UserDataBox = styled.div`
+    padding: 10px;
+    gap: 10px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+`;
+
+const UserDataImageBox = styled.div`
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: gray;
+    margin-right: 10px;
+    position: relative;
+    overflow: hidden;
+`;
+
+const UserDataImage = styled.img`
+    width: 100%;
+    position: absolute;
+    top: 2px;
+`;
+
+const UserDataName = styled.div``;
+
+
 
 export default function Header({ ...props }) {
+    const { isLoggedIn, setIsLoggedIn } = useAuth();
     const location = useLocation();
 
-    useEffect(() => {
-        console.log(location.pathname);
-    }, [location])
+    let userData;
     const curruntURL = location.pathname;
-    const storedData = localStorage.getItem('accessToken');
-    console.log('Stored Data:', storedData);
+    const userDataString = sessionStorage.getItem('userData');
 
-    
-      // 로그아웃을 처리하는 함수
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    console.log('로그아웃 성공!');
-  };
+    if (userDataString) {
+        userData = JSON.parse(userDataString);
+    } else {
+        console.error('세션스토리지에 userData가 존재하지 않습니다.');
+    }
 
+    // 로그아웃을 처리하는 함수
+    const handleLogout = () => {
+        sessionStorage.removeItem('userData');
+        console.log('로그아웃 성공!');
+        navigate('/');
+    };
 
     return (
         <Wrapper>
@@ -145,15 +179,25 @@ export default function Header({ ...props }) {
                     <Title>News Summary</Title>
                 </Link>
                 <LoginBox>
-                    <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
-                        <UserButton>로그인 {storedData}</UserButton>
-                    </Link>
-                    <Link to="/" onClick={handleLogout()} style={{ textDecoration: "none", color: "black" }}>
-                        <UserButton>로그아웃 {storedData}</UserButton>
-                    </Link>
-                    {/* <a href="https://kauth.kakao.com/oauth/logout?client_id=a5336752ae75dfa19b52019c374a13c6&logout_redirect_uri=http://localhost:8081/member/do">
-                        <UserButton>카카오로그아웃</UserButton>
-                    </a> */}
+                    {isLoggedIn ? (
+                        <>
+                            <Link to="/profile" style={{ textDecoration: "none", color: "black" }}>
+                                <UserDataBox>
+                                    <UserDataImageBox>
+                                        <UserDataImage src={userData.userProfile || UserLogo} alt="User Profile" />
+                                    </UserDataImageBox>
+                                    <UserDataName>{userData.userName} 님</UserDataName>
+                                </UserDataBox>
+                            </Link>
+                            <Link to="/" onClick={handleLogout} style={{ textDecoration: "none", color: "black" }}>
+                                <UserButton>로그아웃</UserButton>
+                            </Link>
+                        </>
+                    ) : (
+                        <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
+                            <UserButton>로그인</UserButton>
+                        </Link>
+                    )}
                 </LoginBox>
             </WrapperTop>
             <WrapperBottom>
