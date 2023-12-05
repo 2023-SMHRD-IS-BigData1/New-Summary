@@ -11,6 +11,7 @@ import LoadingScreen from './loading-screen';
 import ModalPortal from './portal';
 import Modal from './modal';
 import { useCategoryContext, useCategoryNewsContext, useNewsContext, useNewsViewContext } from '../data/news-data.context';
+import { Link } from 'react-router-dom';
 
 // -- Home Main news component -- //
 const Main = styled.div`
@@ -756,14 +757,14 @@ const PaginationBox = styled.div`
   ul.pagination li:hover,
   ul.pagination li a:hover,
   ul.pagination li a.active { color: black; }
-`
+`;
 
 export function HomeMainNews() {
     const { categoryData, loadingCategory } = useCategoryContext();
     const { categoryNewsData, loadingCategoryNews } = useCategoryNewsContext();
     const { newsData, loading } = useNewsContext();
     const [isFirst, setIsFirst] = useState(true);
-
+    let sortedKeywords;
 
     // 카드뉴스 뒤집기 핸들러
     const handleCardClick = (event) => {
@@ -776,32 +777,60 @@ export function HomeMainNews() {
         }
     };
 
-    const CategoryKeyword = categoryData.slice(0, 10);
+    // 전체 카테고리 데이터
+    console.log(categoryData.keywordsData);
+    // keywordsData 값 가져오기
+    const keywordsDataValue = categoryData.keywordsData;
 
-    // 가져온 데이터를 사용하여 UI를 렌더링  
-    const CategoryItems = CategoryKeyword.map((item, index) => (
-        <MainTrendBox key={item.id} >
-            <MainTrendBadge># {item.keywordsData}</MainTrendBadge>
-        </MainTrendBox>
-    ));
+    // // 오늘의 카테고리 데이터
+    // console.log(categoryData.keywordsData);
+    // // keywordsData 값 가져오기
+    // const keywordsDataValue = categoryData.keywordsData;
+
+    if (keywordsDataValue) {
+        sortedKeywords = Object.entries(keywordsDataValue)
+            .sort((a, b) => b[1] - a[1]) 
+            .slice(0, 10) 
+            .map(entry => entry[0]);
+    } else {
+        console.log("키워드 데이터가 없습니다");
+    }
+
+
+    // // keywordsData 객체를 배열로 변환하여 값에 따라 정렬
+    // const sortedKeywords = Object.entries(keywordsDataValue)
+    //     .sort((a, b) => b[1] - a[1]) 
+    //     .slice(0, 10) 
+    //     .map(entry => entry[0]); 
+
+    // // 결과 출력
+    // console.log("Today : ",sortedKeywords);
+
+
+    // // 가져온 데이터를 사용하여 UI를 렌더링  
+    // const CategoryItems = sortedKeywords.map((categoryData, index) => (
+    //     <Link to="/search" key={index} style={{ textDecoration: "none", color: "black" }} >
+    //         <MainTrendBadge># {categoryData}</MainTrendBadge>
+    //     </Link>
+    // ));
 
     return (
         <Main>
             <MainDailyHeader>오늘의 키워드</MainDailyHeader>
-            {/* {loading ? (
-                <LoadingScreen />
-            ) : (
-                CategoryItems
-            )} */}
-            {/* 테스트용 키워드 */}
             <MainTrendBox>
-                <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
-                <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
-                <MainTrendBadge># 네덜란드 총선</MainTrendBadge>
-                <MainTrendBadge># 폴리코노미</MainTrendBadge>
-                <MainTrendBadge># 슈링크플레이션 신고</MainTrendBadge>
-                <MainTrendBadge># 친일파 부당이득 반환</MainTrendBadge>
-                <MainTrendBadge># 초록낙엽</MainTrendBadge>
+                {/* {loading ? (
+                    <LoadingScreen />
+                ) : (
+                    CategoryItems
+                )} */}
+                {/* 테스트용 키워드 */}
+                    <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
+                    <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
+                    <MainTrendBadge># 네덜란드 총선</MainTrendBadge>
+                    <MainTrendBadge># 폴리코노미</MainTrendBadge>
+                    <MainTrendBadge># 슈링크플레이션 신고</MainTrendBadge>
+                    <MainTrendBadge># 친일파 부당이득 반환</MainTrendBadge>
+                    <MainTrendBadge># 초록낙엽</MainTrendBadge>
             </MainTrendBox>
             <MainCardNewsBox>
                 <MainCardHeader>1분 카드뉴스</MainCardHeader>
