@@ -33,35 +33,7 @@ spring:
       hibernate:
          format_sql:true #sql 보기 편하게 해줌
 #         show-sql: true
-  profiles:
-    include: oauth
- # OAuth 로그인
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 386273532123-3bljq9l3e9i2gvlb6ht5bqjt953i21j6.apps.googleusercontent.com
-            client-secret: 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
-            scope: email, profile
-            redirect-uri: http://localhost:8081/login/oauth2/code/google
-            
-          kakao:
-            client-id:  960bb59557c16e7281949a657eefae7f  # a5336752ae75dfa19b52019c374a13c6
-            client-secret: SlaZCoBLByQHgWYWfBj3RdG3oFr6Xeqz #5uaGOpRny46DQLr7YO2JdvYkcbXQX7vj 
-            scope:
-              - profile_image
-              - profile_nickname
-              - account_email
-            authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8081/login/oauth2/code/kakao
-            client-name: Kakao
-        provider:
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id
+
 logging.level:  #띄어쓰기 없음
   '[org.hibernate.SQL]': debug   
 logging:
