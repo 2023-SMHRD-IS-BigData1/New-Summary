@@ -409,15 +409,14 @@ const BottomCategory = styled.div`
 
 const BottomCategoryItem = styled.div`
     width: ${(props) => (props.active ? '100%' : '60%')};
-    height: 40px;
-    padding: 0px 25px;
+    padding: 20px 25px 5px 25px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    border-bottom: ${(props) => (props.active ? 'none' : '1px solid #999999;')};
+    border-bottom: ${(props) => (props.active ? 'none' : '1px solid #99999944;')};
     cursor: pointer;
     color: ${(props) => (props.active ? '#000000' : '#999999')};
     background-color: ${(props) => (props.active ? '#FFFFFF' : '#f0f0f0')};
@@ -759,6 +758,10 @@ const PaginationBox = styled.div`
   ul.pagination li a.active { color: black; }
 `;
 
+
+
+
+
 export function HomeMainNews() {
     const { categoryData, loadingCategory } = useCategoryContext();
     const { categoryNewsData, loadingCategoryNews } = useCategoryNewsContext();
@@ -776,6 +779,7 @@ export function HomeMainNews() {
             target.style.transform = "rotateY(180deg)";
         }
     };
+
 
     // 전체 카테고리 데이터
     console.log(categoryData.keywordsData);
@@ -1189,7 +1193,6 @@ export function SearchNewsComponent() {
     const [page, setPage] = useState(1);
     const [items, setItems] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
-    const [sortedNewsData, setSortedNewsData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredNewsData, setFilteredNewsData] = useState([]);
     const [modalOn, setModalOn] = useState(false);
@@ -1198,23 +1201,19 @@ export function SearchNewsComponent() {
     // 데이터를 최근 날짜순으로 정렬 및 검색어에 따라 초기 데이터 필터링
     useEffect(() => {
         if (newsData.length > 0) {
-            // 최근 날짜순으로 정렬
             const sortedData = [...newsData].sort((a, b) => {
                 const dateA = new Date(a.articleWriteTime);
                 const dateB = new Date(b.articleWriteTime);
                 return dateB - dateA;
             });
 
-            // 검색어에 따라 초기 데이터 필터링
+            // 검색어에 따라 초기 데이터 필터링 ( 검색어 제목,내용 )
             const filteredResults = sortedData.filter((item) =>
-                item.title.toLowerCase().includes(searchTerm.toLowerCase())
+                item.title.includes(searchTerm) ||
+                item.articleContent.includes(searchTerm)
             );
 
-            // 초기화된 데이터를 상태에 설정
-            setSortedNewsData(sortedData);
             setFilteredNewsData(filteredResults);
-
-            // 페이지 수 다시 계산하여 업데이트
             calculateTotalPages(filteredResults.length, items);
         }
     }, [newsData, searchTerm, items]);
@@ -1227,8 +1226,8 @@ export function SearchNewsComponent() {
 
         // 검색어에 따라 전체 데이터 필터링
         const filteredResults = newsData.filter((item) =>
-            (item.articleContent && item.articleContent.toLowerCase().includes(newSearchTerm.toLowerCase())) ||
-            (item.title && item.title.toLowerCase().includes(newSearchTerm.toLowerCase()))
+            item.title.includes(newSearchTerm) ||
+            item.articleContent.includes(newSearchTerm)
         );
 
         calculateTotalPages(filteredResults.length, items);
@@ -1240,12 +1239,6 @@ export function SearchNewsComponent() {
     const handlePageChange = (page) => {
         window.scrollTo({ top: 0 });
         setPage(page);
-    };
-
-    const itemChange = (e) => {
-        const newItems = Number(e.target.value);
-        setItems(newItems);
-        calculateTotalPages(filteredNewsData.length, newItems);
     };
 
     const calculateTotalPages = (totalItems, itemsPerPage) => {
@@ -1260,8 +1253,8 @@ export function SearchNewsComponent() {
 
     const searchList = () => {
         return paginatedData.filter((itemData) =>
-            (itemData.articleContent && itemData.articleContent.toUpperCase().includes(searchTerm.toUpperCase())) ||
-            (itemData.title && itemData.title.toUpperCase().includes(searchTerm.toUpperCase()))
+            itemData.title.includes(searchTerm) ||
+            itemData.articleContent.includes(searchTerm)
         );
     };
 
