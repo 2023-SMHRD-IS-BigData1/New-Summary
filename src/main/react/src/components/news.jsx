@@ -605,24 +605,36 @@ const SearchInputBack = styled.div`
     width: 100%;
     max-width: 700px;
     height: 100px;
-    background-color: #E9C46A;
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
 `;
 
 const SearchInput = styled.input`
-    width: 100%;
-    max-width: 600px;
-    height: 40px;
-    font-size: 20px;
-    padding: 0 30px;
-    border: none;
-    &:focus {
-	    outline: none;  
-        border: 1px solid #999999;
-        transition: 0.5s;
-    }
+  border: none;
+  border-bottom: 3px solid #D1D1D4;
+  background: none;
+  padding: 10px;
+  padding-left: 20px;
+  font-weight: 700;
+  font-size: 18px;
+  width: 75%;
+  transition: .2s;
+  &:active,
+  &:focus,
+  &:hover {
+    outline: none;
+    border-color: #00ae68;
+  }
+  &:focus {
+    color: #000000;
+  }
+  &::placeholder {
+    color: #bbbbbb;
+    text-align: center;
+    padding-right: 20px;
+  }
 `;
 
 
@@ -732,6 +744,87 @@ const CategoryNewsContent = styled.div`
 
 
 
+// 북마크 뉴스 컴포넌트
+
+const BookMarkBox = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  height: 300px;
+  padding: 30px;
+  border: 1px solid #99999944;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  box-shadow: 2px 5px 10px 2px #99999944;
+  background-color: #ffffff;
+`;
+
+const BookMarkTextBox = styled.div`
+  width: 65%;
+  max-width: 600px;
+  height: 240px;
+`;
+
+const BookMarkDateBox = styled.div`
+  width: 100%;
+  height: 30px;
+  padding-bottom: 10px;
+  gap: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const BookMarkMedia = styled.div`
+  font-size: 18px;
+  color: #999999;
+`;
+
+const BookMarkDate = styled.div`
+  color: #999999;
+`;
+
+const BookMarkTitle = styled.div`
+  width: 100%;
+  height: 72px;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  line-height: 1.3;
+  overflow: hidden;
+  position: relative;
+  white-space: normal;
+  word-wrap: break-word;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
+
+const BookMarkContent = styled.div`
+  width: 100%;
+  height: 114px;
+  font-size: 18px;
+  line-height: 1.3;
+  overflow: hidden;
+  position: relative;
+  white-space: normal;
+  word-wrap: break-word;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+`;
+
+const BookMarkImageBox = styled.img`
+  width: 40%;
+  max-width: 300px;
+  height: 240px;
+`;
+
+
+
+
 // -- react-js-pagination component -- //
 
 const PaginationBox = styled.div`
@@ -782,24 +875,9 @@ export function HomeMainNews() {
 
 
     // 전체 카테고리 데이터
-    console.log(categoryData.keywordsData);
+    // console.log(categoryData);
     // keywordsData 값 가져오기
-    const keywordsDataValue = categoryData.keywordsData;
-
-    // // 오늘의 카테고리 데이터
-    // console.log(categoryData.keywordsData);
-    // // keywordsData 값 가져오기
-    // const keywordsDataValue = categoryData.keywordsData;
-
-    if (keywordsDataValue) {
-        sortedKeywords = Object.entries(keywordsDataValue)
-            .sort((a, b) => b[1] - a[1]) 
-            .slice(0, 10) 
-            .map(entry => entry[0]);
-    } else {
-        console.log("키워드 데이터가 없습니다");
-    }
-
+    // const keywordsDataValue = categoryData;
 
     // // keywordsData 객체를 배열로 변환하여 값에 따라 정렬
     // const sortedKeywords = Object.entries(keywordsDataValue)
@@ -810,13 +888,16 @@ export function HomeMainNews() {
     // // 결과 출력
     // console.log("Today : ",sortedKeywords);
 
+    // // 오늘의 카테고리 데이터
+    console.log(categoryData);
+
 
     // // 가져온 데이터를 사용하여 UI를 렌더링  
-    // const CategoryItems = sortedKeywords.map((categoryData, index) => (
-    //     <Link to="/search" key={index} style={{ textDecoration: "none", color: "black" }} >
-    //         <MainTrendBadge># {categoryData}</MainTrendBadge>
-    //     </Link>
-    // ));
+    const CategoryItems = categoryData.map((categoryData, index) => (
+        <Link to="/search" key={index} style={{ textDecoration: "none", color: "black" }} >
+            <MainTrendBadge># {categoryData}</MainTrendBadge>
+        </Link>
+    ));
 
     return (
         <Main>
@@ -828,13 +909,13 @@ export function HomeMainNews() {
                     CategoryItems
                 )} */}
                 {/* 테스트용 키워드 */}
-                    <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
-                    <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
-                    <MainTrendBadge># 네덜란드 총선</MainTrendBadge>
-                    <MainTrendBadge># 폴리코노미</MainTrendBadge>
-                    <MainTrendBadge># 슈링크플레이션 신고</MainTrendBadge>
-                    <MainTrendBadge># 친일파 부당이득 반환</MainTrendBadge>
-                    <MainTrendBadge># 초록낙엽</MainTrendBadge>
+                <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
+                <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
+                <MainTrendBadge># 네덜란드 총선</MainTrendBadge>
+                <MainTrendBadge># 폴리코노미</MainTrendBadge>
+                <MainTrendBadge># 슈링크플레이션 신고</MainTrendBadge>
+                <MainTrendBadge># 친일파 부당이득 반환</MainTrendBadge>
+                <MainTrendBadge># 초록낙엽</MainTrendBadge>
             </MainTrendBox>
             <MainCardNewsBox>
                 <MainCardHeader>1분 카드뉴스</MainCardHeader>
@@ -925,7 +1006,7 @@ export function CategoryNewsComponent() {
     const [onMenu, setOnMenu] = useState('content1');
     const [totalItemsCount, setTotalItemsCount] = useState()
 
-    // 데이터를 최근 날짜순으로 정렬 및 검색어에 따라 초기 데이터 필터링
+    // 데이터를 최근 날짜순으로 초기 데이터 필터링
     useEffect(() => {
         if (newsData.length > 0) {
             const sortedData = [...newsData].sort((a, b) => {
@@ -1108,7 +1189,7 @@ export function CategoryNewsComponent() {
                     <CategoryNewsDate>{item.articleWriteTime}</CategoryNewsDate>
                 </CategoryNewsDateBox>
                 <CategoryNewsTitle>{item.title}</CategoryNewsTitle>
-                <CategoryNewsContent>{item.articleContent}</CategoryNewsContent>
+                <CategoryNewsContent>{item.summary}</CategoryNewsContent>
             </CategoryNewsContentBox>
             <CategoryNewsImageBox>
                 <CategoryNewsImage src={item.picture} />
@@ -1209,8 +1290,8 @@ export function SearchNewsComponent() {
 
             // 검색어에 따라 초기 데이터 필터링 ( 검색어 제목,내용 )
             const filteredResults = sortedData.filter((item) =>
-                item.title.includes(searchTerm) ||
-                item.articleContent.includes(searchTerm)
+                item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.summary && item.summary.toLowerCase().includes(searchTerm.toLowerCase())
             );
 
             setFilteredNewsData(filteredResults);
@@ -1226,8 +1307,8 @@ export function SearchNewsComponent() {
 
         // 검색어에 따라 전체 데이터 필터링
         const filteredResults = newsData.filter((item) =>
-            item.title.includes(newSearchTerm) ||
-            item.articleContent.includes(newSearchTerm)
+            item.title && item.title.toLowerCase().includes(newSearchTerm.toLowerCase()) ||
+            item.summary && item.summary.toLowerCase().includes(newSearchTerm.toLowerCase())
         );
 
         calculateTotalPages(filteredResults.length, items);
@@ -1253,8 +1334,8 @@ export function SearchNewsComponent() {
 
     const searchList = () => {
         return paginatedData.filter((itemData) =>
-            itemData.title.includes(searchTerm) ||
-            itemData.articleContent.includes(searchTerm)
+        itemData.title && itemData.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        itemData.summary && itemData.summary.toLowerCase().includes(searchTerm.toLowerCase())
         );
     };
 
@@ -1278,8 +1359,6 @@ export function SearchNewsComponent() {
         }
     };
 
-
-    console.log(newsData * (page - 1), newsData * (page - 1) + newsData)
     // 가져온 데이터를 사용하여 UI를 렌더링  
     const SearchNewsItems = filteredSearchItems.map((item, index) => (
         <SearchNewsBox className='SearchNewsBox' key={item.id} onClick={() => handleModal(item)}>
@@ -1289,7 +1368,7 @@ export function SearchNewsComponent() {
                     <SearchNewsDate>{item.articleWriteTime}</SearchNewsDate>
                 </SearchNewsDateBox>
                 <SearchNewsTitle>{item.title}</SearchNewsTitle>
-                <SearchNewsContent>{item.articleContent}</SearchNewsContent>
+                <SearchNewsContent>{item.summary}</SearchNewsContent>
             </SearchNewsContentBox>
             <SearchNewsImageBox>
                 <SearchNewsImage src={item.picture} />
@@ -1326,4 +1405,116 @@ export function SearchNewsComponent() {
             </WrapperBox>
         </>
     )
+}
+
+export function BookMarkNewsComponent() {
+    const { newsData, loading } = useNewsContext();
+    const { newsViewData, viewLoading } = useNewsViewContext();
+    const [page, setPage] = useState(1);
+    const [items, setItems] = useState(10);
+    const [modalOn, setModalOn] = useState(false);
+    const [totalPages, setTotalPages] = useState(1);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [sortedNewsData, setSortedNewsData] = useState([]);
+    const [totalItemsCount, setTotalItemsCount] = useState()
+    const [filteredNewsData, setFilteredNewsData] = useState([]);
+
+    // 데이터를 최근 날짜순으로 초기 데이터 필터링
+    useEffect(() => {
+        if (newsData.length > 0) {
+            const sortedData = [...newsData].sort((a, b) => {
+                const dateA = new Date(a.articleWriteTime);
+                const dateB = new Date(b.articleWriteTime);
+                return dateB - dateA;
+            });
+
+            setSortedNewsData(sortedData);
+            setFilteredNewsData(sortedData);
+            calculateTotalPages(sortedData.length, items);
+            setTotalItemsCount(sortedData.length)
+        }
+    }, [newsData, items]);
+
+    // 페이징 코드
+    const handlePageChange = (page) => {
+        window.scrollTo({ top: 0 });
+        setPage(page);
+    };
+
+    const calculateTotalPages = (totalItems, itemsPerPage) => {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        setTotalPages(totalPages);
+    };
+
+    // 검색 결과에 대해 페이징된 데이터 가져오기
+    const startIndex = (page - 1) * items;
+    const endIndex = startIndex + items;
+    // data에 게시판 데이터 넣기
+    const paginatedData = sortedNewsData.slice(startIndex, endIndex);
+
+    const searchList = () => {
+        return paginatedData.filter((itemData) =>
+            itemData.title.toUpperCase().includes(searchTerm.toUpperCase())
+        );
+    };
+
+    const handleModal = async (item) => {
+        setSelectedItem(item);
+        setModalOn(!modalOn);
+
+        // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+        try {
+            const response = await axios.get(`/api/board/detail/${bdIdx}`);
+            const { setNewsData } = useNewsViewContext();
+            useEffect(() => {
+                setNewsData(response.data);
+                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+            }, [response.data, setNewsData]);
+
+        } catch (error) {
+            console.error('데이터 로드 중 오류 발생:', error);
+        }
+    };
+    // 정렬된 전체데이터
+    const filterCategoryItem = sortedNewsData;
+    // 테스트용 데이터
+    const restItems = filterCategoryItem.slice(0, 8);
+
+    const BookMarkNewsItems = restItems.map((item, index) => (
+        <>
+            <BookMarkBox className='CategoryNewsBox' key={item.id} onClick={() => handleModal(item)}>
+                <BookMarkTextBox key={index}>
+                    <BookMarkDateBox>
+                        <BookMarkMedia>{item.press}</BookMarkMedia>
+                        <BookMarkDate>{item.articleWriteTime}</BookMarkDate>
+                    </BookMarkDateBox>
+                    <BookMarkTitle>{item.title}</BookMarkTitle>
+                    <BookMarkContent>{item.summary}</BookMarkContent>
+                </BookMarkTextBox>
+                <BookMarkImageBox src={item.picture} />
+            </BookMarkBox>
+        </>
+    ));
+
+    return (
+        <>
+            {loading ? (
+                <LoadingScreen />
+            ) : (
+                BookMarkNewsItems
+            )}
+            <PaginationBox>
+                <Pagination
+                    activePage={page}
+                    itemsCountPerPage={items}
+                    totalItemsCount={restItems.length}
+                    pageRangeDisplayed={5}
+                    onChange={handlePageChange}>
+                </Pagination>
+            </PaginationBox>
+            <ModalPortal>
+                {modalOn && <Modal item={selectedItem} onClose={() => setModalOn(false)} />}
+            </ModalPortal>
+        </>
+    );
 }

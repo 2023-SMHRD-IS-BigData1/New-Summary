@@ -19,6 +19,10 @@ const Wrapper = styled.div`
     backdrop-filter: blur(10px);
     box-shadow: 5px 5px 50px 5px #99999944;
     z-index: 199;
+    @media screen and (max-width: 412px) {
+        max-width: 412px;
+        height: 80px;
+    }
 `;
 
 const WrapperTop = styled.div`
@@ -29,6 +33,9 @@ const WrapperTop = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @media screen and (max-width: 412px) {
+        max-width: 412px;
+    }
 `;
 
 const WrapperBottom = styled.div`
@@ -38,6 +45,9 @@ const WrapperBottom = styled.div`
     padding: 0 50px;
     display: flex;
     align-items: center;
+    @media screen and (max-width: 412px) {
+        visibility: hidden;
+    }
 `;
 
 const Title = styled.div`
@@ -49,6 +59,10 @@ const Title = styled.div`
     font-weight: 600;
     cursor: pointer;
     font-family: 'Oswald', sans-serif;
+    @media screen and (max-width: 412px) {
+        width: 120px;
+        font-size: 24px;
+    }
 `;
 
 const LoginBox = styled.div`
@@ -58,6 +72,9 @@ const LoginBox = styled.div`
     display: flex;
     justify-content: right;
     align-items: center;
+    @media screen and (max-width: 412px) {
+        visibility: hidden;
+    }
 `;
 
 const UserButton = styled.div`
@@ -86,14 +103,19 @@ const MenuBox = styled.div`
 `;
 
 const MenuHambergerBox = styled.div`
-    width: 100%;
-    max-width: 1100px;
+    width: 100px;
     height: 40px;
     padding-right: 50px;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: right;
     position: relative;
+    visibility: hidden;
+    background-color: aqua;
+    @media screen and (max-width: 412px) {
+        display: flex;
+        visibility: visible;
+    }
 `;
 
 const MenuItem = styled.div`
@@ -198,6 +220,23 @@ export default function Header({ ...props }) {
                             <UserButton>로그인</UserButton>
                         </Link>
                     )}
+                    <MenuHambergerBox>
+                        {/* <Link to="/" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                            {curruntURL == "/" ? <MenuItem {...props} onPage>메인페이지</MenuItem> : <MenuItem>메인페이지</MenuItem>}
+                        </Link>
+                        <Link to="/category-news" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                            {curruntURL == "/category-news" ? <MenuItem {...props} onPage>뉴스 모아보기</MenuItem> : <MenuItem>뉴스 모아보기</MenuItem>}
+                        </Link>
+                        <Link to="/search" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                            {curruntURL == "/search" ? <MenuItem {...props} onPage>뉴스 찾아보기</MenuItem> : <MenuItem>뉴스 찾아보기</MenuItem>}
+                        </Link>
+                        <Link to="/board" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                            {curruntURL == "/board" ? <MenuItem {...props} onPage>커뮤니티</MenuItem> : <MenuItem>커뮤니티</MenuItem>}
+                        </Link>
+                        <Link to="/profile" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                            {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
+                        </Link> */}
+                    </MenuHambergerBox>
                 </LoginBox>
             </WrapperTop>
             <WrapperBottom>
@@ -218,23 +257,6 @@ export default function Header({ ...props }) {
                         {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
                     </Link>
                 </MenuBox>
-                {/* <MenuHambergerBox>
-                    <Link to="/" style={{ textDecoration: "none", color: "black", width: "20%" }}>
-                        {curruntURL == "/" ? <MenuItem {...props} onPage>메인페이지</MenuItem> : <MenuItem>메인페이지</MenuItem>}
-                    </Link>
-                    <Link to="/category-news" style={{ textDecoration: "none", color: "black", width: "20%" }}>
-                        {curruntURL == "/category-news" ? <MenuItem {...props} onPage>뉴스 모아보기</MenuItem> : <MenuItem>뉴스 모아보기</MenuItem>}
-                    </Link>
-                    <Link to="/search" style={{ textDecoration: "none", color: "black", width: "20%" }}>
-                        {curruntURL == "/search" ? <MenuItem {...props} onPage>뉴스 찾아보기</MenuItem> : <MenuItem>뉴스 찾아보기</MenuItem>}
-                    </Link>
-                    <Link to="/board" style={{ textDecoration: "none", color: "black", width: "20%" }}>
-                        {curruntURL == "/board" ? <MenuItem {...props} onPage>커뮤니티</MenuItem> : <MenuItem>커뮤니티</MenuItem>}
-                    </Link>
-                    <Link to="/profile" style={{ textDecoration: "none", color: "black", width: "20%" }}>
-                        {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
-                    </Link>
-                </MenuHambergerBox> */}
             </WrapperBottom>
         </Wrapper>
     )

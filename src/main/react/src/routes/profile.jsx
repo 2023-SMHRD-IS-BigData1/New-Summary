@@ -10,6 +10,12 @@ import Pencil from '../assets/pencil-logo.svg'
 import Coin from '../assets/coin-logo.svg'
 import Exclamation from '../assets/exclamation-circle.svg'
 import MypagePaging from '../components/pagination';
+import { BookMarkNewsComponent } from '../components/news';
+import EmailLogo from '../assets/email-logo.svg';
+import UserLogo from '../assets/user-logo.svg';
+import PasswordLogo from '../assets/password-logo.svg';
+import PhoneLogo from '../assets/phone-logo.svg';
+import { BoardProfile } from '../components/board-sns';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -202,82 +208,6 @@ const SecessionBtn = styled.div`
   }
 `;
 
-const BookMarkBox = styled.div`
-  width: 100%;
-  max-width: 1200px;
-  height: 300px;
-  padding: 30px;
-  border: 1px solid #99999944;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  box-shadow: 2px 5px 10px 2px #99999944;
-  background-color: #ffffff;
-`;
-
-const BookMarkTextBox = styled.div`
-  width: 65%;
-  max-width: 600px;
-  height: 240px;
-`;
-
-const BookMarkDateBox = styled.div`
-  width: 100%;
-  height: 30px;
-  padding-bottom: 10px;
-  gap: 30px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const BookMarkMedia = styled.div`
-  font-size: 18px;
-  color: #999999;
-`;
-
-const BookMarkDate = styled.div`
-  color: #999999;
-`;
-
-const BookMarkTitle = styled.div`
-  width: 100%;
-  height: 72px;
-  font-size: 26px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  line-height: 1.3;
-  overflow: hidden;
-  position: relative;
-  white-space: normal;
-  word-wrap: break-word;
-  display: -webkit-box;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-`;
-
-const BookMarkContent = styled.div`
-  width: 100%;
-  height: 114px;
-  font-size: 18px;
-  line-height: 1.3;
-  overflow: hidden;
-  position: relative;
-  white-space: normal;
-  word-wrap: break-word;
-  display: -webkit-box;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-`;
-
-const BookMarkImageBox = styled.img`
-  width: 40%;
-  max-width: 300px;
-  height: 240px;
-`;
-
 const ProfileBack = styled.div`
   width: 100%;
   height: 300px;
@@ -300,32 +230,48 @@ const ProfileUpdateForm = styled.form`
 const ProfileUpdateBox = styled.div`
   width: 100%;
   height: 80px;
-  padding: 0 60px;
+  padding: 20px 0px;  
+  position: relative; 
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-bottom: 1px solid #99999944;
   &:last-child {
     border: none;
   }
 `;
 
-const ProfileUpdateText = styled.div`
-  width: 50%;
-  max-width: 150px;
-  height: 30px;
-  font-size: 18px;
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  padding-right: 20px;
+const ProfileUpdateLogo = styled.img`
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  position: absolute;
+  top: 20px;
+  left: 16%;
+  color: #7875B5;
 `;
 
 const ProfileUpdateInput = styled.input`
-  width: 100%;
-  height: 30px;
+  border: none;
+  border-bottom: 3px solid #D1D1D4;
+  background: none;
+  padding: 10px;
+  padding-left: 16%;
+  font-weight: 700;
   font-size: 18px;
-  padding-left: 20px;
+  width: 75%;
+  transition: .2s;
+  &:active,
+  &:focus,
+  &:hover {
+    outline: none;
+    border-color: #00ae68;
+  }
+  &:focus {
+    color: #000000;
+  }
+  &::placeholder {
+    color: #bbbbbb;
+  }
 `;
 
 const ProfileUpdateBtn = styled.div`
@@ -335,9 +281,54 @@ const ProfileUpdateBtn = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  background-color: #00ae68;
+  font-weight: 600;
+  &:hover {
+    color: #ffffff;
+    background-color: #264653;
+    transition: .5s;
+  }
+`;
+
+const ProfileUpdateBoxTop = styled.div`
+  width: 75%;
+  display: flex;
+  justify-content: space-around;
   background-color: aqua;
 `;
 
+const ProfileBoxArea = styled.div`
+  width: 50%;
+  border: 1px solid #000000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+`;
+
+const ProfileHeader = styled.div`
+  padding-right: 100px;
+  font-size: 24px;
+  font-weight: 600;
+  white-space: nowrap;
+`;
+
+const ProfileImageBox = styled.div`
+  width: 80%;
+  border-radius: 50%;
+  margin: auto;
+  border: 1px solid #99999944;
+  overflow: hidden;
+
+
+`;
+
+const ProfileImage = styled.img`
+  width: 100%;
+  transform: translateY(20px);
+`;
+
+const ProfileImgInput = styled.input``;
 
 
 
@@ -388,45 +379,47 @@ export default function Profile() {
         </Content>
         {/* 북마크 뉴스 */}
         <Content className={`content2 ${onMenu === 'content2' ? 'active' : ''}`} active={onMenu === 'content2'}>
-          <BookMarkBox>
-            <BookMarkTextBox>
-              <BookMarkDateBox>
-                <BookMarkMedia> KBS </BookMarkMedia>
-                <BookMarkDate>2023.11.20 15:22</BookMarkDate>
-              </BookMarkDateBox>
-              <BookMarkTitle>시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?시가 600억 클럽마약 밀수·유통조직 일망 타진…어떻게?</BookMarkTitle>
-              <BookMarkContent>
-                강원도 평창경찰서와 춘천지검 영월지청은 케타민과 필로폰 등 30kg 시가 600억 원어치의 마약을 밀수해 서울의 강남지역 클럽 등에 유통시킨 조직원 30여 명을 검거했다고 밝혔습니다. 이 조직은 밀수 담당과 유통 담당으로 나뉘어 체계적으로 움직였습니다. 각 조직원은 또 '탈퇴 시 보복' 등 엄격한 행동강령 아래 역할을 분담한 것으로 드러났습니다.
-              </BookMarkContent>
-            </BookMarkTextBox>
-            <BookMarkImageBox src='https://imgnews.pstatic.net/image/056/2023/11/20/0011605744_001_20231120153305436.jpg?type=w647' />
-          </BookMarkBox>
+          <BookMarkNewsComponent />
         </Content>
         {/* 내가 작성한 글 */}
         <Content className={`content3 ${onMenu === 'content3' ? 'active' : ''}`} active={onMenu === 'content3'}>
+          <BoardProfile />
         </Content>
         {/* 개인정보 수정 */}
         <Content className={`content4 ${onMenu === 'content4' ? 'active' : ''}`} active={onMenu === 'content4'}>
           <ProfileUpdateForm action=''>
             <ProfileUpdateBox>
-              <ProfileUpdateText>Email : </ProfileUpdateText>
-              <ProfileUpdateInput value="email" readOnly/>
+              <ProfileUpdateBoxTop>
+                <ProfileBoxArea>
+                  <ProfileHeader>내정보</ProfileHeader>
+                </ProfileBoxArea>
+                <ProfileBoxArea>
+                  <ProfileImageBox>
+                    <ProfileImage />
+                  </ProfileImageBox>
+                  <ProfileImgInput />
+                </ProfileBoxArea>
+              </ProfileUpdateBoxTop>
             </ProfileUpdateBox>
             <ProfileUpdateBox>
-              <ProfileUpdateText>닉네임 : </ProfileUpdateText>
-              <ProfileUpdateInput value="" placeholder=''/>
+              <ProfileUpdateLogo src={EmailLogo} />
+              <ProfileUpdateInput type='email' value="email" disabled />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
-              <ProfileUpdateText>비밀번호 : </ProfileUpdateText>
-              <ProfileUpdateInput value=""/>
+              <ProfileUpdateLogo src={UserLogo} />
+              <ProfileUpdateInput type='text' placeholder="username" />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
-              <ProfileUpdateText>비밀번호 확인 : </ProfileUpdateText>
-              <ProfileUpdateInput value=""/>
+              <ProfileUpdateLogo src={PasswordLogo} />
+              <ProfileUpdateInput type='password' placeholder="password" />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
-              <ProfileUpdateText>연락처 : </ProfileUpdateText>
-              <ProfileUpdateInput value=""/>
+              <ProfileUpdateLogo src={PasswordLogo} />
+              <ProfileUpdateInput type='password' placeholder="password" />
+            </ProfileUpdateBox>
+            <ProfileUpdateBox>
+              <ProfileUpdateLogo src={PhoneLogo} />
+              <ProfileUpdateInput placeholder="phone number" />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateBtn>수정하기</ProfileUpdateBtn>

@@ -178,7 +178,7 @@ const sortedNewsData = newsData && newsData
         <SubDate>{format(new Date(item.articleWriteTime), 'ko')}</SubDate>
       </SubTextBox>
       <NewsTitle>{item.title}</NewsTitle>
-      <NewsContent>{item.articleContent}</NewsContent>
+      <NewsContent>{item.summary}</NewsContent>
     </SlideItem>
   ));
 

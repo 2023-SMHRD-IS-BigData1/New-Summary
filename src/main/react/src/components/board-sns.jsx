@@ -490,3 +490,137 @@ export function BoardMain() {
         </Link>
     )
 }
+
+export function BoardProfile() {
+    const { boardData, loading } = useBoardContext();
+    const { boardViewData, loadingViews } = useBoardViewContext();
+    const [columns, setColumns] = useState(3);
+    const [modalOn, setModalOn] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    // 반응형으로 사이즈 조절
+    useEffect(() => {
+        const handleResize = () => {
+            const newColumns = window.innerWidth <= 1000 ? 1 : 2;
+            setColumns(newColumns);
+        };
+
+        const handleImageLoad = (index, height) => {
+            const boardData = [...data];
+            boardData[index] = 300 + height;
+            setData(boardData);
+        };
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const handleModal = async (item) => {
+        setSelectedItem(item);
+        setModalOn(!modalOn);
+
+        // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+        try {
+            const response = await axios.get(`/api/news/detail/${item.id}`);
+            const { setBoardViewData } = useBoardViewContext();
+            useEffect(() => {
+                setNewsData(response.data);
+                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+            }, [response.data, setNewsData]);
+
+        } catch (error) {
+            console.error('데이터 로드 중 오류 발생:', error);
+        }
+    };
+
+    // 가져온 데이터를 사용하여 UI를 렌더링
+    const boardMainItems = boardData && boardData.map((item, index) => {
+        // Moment.js를 사용하여 날짜 포맷 변경
+        const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
+        return (
+            <>
+                <Item key={item.id} style={{ height: `auto` }} onClick={() => handleModal(item)}>
+                    {/* 이미지 추가시 들어갈 코드 */}
+                    {/* {imageUrl[item.id] && <ItemImage src={imageUrl[item.id]} />} */}
+                    <ItemTextBox>
+                        <TextDate>{formattedDate}</TextDate>
+                        <TextContent>{item.bdContent}</TextContent>
+                        <TextUrl>{item.bdUrl}</TextUrl>
+                        <LikeBox>
+                            {/* 댓글추가시 댓글 카운트해서 넣을것 */}
+                            <Comments src={Comment} /> 10
+                            <Likes src={Like} /> {item.bdLikes}
+                            <Views src={ViewsLogo} /> {item.bdViews}
+                        </LikeBox>
+                        <UserBox>
+                            {/*  유저 프로필사진 들어가기 */}
+                            <UserBoxImage></UserBoxImage>
+                            {/* 유저이름 출력 / 아직 시큐리티 적용안되서 null 받는중 */}
+                            <UserBoxName>{item.user}</UserBoxName>
+                        </UserBox>
+                    </ItemTextBox>
+                </Item>
+                <BoardModalPortal>
+                    {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+                </BoardModalPortal>
+            </>
+        );
+    });
+
+    const heights = [600, 300, 600, 900, 600, 600];
+    const imageUrl = [
+        "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
+        undefined,
+        "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
+        "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
+        "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
+        "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
+    ]
+
+    return (
+        <Link to="/board" style={{width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000"}}>
+            <Masonry
+                columns={columns}
+                spacing={2}
+                defaultHeight={300}
+                defaultColumns={1}
+                defaultSpacing={2}
+            >
+                {/* {loading ? (
+                    <LoadingScreen />
+                ) : (
+                    boardMainItems
+                )} */}
+                {/* 테스트용 데이터 */}
+                {heights.map((height, index) => (
+                <Item key={index} style={{ height: `${height}px` }}>
+                    {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
+                    <ItemTextBox>
+                        <TextDate>2023.11.16 16:06</TextDate>
+                        <TextContent>
+                            사용자가 작성한 게시판 글이 여기에 나올 예정입니다 
+                        </TextContent>
+                        <TextUrl>https://www.naver.com/</TextUrl>
+                        <LikeBox>
+                            <Comments src={Comment} /> 10
+                            <Likes src={Like} /> 52
+                        </LikeBox>
+                        <UserBox>
+                            <UserBoxImage></UserBoxImage>
+                            <UserBoxName>UserName</UserBoxName>
+                        </UserBox>
+                    </ItemTextBox>
+                </Item>
+            ))}
+            </Masonry>
+            <BoardModalPortal>
+                {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+            </BoardModalPortal>
+        </Link>
+    )
+}
