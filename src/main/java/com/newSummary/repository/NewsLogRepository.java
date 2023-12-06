@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.newSummary.domain.entity.NewsLog;
 
 @Repository
-public interface LogRepository extends JpaRepository<NewsLog, Long>{
+public interface NewsLogRepository extends JpaRepository<NewsLog, Long>{
 	
 }
