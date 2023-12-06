@@ -7,12 +7,13 @@ import lombok.Data;
 @Data
 public class BookmarkResponseDTO {
 	
-	private Long boomark_idx;
-	private String user_email;
-	private String news_object_id;
+	private Long bookmark_idx;
+	private String newsObjectId;
+	private String userEmail;
 
-	public BookmarkResponseDTO(Bookmark bookmark) {
-		this.boomark_idx = bookmark.getBookmarkIdx();
-		this.news_object_id = bookmark.getNewsObjectId();
+	public BookmarkResponseDTO(Bookmark bookmark,String userEmail) {
+		this.bookmark_idx = bookmark.getBookmarkIdx();
+		this.newsObjectId = bookmark.getNewsObjectId();
+		this.userEmail = userEmail;
 	}
 }
