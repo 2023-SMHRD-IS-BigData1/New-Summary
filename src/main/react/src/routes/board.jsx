@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Header from '../components/header';
 import Footer from '../components/footer';
-import { BoardSNS } from '../components/board-sns';
+import { BoardSNS, BoardWriteArea } from '../components/board-sns';
 
 
 const Wrapper = styled.div`
@@ -20,8 +20,20 @@ const WrapperBox = styled.div`
   flex-direction: row;
   justify-content: space-between;
   gap: 50px;
-  padding: 100px 50px 200px 50px;
-  /* padding-bottom: 200px; */
+  padding: 0 50px 0 50px;
+  margin: auto;
+  position: relative;
+  `;
+
+const WrapperBoxTop = styled.div`
+  width: 100%;
+  max-width: 1400px;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 50px 50px 50px 50px;
   margin: auto;
   position: relative;
   `;
@@ -39,6 +51,9 @@ export default function Board() {
         <Wrapper>
             <Header></Header>
             <BoardBack></BoardBack>
+            <WrapperBoxTop>
+              <BoardWriteArea />
+            </WrapperBoxTop>
             <WrapperBox>
               <BoardSNS />
             </WrapperBox>

@@ -13,6 +13,13 @@ import LoadingScreen from './loading-screen';
 import { BoardModalPortal } from './portal';
 import { BoardModal } from './modal';
 import moment from 'moment';
+import UserDefault from '../assets/image/user-avatar.png';
+
+// 임시
+import EmailLogo from '../assets/email-logo.svg';
+import UserLogo from '../assets/user-logo.svg';
+import PasswordLogo from '../assets/password-logo.svg';
+import PhoneLogo from '../assets/phone-logo.svg';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -150,6 +157,35 @@ const BoardWriteButton = styled.div`
 `;
 
 
+//  -- react-js Board Write component -- //
+const BoardWriteWrapper = styled.div`
+    width: 100%;
+    max-width: 800px;
+    min-height: 200px;
+    padding-top: 20px;
+    background-color: #ffffff;
+    border: 1px solid #99999944;
+    border-radius: 20px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+`;
+
+const BoardWriteTextArea = styled.div`
+    width: 100%;
+    min-height: 120px;
+`;
+
+const BoardWriteBottom = styled.div`
+    width: 90%;
+    height: 50px;
+    margin-left: 5%;
+    border-top: 1px solid #99999944;
+    background-color: green;
+`;
+
 
 
 // -- react-js-pagination component -- //
@@ -176,7 +212,7 @@ const PaginationBox = styled.div`
   ul.pagination li:hover,
   ul.pagination li a:hover,
   ul.pagination li a.active { color: black; }
-`
+`;
 
 
 
@@ -268,7 +304,7 @@ export function BoardSNS() {
     };
 
     // 가져온 데이터를 사용하여 UI를 렌더링
-    const boardItems = boardData  && boardData.map((item, index) => {
+    const boardItems = boardData && boardData.map((item, index) => {
         // Moment.js를 사용하여 날짜 포맷 변경
         const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
 
@@ -340,9 +376,7 @@ export function BoardSNS() {
                 ))} */}
             </Masonry>
             <BoardWriteBox>
-                <Link to="/board-write" style={{ textDecoration: "none", color: "black" }}>
-                    <BoardWriteButton>글쓰기</BoardWriteButton>
-                </Link>
+                {/* 검색창 만들기 */}
             </BoardWriteBox>
             <PaginationBox>
                 <Pagination
@@ -449,7 +483,7 @@ export function BoardMain() {
     ]
 
     return (
-        <Link to="/board" style={{width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000"}}>
+        <Link to="/board" style={{ width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000" }}>
             <Masonry
                 columns={columns}
                 spacing={2}
@@ -464,25 +498,25 @@ export function BoardMain() {
                 )} */}
                 {/* 테스트용 데이터 */}
                 {heights.map((height, index) => (
-                <Item key={index} style={{ height: `${height}px` }}>
-                    {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
-                    <ItemTextBox>
-                        <TextDate>2023.11.16 16:06</TextDate>
-                        <TextContent>
-                            사용자가 작성한 게시판 글이 여기에 나올 예정입니다 AAAAABABABABABBABABABBABABABABVAAVAVAVA 사용자가 작성한 게시판 글이 여기에 나올 예정입니다
-                        </TextContent>
-                        <TextUrl>https://www.naver.com/</TextUrl>
-                        <LikeBox>
-                            <Comments src={Comment} /> 10
-                            <Likes src={Like} /> 52
-                        </LikeBox>
-                        <UserBox>
-                            <UserBoxImage></UserBoxImage>
-                            <UserBoxName>UserName</UserBoxName>
-                        </UserBox>
-                    </ItemTextBox>
-                </Item>
-            ))}
+                    <Item key={index} style={{ height: `${height}px` }}>
+                        {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
+                        <ItemTextBox>
+                            <TextDate>2023.11.16 16:06</TextDate>
+                            <TextContent>
+                                사용자가 작성한 게시판 글이 여기에 나올 예정입니다 AAAAABABABABABBABABABBABABABABVAAVAVAVA 사용자가 작성한 게시판 글이 여기에 나올 예정입니다
+                            </TextContent>
+                            <TextUrl>https://www.naver.com/</TextUrl>
+                            <LikeBox>
+                                <Comments src={Comment} /> 10
+                                <Likes src={Like} /> 52
+                            </LikeBox>
+                            <UserBox>
+                                <UserBoxImage></UserBoxImage>
+                                <UserBoxName>UserName</UserBoxName>
+                            </UserBox>
+                        </ItemTextBox>
+                    </Item>
+                ))}
             </Masonry>
             <BoardModalPortal>
                 {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
@@ -583,7 +617,7 @@ export function BoardProfile() {
     ]
 
     return (
-        <Link to="/board" style={{width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000"}}>
+        <Link to="/board" style={{ width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000" }}>
             <Masonry
                 columns={columns}
                 spacing={2}
@@ -598,29 +632,38 @@ export function BoardProfile() {
                 )} */}
                 {/* 테스트용 데이터 */}
                 {heights.map((height, index) => (
-                <Item key={index} style={{ height: `${height}px` }}>
-                    {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
-                    <ItemTextBox>
-                        <TextDate>2023.11.16 16:06</TextDate>
-                        <TextContent>
-                            사용자가 작성한 게시판 글이 여기에 나올 예정입니다 
-                        </TextContent>
-                        <TextUrl>https://www.naver.com/</TextUrl>
-                        <LikeBox>
-                            <Comments src={Comment} /> 10
-                            <Likes src={Like} /> 52
-                        </LikeBox>
-                        <UserBox>
-                            <UserBoxImage></UserBoxImage>
-                            <UserBoxName>UserName</UserBoxName>
-                        </UserBox>
-                    </ItemTextBox>
-                </Item>
-            ))}
+                    <Item key={index} style={{ height: `${height}px` }}>
+                        {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
+                        <ItemTextBox>
+                            <TextDate>2023.11.16 16:06</TextDate>
+                            <TextContent>
+                                사용자가 작성한 게시판 글이 여기에 나올 예정입니다
+                            </TextContent>
+                            <TextUrl>https://www.naver.com/</TextUrl>
+                            <LikeBox>
+                                <Comments src={Comment} /> 10
+                                <Likes src={Like} /> 52
+                            </LikeBox>
+                            <UserBox>
+                                <UserBoxImage></UserBoxImage>
+                                <UserBoxName>UserName</UserBoxName>
+                            </UserBox>
+                        </ItemTextBox>
+                    </Item>
+                ))}
             </Masonry>
             <BoardModalPortal>
                 {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
             </BoardModalPortal>
         </Link>
     )
+}
+
+export function BoardWriteArea() {
+    return (
+        <BoardWriteWrapper>
+            <BoardWriteTextArea></BoardWriteTextArea>
+            <BoardWriteBottom></BoardWriteBottom>
+        </BoardWriteWrapper>
+    );
 }
