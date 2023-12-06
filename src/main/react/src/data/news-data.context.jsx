@@ -17,9 +17,9 @@ export const CategoryProvider = ({ children }) => {
     const aixosData = async () => {
       try {
         // 전체기간 키워드 요청 url
-        // const response = await axios.get('/api/keyword/list');
+        const response = await axios.get('/api/keyword/list');
         // 오늘의 키워드 요청 url
-        const response = await axios.get('/api/keyword/today');
+        // const response = await axios.get('/api/keyword/today');
         setCategoryData(response.data);
         console.log('키워드 데이터가 성공적으로 로드되었습니다:', response.data);
       } catch (error) {
@@ -76,13 +76,13 @@ export const NewsProvider = ({ children }) => {
       try {
         const response = await axios.get('/api/news/list');
         setNewsData(response.data);
-        const filteredData = response.data.filter(item => 
-          item.picture !== null && item.picture !== "" && 
+        const filteredData = response.data.filter(item =>
+          item.picture !== null && item.picture !== "" &&
           item.articleContent !== null && item.articleContent !== ""
         );
-        console.log('데이터가 성공적으로 로드되었습니다:', filteredData);
+        console.log('뉴스 데이터가 성공적으로 로드되었습니다:', filteredData);
       } catch (error) {
-        console.error('데이터 로드 중 오류 발생:', error);
+        console.error('뉴스 데이터 로드 중 오류 발생:', error);
       } finally {
         setLoading(false);
       }
@@ -107,9 +107,9 @@ export const NewsViewProvider = ({ children }) => {
       try {
         const response = await axios.get(`/api/news/detail/{id}`);
         setNewsData(response.data);
-        console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+        console.log('조회수 뉴스데이터가 성공적으로 로드되었습니다:', response.data);
       } catch (error) {
-        console.error('데이터 로드 중 오류 발생:', error);
+        console.error('조회수 뉴스데이터 로드 중 오류 발생:', error);
       } finally {
         setLoading(false);
       }
