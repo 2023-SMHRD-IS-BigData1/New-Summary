@@ -125,7 +125,7 @@ public class NewsService {
 	       return newsDTOList;
 	   }
 	   // 상위키워드 추출
-	    public static List<String> findTopKeys(Map<String, Integer> map, int topCount) {
+	    public List<String> findTopKeys(Map<String, Integer> map, int topCount) {
 	        // Map.Entry를 리스트로 변환
 	        List<Entry<String, Integer>> entryList = new ArrayList<>(map.entrySet());
 

@@ -1,6 +1,5 @@
 package com.newSummary.domain.dto.bookmark;
 
-import com.newSummary.domain.entity.User;
 
 import lombok.Data;
 
@@ -8,6 +7,12 @@ import lombok.Data;
 public class BookmarkRequestDTO {
 	
 	private String newsObjectId;
-	private User user;
+	private String userEmail;
+	
+    // 생성자 추가
+    public BookmarkRequestDTO(String newsObjectId, String userEmail) {
+        this.newsObjectId = newsObjectId;
+        this.userEmail = userEmail;
+    }
 	
 }

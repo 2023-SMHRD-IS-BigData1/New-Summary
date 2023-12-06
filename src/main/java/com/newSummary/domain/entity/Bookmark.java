@@ -1,7 +1,6 @@
 package com.newSummary.domain.entity;
 
 
-import com.newSummary.domain.dto.bookmark.BookmarkRequestDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,10 +37,6 @@ public class Bookmark {
     private User user;
     
 
-    public Bookmark(BookmarkRequestDTO bookmarkRequestDTO) {
-        this.newsObjectId = bookmarkRequestDTO.getNewsObjectId();
-        this.user = bookmarkRequestDTO.getUser();
-    }
 
 }
 
