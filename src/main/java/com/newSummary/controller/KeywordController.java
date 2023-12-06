@@ -25,8 +25,8 @@ public class KeywordController {
 		return keywordService.getlist();
 	}
 	@GetMapping("/today")
-	public Keyword getKeyword() {
-		return keywordService.getkeyword();
+	public List<String> getKeyword() {
+		return keywordService.gettopkeys();
 	}
 
 }
