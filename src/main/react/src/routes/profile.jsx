@@ -240,6 +240,19 @@ const ProfileUpdateBox = styled.div`
   }
 `;
 
+const ProfileUpdateTop = styled.div`
+  width: 100%;
+  height: 300px;
+  padding: 20px 0px;  
+  position: relative; 
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  &:last-child {
+    border: none;
+  }
+`;
+
 const ProfileUpdateLogo = styled.img`
   width: 40px;
   height: 40px;
@@ -292,22 +305,21 @@ const ProfileUpdateBtn = styled.div`
 
 const ProfileUpdateBoxTop = styled.div`
   width: 75%;
+  height: 300px;
   display: flex;
   justify-content: space-around;
-  background-color: aqua;
 `;
 
 const ProfileBoxArea = styled.div`
   width: 50%;
-  border: 1px solid #000000;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
   flex-direction: column;
 `;
 
 const ProfileHeader = styled.div`
   padding-right: 100px;
+  margin-bottom: 200px;
   font-size: 24px;
   font-weight: 600;
   white-space: nowrap;
@@ -315,20 +327,37 @@ const ProfileHeader = styled.div`
 
 const ProfileImageBox = styled.div`
   width: 80%;
+  height: 80%;
   border-radius: 50%;
   margin: auto;
   border: 1px solid #99999944;
   overflow: hidden;
-
-
 `;
 
 const ProfileImage = styled.img`
   width: 100%;
-  transform: translateY(20px);
+  transform: translateY(30px);
 `;
 
-const ProfileImgInput = styled.input``;
+const ProfileImgLabel = styled.label`
+  margin-top: 30px;
+  background-color: #2A9D8F;
+  text-align: center;
+  padding: 10px 0;
+  width: 65%;
+  margin: auto;
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover {
+    color: #ffffff;
+    background-color: #264653;
+    transition: .5s;
+  }
+`;
+
+const ProfileImgInput = styled.input`
+  display: none;
+`;
 
 
 
@@ -388,19 +417,20 @@ export default function Profile() {
         {/* 개인정보 수정 */}
         <Content className={`content4 ${onMenu === 'content4' ? 'active' : ''}`} active={onMenu === 'content4'}>
           <ProfileUpdateForm action=''>
-            <ProfileUpdateBox>
+            <ProfileUpdateTop>
               <ProfileUpdateBoxTop>
                 <ProfileBoxArea>
                   <ProfileHeader>내정보</ProfileHeader>
                 </ProfileBoxArea>
                 <ProfileBoxArea>
                   <ProfileImageBox>
-                    <ProfileImage />
+                    <ProfileImage src={UserDefault} />
                   </ProfileImageBox>
-                  <ProfileImgInput />
+                  <ProfileImgLabel class="file-label" for="chooseFile">Image Upload</ProfileImgLabel>
+                  <ProfileImgInput  class="file" id="chooseFile" type="file" multiple />
                 </ProfileBoxArea>
               </ProfileUpdateBoxTop>
-            </ProfileUpdateBox>
+            </ProfileUpdateTop>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={EmailLogo} />
               <ProfileUpdateInput type='email' value="email" disabled />
