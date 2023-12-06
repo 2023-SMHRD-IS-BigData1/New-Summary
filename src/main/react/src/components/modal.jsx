@@ -136,6 +136,7 @@ const ContentText = styled.div`
   line-height: 1.3;
   white-space: normal;
   word-wrap: break-word;
+  text-align: left;
 `;
 
 const NewsUrlBox = styled.div`
@@ -374,7 +375,7 @@ const Modal = ({ onClose, item }) => {
           <ImageUrl src={item.picture} />
         </ImageBox>
         <ContentBox>
-          <ContentText>{item.articleContent}</ContentText>
+          <ContentText>{item.summary}</ContentText>
           <NewsUrlBox>
             기사 원문 :
             <NewsUrl href={item.url} target="_blank">{item.url}</NewsUrl>
