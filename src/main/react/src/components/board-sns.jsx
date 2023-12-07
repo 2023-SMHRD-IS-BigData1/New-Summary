@@ -13,13 +13,9 @@ import LoadingScreen from './loading-screen';
 import { BoardModalPortal } from './portal';
 import { BoardModal } from './modal';
 import moment from 'moment';
-import UserDefault from '../assets/image/user-avatar.png';
-
-// 임시
-import EmailLogo from '../assets/email-logo.svg';
-import UserLogo from '../assets/user-logo.svg';
-import PasswordLogo from '../assets/password-logo.svg';
-import PhoneLogo from '../assets/phone-logo.svg';
+import PhotoLogo from '../assets/photo-logo.svg';
+import LinkLogo from '../assets/link-logo.svg';
+import ResetLogo from '../assets/reset-logo.svg';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -138,27 +134,10 @@ const BoardWriteBox = styled.div`
 
 `;
 
-const BoardWriteButton = styled.div`
-    width: 120px;
-    height: 40px;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: 600;
-    background-color: #2A9D8F;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    &:hover {
-        background-color: #264653;
-        color: #ffffff;
-        transition: .5s;
-    }
-`;
 
 
 //  -- react-js Board Write component -- //
-const BoardWriteWrapper = styled.div`
+const BoardWriteForm = styled.form`
     width: 100%;
     max-width: 800px;
     min-height: 200px;
@@ -174,17 +153,76 @@ const BoardWriteWrapper = styled.div`
 `;
 
 const BoardWriteTextArea = styled.div`
-    width: 100%;
-    min-height: 120px;
+    width: 90%;
+    min-height: 100px;
+    margin-left: 5%;
 `;
 
 const BoardWriteBottom = styled.div`
     width: 90%;
-    height: 50px;
+    height: 80px;
     margin-left: 5%;
     border-top: 1px solid #99999944;
-    background-color: green;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 `;
+
+const BoardWriteIconArea = styled.div`
+    width: 100%;
+    display: flex;
+    gap: 20px;
+`;
+
+const BoardWriteIcon = styled.img`
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    &:hover {
+
+    }
+`;
+const BoardWritePostBox = styled.div`
+    display: flex;
+    gap: 20px;
+`;
+
+const BoardWritePostBtn = styled.div`
+    width: 120px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #E9C46A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+        background-color: #264653;
+        color: #ffffff;
+        transition: .5s;
+    }
+`;
+
+const BoardWriteResetBtn = styled.div`
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #E9C46A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+        background-color: #264653;
+        color: #ffffff;
+        transition: .5s;
+    }
+`;
+
 
 
 
@@ -661,9 +699,20 @@ export function BoardProfile() {
 
 export function BoardWriteArea() {
     return (
-        <BoardWriteWrapper>
+        <BoardWriteForm>
             <BoardWriteTextArea></BoardWriteTextArea>
-            <BoardWriteBottom></BoardWriteBottom>
-        </BoardWriteWrapper>
+            <BoardWriteBottom>
+                <BoardWriteIconArea>
+                    <BoardWriteIcon src={PhotoLogo} />
+                    <BoardWriteIcon src={LinkLogo} />
+                </BoardWriteIconArea>
+                <BoardWritePostBox>
+                    <BoardWriteResetBtn>
+                        <BoardWriteIcon src={ResetLogo} />
+                    </BoardWriteResetBtn>
+                    <BoardWritePostBtn>작성하기</BoardWritePostBtn>
+                </BoardWritePostBox>
+            </BoardWriteBottom>
+        </BoardWriteForm>
     );
 }
