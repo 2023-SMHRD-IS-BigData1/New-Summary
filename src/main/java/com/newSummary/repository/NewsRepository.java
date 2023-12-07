@@ -22,4 +22,5 @@ public interface NewsRepository extends MongoRepository<News, String>{
     
     // 카테고리 내 추천 기능
     List<News> findByCategory(String category);
+
 }
