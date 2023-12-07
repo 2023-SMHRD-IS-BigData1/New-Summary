@@ -13,7 +13,6 @@ import { CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider 
 import { AuthProvider } from './data/user-login';
 import { BoardProvider, BoardViewProvider } from './data/board-data';
 import TopButtonLogo from '../src/assets/top-logo.svg'
-import BoardWrite from './routes/board-write';
 
 // 초기 시작페이지를 잡아주기
 const router = createBrowserRouter([
@@ -44,10 +43,6 @@ const router = createBrowserRouter([
       {
         path: "board",
         element: <Board />,
-      },
-      {
-        path: "board-write",
-        element: <BoardWrite />,
       },
     ],
   },
