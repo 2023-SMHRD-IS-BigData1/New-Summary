@@ -4,11 +4,10 @@ import styled from "styled-components"
 import Like from "../assets/heart-icon.svg"
 import Comment from "../assets/comment-icon.svg"
 import ViewsLogo from "../assets/views.svg"
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Pagination from 'react-js-pagination';
 import { Link } from 'react-router-dom';
-import { useBoardContext, useBoardViewContext } from '../data/board-data';
+import { useBoardContext, useBoardViewContext, useBoardWriteContext } from '../data/board-data';
 import LoadingScreen from './loading-screen';
 import { BoardModalPortal } from './portal';
 import { BoardModal } from './modal';
@@ -36,38 +35,42 @@ const ItemImage = styled.img`
 
 const ItemTextBox = styled.div`
     width: 100%;
-    height: 300px;
+    height: auto;
     padding: 20px;
     background-color: white;
     position: relative;
 `;
 
 const TextDate = styled.div`
+    width: 100%;
+    height: 20px;
+    margin-bottom: 5px;
     color: #999999;
 `;
 
 const TextContent = styled.div`
     width: 100%;
-    height: 105px;
+    /* height: 105px; */
     padding: 10px 10px 0 10px;
+    margin-bottom: 20px;
     font-size: 20px;
     line-height: 1.2;
-    overflow: hidden;
+    /* overflow: hidden;
     position: relative;
     white-space: normal;
     word-wrap: break-word;
     display: -webkit-box;
     text-overflow: ellipsis;
     -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
+    -webkit-box-orient: vertical; */
 `;
 
 const TextUrl = styled.div`
     width: 100%;
-    height: 40px;
+    min-height: 40px;
     font-size: 16px;
     padding: 0 10px;
-    margin-top: 10px;
+    margin: 10px 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,14 +79,12 @@ const TextUrl = styled.div`
 `;
 
 const LikeBox = styled.div`
-    width: 90%;
+    width: 100%;
     height: 30px;
     padding-right: 30px;
     display: flex;
     align-items: center;
     justify-content: right;
-    position: absolute;
-    bottom: 70px;
     gap: 10px;
 `;
 
@@ -109,8 +110,6 @@ const UserBox = styled.div`
     height: 70px;
     display: flex;
     align-items: center;
-    position: absolute;
-    bottom: 20px;
     gap: 20px;
 `;
 
@@ -149,11 +148,11 @@ const BoardWriteForm = styled.form`
     display: flex;
     justify-content: center;
     flex-direction: column;
-    gap: 20px;
 `;
 
 const BoardWriteTextArea = styled.div`
     width: 90%;
+    height: auto;
     min-height: 100px;
     margin-left: 5%;
 `;
@@ -162,7 +161,6 @@ const BoardWriteBottom = styled.div`
     width: 90%;
     height: 80px;
     margin-left: 5%;
-    border-top: 1px solid #99999944;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -175,11 +173,15 @@ const BoardWriteIconArea = styled.div`
 `;
 
 const BoardWriteIcon = styled.img`
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
+    padding: 10px;
     cursor: pointer;
     &:hover {
-
+        border-radius: 50px;
+        color: #ffffff;
+        background-color: #E9C46A;
+        transition: .5s;
     }
 `;
 const BoardWritePostBox = styled.div`
@@ -187,7 +189,7 @@ const BoardWritePostBox = styled.div`
     gap: 20px;
 `;
 
-const BoardWritePostBtn = styled.div`
+const BoardWritePostBtn = styled.button`
     width: 120px;
     height: 40px;
     border-radius: 10px;
@@ -197,6 +199,7 @@ const BoardWritePostBtn = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    border: none;
     cursor: pointer;
     &:hover {
         background-color: #264653;
@@ -205,7 +208,7 @@ const BoardWritePostBtn = styled.div`
     }
 `;
 
-const BoardWriteResetBtn = styled.div`
+const BoardWriteResetBtn = styled.button`
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -215,12 +218,38 @@ const BoardWriteResetBtn = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    border: none;
     cursor: pointer;
     &:hover {
         background-color: #264653;
         color: #ffffff;
         transition: .5s;
     }
+`;
+
+const BoardTextAreaInput = styled.textarea`
+    width: 100%;
+    min-height: 120px;
+    padding: 20px 0;
+    /* background-color: aqua; */
+    font-size: 18px;
+    line-height: 1.2;
+    font-family: 'Malgun Gothic';
+    border: none;
+    resize: none;
+    outline: none;
+    transition: .2s;
+    border-bottom: 3px solid #D1D1D4;
+    &::placeholder {
+        text-align: center;
+    }
+    &:active,
+    &:focus,
+    &:hover {
+        outline: none;
+        border-color: #E9C46A;
+    }
+
 `;
 
 
@@ -255,30 +284,14 @@ const PaginationBox = styled.div`
 
 
 export function BoardSNS() {
-    const { boardData, loading } = useBoardContext();
+    const { boardData, setBoardData, loading } = useBoardContext();
     const { boardViewData, loadingViews } = useBoardViewContext();
     const [columns, setColumns] = useState(3);
     const [page, setPage] = useState(1);
-    const [itemsBoard, setItemsBoard] = useState(20);
+    const [itemsBoard, setItemsBoard] = useState(10);
     const [modalOn, setModalOn] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
-
-    // const data = [600, 300, 600, 900, 600, 600, 600, 300, 600, 900, 600, 600];
-    // const imageUrl = [
-    //     "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
-    //     undefined,
-    //     "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
-    //     "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
-    //     "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
-    //     "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
-    //     undefined,
-    //     "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
-    //     "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
-    //     "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
-    // ]
-
-
 
     useEffect(() => {
         const handleResize = () => {
@@ -300,6 +313,20 @@ export function BoardSNS() {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    // DB 게시판데이터 변동시 재요청
+    useEffect(() => {
+        const axiosData = async () => {
+            try {
+                const response = await axios.get('/api/board/list');
+                setBoardData(response.data);
+                console.log('게시판 갱신 데이터가 성공적으로 로드되었습니다:', response.data);
+            } catch (error) {
+                console.error('게시판 갱신 데이터 로드 중 오류 발생:', error);
+            }
+        };
+        axiosData();
+    }, [setBoardData]);
 
     // 페이징 코드
     const handlePageChange = (page) => {
@@ -330,7 +357,7 @@ export function BoardSNS() {
 
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            const response = await axios.get(`/api/board/detail/${bdIdx}`);
+            const response = await axios.get(`/api/board/detail/${item.bdIdx}`);
             useEffect(() => {
                 setNewsData(response.data);
                 console.log('데이터가 성공적으로 로드되었습니다:', response.data);
@@ -341,6 +368,7 @@ export function BoardSNS() {
         }
     };
 
+
     // 가져온 데이터를 사용하여 UI를 렌더링
     const boardItems = boardData && boardData.map((item, index) => {
         // Moment.js를 사용하여 날짜 포맷 변경
@@ -348,13 +376,13 @@ export function BoardSNS() {
 
         return (
             <>
-                <Item key={item.id} style={{ height: `auto` }} onClick={() => handleModal(item)}>
+                <Item key={item.id} onClick={() => handleModal(item)}>
                     {/* 이미지 추가시 들어갈 코드 */}
                     {/* {imageUrl[item.id] && <ItemImage src={imageUrl[item.id]} />} */}
                     <ItemTextBox>
                         <TextDate>{formattedDate}</TextDate>
                         <TextContent>{item.bdContent}</TextContent>
-                        <TextUrl>{item.bdUrl}</TextUrl>
+                        {item.bdUrl && <TextUrl>{item.bdUrl}</TextUrl>}
                         <LikeBox>
                             {/* 댓글추가시 댓글 카운트해서 넣을것 */}
                             <Comments src={Comment} /> 10
@@ -365,7 +393,7 @@ export function BoardSNS() {
                             {/*  유저 프로필사진 들어가기 */}
                             <UserBoxImage></UserBoxImage>
                             {/* 유저이름 출력 / 아직 시큐리티 적용안되서 null 받는중 */}
-                            <UserBoxName>{item.user}</UserBoxName>
+                            <UserBoxName>{item.userName}</UserBoxName>
                         </UserBox>
                     </ItemTextBox>
                 </Item>
@@ -376,13 +404,12 @@ export function BoardSNS() {
         );
     });
 
-
     return (
         <Wrapper>
             <Masonry
                 columns={columns}
                 spacing={2}
-                defaultHeight={300}
+                defaultHeight={150}
                 defaultColumns={1}
                 defaultSpacing={2}
             >
@@ -464,7 +491,7 @@ export function BoardMain() {
 
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            const response = await axios.get(`/api/news/detail/${item.id}`);
+            const response = await axios.get(`/api/board/detail/${item.bdIdx}`);
             const { setBoardViewData } = useBoardViewContext();
             useEffect(() => {
                 setNewsData(response.data);
@@ -698,19 +725,74 @@ export function BoardProfile() {
 }
 
 export function BoardWriteArea() {
+    const { setBoardData } = useBoardContext();
+    const { boardWriteData, setBoardWriteData, loadingWrite } = useBoardWriteContext();
+    const [bdContent, setBdContent] = useState('');
+    const formRef = useRef(null);
+    const [textareaHeight, setTextareaHeight] = useState('auto'); // 초기값은 'auto'로 설정
+
+    // 세션에 저장된 유저데이터가 있을경우 이메일 데이터를 가져오기
+    let userEmail;
+    const userDataString = sessionStorage.getItem('userData');
+    if (userDataString) {
+        let userData = JSON.parse(userDataString);
+        userEmail = userData.userEmail;
+    }
+
+    // reset 버튼을 눌렀을 때 textarea 높이를 'auto'로 설정
+    const handleReset = () => {
+        setTextareaHeight('auto');
+        formRef.current.reset();
+    };
+
+    // textarea 높이값 조절
+    const handleTextareaChange = (e) => {
+        setBdContent(e.target.value);
+        const minHeight = '0px';
+        const newHeight = `${Math.max(e.target.scrollHeight - 10, parseInt(minHeight, 10))}px`;
+
+        // 동적으로 textarea 높이 조절
+        setTextareaHeight(newHeight);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('/api/board/create', {
+                bdContent,
+                userEmail
+            });
+            setBoardWriteData(response.data);
+            setBoardData((prevData) => [response.data, ...prevData]); // 기존 데이터 앞에 새로운 데이터 추가
+            console.log('글 작성이 성공했습니다:', response.data);
+            formRef.current.reset();
+        } catch (error) {
+            console.error('글 작성 중 오류 발생:', error);
+        }
+    };
+
+
     return (
-        <BoardWriteForm>
-            <BoardWriteTextArea></BoardWriteTextArea>
+        <BoardWriteForm action='/api/board/create' ref={formRef} onSubmit={handleSubmit} method='post'>
+            <BoardWriteTextArea>
+                <BoardTextAreaInput
+                    rows={1}
+                    name='bdContent'
+                    placeholder='당신의 생각을 적어주세요'
+                    onChange={handleTextareaChange}
+                    style={{ height: textareaHeight }} // 동적으로 변경된 높이 적용
+                />
+            </BoardWriteTextArea>
             <BoardWriteBottom>
                 <BoardWriteIconArea>
                     <BoardWriteIcon src={PhotoLogo} />
                     <BoardWriteIcon src={LinkLogo} />
                 </BoardWriteIconArea>
                 <BoardWritePostBox>
-                    <BoardWriteResetBtn>
+                    <BoardWriteResetBtn type='reset' onClick={handleReset}>
                         <BoardWriteIcon src={ResetLogo} />
                     </BoardWriteResetBtn>
-                    <BoardWritePostBtn>작성하기</BoardWritePostBtn>
+                    <BoardWritePostBtn type='submit'>작성하기</BoardWritePostBtn>
                 </BoardWritePostBox>
             </BoardWriteBottom>
         </BoardWriteForm>

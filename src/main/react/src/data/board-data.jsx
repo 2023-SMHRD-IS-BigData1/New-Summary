@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const BoardContext = createContext();
 const BoardViewContext = createContext();
+const BoardWriteContext = createContext();
 
 export const BoardProvider = ({ children }) => {
   const [boardData, setBoardData] = useState([]);
@@ -22,10 +23,10 @@ export const BoardProvider = ({ children }) => {
     };
 
     aixosData();
-  }, []);
+  }, [setBoardData]);
 
   return (
-    <BoardContext.Provider value={{ boardData, loading }}>
+    <BoardContext.Provider value={{ boardData, setBoardData, loading }}>
       {children}
     </BoardContext.Provider>
   );
@@ -47,12 +48,37 @@ export const BoardViewProvider = ({ children }) => {
     };
 
     aixosData();
-  }, []);
+  }, [setBoardViewData]);
 
   return (
     <BoardViewContext.Provider value={{ boardViewData, loadingViews }}>
       {children}
     </BoardViewContext.Provider>
+  );
+};
+
+export const BoardWriteProvider = ({ children }) => {
+  const [boardWriteData, setBoardWriteData] = useState([]);
+  const [loadingWrite, setLoadingWrite] = useState(true);
+
+  useEffect(() => {
+    const aixosData = async () => {
+      try {
+        const response = await axios.post('/api/board/create');
+        setBoardWriteData(response.data);
+        console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+      } catch (error) {
+        console.error('데이터 로드 중 오류 발생:', error);
+      }
+    };
+
+    aixosData();
+  }, [setBoardWriteData]);
+
+  return (
+    <BoardWriteContext.Provider value={{ boardWriteData, setBoardWriteData, loadingWrite }}>
+      {children}
+    </BoardWriteContext.Provider>
   );
 };
 
@@ -63,4 +89,8 @@ export const useBoardContext = () => {
 
 export const useBoardViewContext = () => {
   return useContext(BoardViewContext);
+};
+
+export const useBoardWriteContext = () => {
+  return useContext(BoardWriteContext);
 };

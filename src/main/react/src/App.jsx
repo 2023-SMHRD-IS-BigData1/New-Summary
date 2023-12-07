@@ -11,7 +11,7 @@ import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
 import { CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider } from './data/news-data.context';
 import { AuthProvider } from './data/user-login';
-import { BoardProvider, BoardViewProvider } from './data/board-data';
+import { BoardProvider, BoardViewProvider, BoardWriteProvider } from './data/board-data';
 import TopButtonLogo from '../src/assets/top-logo.svg'
 
 // 초기 시작페이지를 잡아주기
@@ -125,6 +125,8 @@ function App() {
               <BoardProvider>
                 {/* 게시판 상세글 */}
                 <BoardViewProvider>
+                  {/* 게시판 글 작성 */}
+                  <BoardWriteProvider>
                   <Wrapper>
                     <GlobalStyles />
                     {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
@@ -132,6 +134,7 @@ function App() {
                       <TopButtonImage src={TopButtonLogo} />
                     </TopButton>
                   </Wrapper>
+                  </BoardWriteProvider>
                 </BoardViewProvider>
               </BoardProvider>
             </AuthProvider>
