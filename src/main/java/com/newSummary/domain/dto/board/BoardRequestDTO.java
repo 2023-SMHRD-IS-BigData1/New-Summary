@@ -1,10 +1,8 @@
 package com.newSummary.domain.dto.board;
 
-import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.newSummary.domain.entity.Board;
-import com.newSummary.domain.entity.User;
 
 import lombok.Data;
 
@@ -12,10 +10,12 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BoardRequestDTO {
 	
-	private Long bdIdx;
+	
+	// 게시글 내용
 	private String bdContent;
+	// 게시글 url
 	private String bdUrl;
-	private LocalDateTime createdAt;
+	// 유저 이메일
 	private String userEmail;		
 	
 	public Board fill(Board board) {

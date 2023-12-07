@@ -18,10 +18,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tb_comment")
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access= AccessLevel.PROTECTED) 
 @AllArgsConstructor
@@ -30,9 +32,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cmtIdx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bd_idx")
-    private Board board;
 
     @Column(columnDefinition = "TEXT")
     private String cmtContent;
@@ -44,7 +43,12 @@ public class Comment {
 	@Column(columnDefinition = "int default 0")
     private int cmtLikes;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bd_idx")
+	private Board board;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_email")
     private User user;
+
 }
