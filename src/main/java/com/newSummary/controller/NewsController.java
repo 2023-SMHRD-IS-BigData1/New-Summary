@@ -31,7 +31,7 @@ public class NewsController {
     }
     @GetMapping("/detail/{id}")
     // 뉴스 상세 데이터
-    public NewsDTO NewsDetail(@PathVariable("id") String id) {
+	public NewsDTO NewsDetail(@PathVariable("id") String id/* , @RequestParam String userEmail */) {
     	NewsDTO dto = newsService.detailNews(id);
     	return dto;
     }
