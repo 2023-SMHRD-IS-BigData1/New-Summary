@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.newSummary.domain.dto.bookmark.BookmarkRequestDTO;
 import com.newSummary.domain.dto.bookmark.BookmarkResponseDTO;
+import com.newSummary.domain.dto.bookmark.BookmarkSuccessDTO;
 import com.newSummary.service.BookmarkService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,14 +34,10 @@ public class BookmarkController {
 	public List<BookmarkResponseDTO> getBookmark(@PathVariable String userEmail){
 		return bookmarkService.getBookmark(userEmail);
 	}
-	@DeleteMapping("/delete/{bookmark_idx}")
-	public String deleteBookmark(@PathVariable Long bookmark_idx) {
-	    // 삭제 전에 삭제할 북마크의 사용자 정보를 가져옴
-	    String userEmail = bookmarkService.getUserEmailByBookmarkId(bookmark_idx);
+	@DeleteMapping("/delete/{bookmark_idx}/{userEmail}")
+	public BookmarkSuccessDTO deleteBookmark(@PathVariable Long bookmark_idx,  @PathVariable String userEmail) {
 	    
-	    bookmarkService.deleteBookmark(bookmark_idx);
-//	    return "redirect:" + redirectUrl;
-	    return "삭제성공";
+	    return bookmarkService.deleteBookmark(bookmark_idx, userEmail);
 	}
 	
 
