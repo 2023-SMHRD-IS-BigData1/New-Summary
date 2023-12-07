@@ -16,8 +16,7 @@ public class BoardRequestDTO {
 	private String bdContent;
 	private String bdUrl;
 	private LocalDateTime createdAt;
-	private User user;
-		
+	private String userEmail;		
 	
 	public Board fill(Board board) {
 		board.setBdContent(this.bdContent);

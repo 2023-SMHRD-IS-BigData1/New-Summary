@@ -36,7 +36,7 @@ public class BoardController {
 	
 	// 게시글 상세 보기
 	@GetMapping("/detail/{bdIdx}")
-	public Board boardDetail(@PathVariable("bdIdx") Long bdIdx) {
+	public BoardResponseDTO boardDetail(@PathVariable("bdIdx") Long bdIdx) {
 		return boardService.boardDetail(bdIdx);
 	}
 	

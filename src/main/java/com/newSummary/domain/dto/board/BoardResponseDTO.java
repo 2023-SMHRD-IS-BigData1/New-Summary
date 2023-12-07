@@ -23,20 +23,17 @@ public class BoardResponseDTO {
 	// 좋아요
 	private int bdLikes;
 	// 작성자
-	private User user;
+	private String userName;
+		
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class User {
-		private String userEmail;
-	}
-
-	public BoardResponseDTO(Board entity) {
-		this.bdIdx = entity.getBdIdx();
-		this.bdContent = entity.getBdContent();
-		this.bdUrl = entity.getBdUrl();
-		this.createdAt = entity.getCreatedAt();
-		this.bdLikes = entity.getBdLikes();
-		this.bdViews = entity.getBdViews();
+	public BoardResponseDTO(Board board, String userName) {
+		this.bdIdx = board.getBdIdx();
+		this.bdContent = board.getBdContent();
+		this.bdUrl = board.getBdUrl();
+		this.createdAt = board.getCreatedAt();
+		this.bdLikes = board.getBdLikes();
+		this.bdViews = board.getBdViews();
+		this.userName = userName;
 
 	}
 
