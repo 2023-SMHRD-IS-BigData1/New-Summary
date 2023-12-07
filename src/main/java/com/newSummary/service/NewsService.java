@@ -17,10 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.newSummary.domain.dto.NewsDTO;
+import com.newSummary.domain.entity.Bookmark;
 import com.newSummary.domain.entity.Keyword;
 import com.newSummary.domain.entity.News;
+import com.newSummary.domain.entity.NewsLog;
+import com.newSummary.domain.entity.User;
+import com.newSummary.repository.BookmarkRepository;
+import com.newSummary.repository.NewsLogRepository;
 import com.newSummary.repository.NewsRepository;
+import com.newSummary.repository.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -30,7 +37,10 @@ public class NewsService {
 	@Autowired
 	private final NewsRepository newsRepository;
 	private final KeywordService keywordService;
-
+	private final NewsLogRepository newsLogRepository;
+	private final UserRepository userRepository;
+	private final BookmarkRepository bookmarkRepository;
+	
 	   // 전체 리스트 조회(기사 작성시간 내림차순)
 	   public List<NewsDTO> getNewsList() {
 	      List<News> newsList = this.newsRepository.findAllByOrderByArticleWriteTimeDesc();
@@ -157,4 +167,43 @@ public class NewsService {
 	                })
 	                .collect(Collectors.toList());
 	    }
+	    // 로그인상태에서 뉴스 상세페이지를 요청하면 조회수 증가, 뉴스로그 저장
+		public NewsDTO historyNews(String id, String userEmail) {
+		      Optional<News> on = this.newsRepository.findById(id);
+		      if (on.isPresent()) {
+		         News news = on.get();
+		         news.incrementViewCount();
+		         this.newsRepository.save(news);
+		         User user = userRepository.findByUserEmail(userEmail)
+		                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다"));
+		         NewsLog newslog = NewsLog.builder()
+		        		 .newsIdx(id)
+		         		 .categoryName(news.getCategory())
+		         		 .user(user)
+		         		 .build();
+		         this.newsLogRepository.save(newslog);
+		         NewsDTO newsDTO = convertToDTO(news);
+		         return newsDTO;
+		      } else {
+		         return null;
+		      }
+		}
+		// 북마크 뉴스 데이터
+		public List<NewsDTO> bookmarkNews(String userEmail) {
+	         User user = userRepository.findByUserEmail(userEmail)
+	                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다"));
+	         List<Bookmark> bookmarkList = bookmarkRepository.findByUser(user);
+	         // 뉴스 ID 리스트 추출
+	         List<String> bookmarkedNewsIds = bookmarkList.stream()
+	                 .map(Bookmark::getNewsObjectId)
+	                 .collect(Collectors.toList());
+
+	         // MongoDB에서 뉴스 리스트 조회
+	         List<News> bookmarkedNewsList = newsRepository.findAllById(bookmarkedNewsIds);
+
+	         // 뉴스를 DTO로 변환하여 반환
+	         return bookmarkedNewsList.stream()
+	                 .map(this::convertToDTO)
+	                 .collect(Collectors.toList());
+		}
 }
