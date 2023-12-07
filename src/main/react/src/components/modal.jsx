@@ -416,15 +416,15 @@ const BoardModal = ({ onClose, item }) => {
           <BoardHeadBox>
             <BoardUserBox>
               <BoardUserImage />
-              <BoardUserName>{item.user}유저이름</BoardUserName>
+              <BoardUserName>{item.userName}</BoardUserName>
             </BoardUserBox>
             <BoardDateBox>{formattedDate}</BoardDateBox>
           </BoardHeadBox>
           <BoardImageBox>
-            <BoardImage />
+            <BoardImage src="https://i.pinimg.com/originals/49/a7/de/49a7dec9f79f6b345da7a57b4e9e82cb.gif" />
           </BoardImageBox>
           <BoardTextBox>{item.bdContent}</BoardTextBox>
-          <BoardUrlBox href={item.bdUrl} target="_blank">{item.bdUrl}</BoardUrlBox>
+          {item.bdUrl && <BoardUrlBox href={item.bdUrl} target="_blank">{item.bdUrl}</BoardUrlBox>}
           <BoardCommentBox>
             <BoardCommentText>
               <BoardCommentIcon src={CommentLogo} />
