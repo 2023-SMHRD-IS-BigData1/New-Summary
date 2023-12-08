@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,11 +48,36 @@ public class S3UploaderService {
 		//사용자의 프로필을 등록하는 것이기때문에, User 도메인에 setProfile을 해주는 코드.
 		User user = userRepository.findByUserEmail(userEmail).get();
 		user.setUserProfile(uploadImageUrl);
-
+		this.userRepository.save(user);
 		//FileUploadResponse DTO로 반환해준다.
 		return new FileUploadResponse(fileName, uploadImageUrl);
 		//return uploadImageUrl;
 	}
+	public FileUploadResponse updateProfile(String userEmail, MultipartFile newProfile, String dirName) throws IOException {
+	    // 현재 사용자의 프로필 정보 조회
+	    User user = userRepository.findByUserEmail(userEmail)
+	            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+	    // 현재 프로필 이미지의 파일 이름 가져오기
+	    String currentFileName = extractFileNameFromUrl(user.getUserProfile());
+
+	    // 기존 파일 삭제
+	    deleteFileFromS3(currentFileName);
+
+	    // 새로운 파일 업로드
+	    File newUploadFile = convert(newProfile)
+	            .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+	    String newFileName = dirName + "/" + newUploadFile.getName();
+	    String newUploadImageUrl = putS3(newUploadFile, newFileName);
+	    removeNewFile(newUploadFile);
+
+	    // 데이터베이스에 새로운 프로필 이미지 URL 업데이트
+	    user.setUserProfile(newUploadImageUrl);
+	    userRepository.save(user);
+
+	    return new FileUploadResponse(newFileName, newUploadImageUrl);
+	}
+	
 	// S3에 파일을 업로드하고, URL반환하는 메소드
 	private String putS3(File uploadFile, String fileName) {
 		amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(
@@ -79,5 +103,19 @@ public class S3UploaderService {
 		}
 
 		return Optional.empty();
+	}
+	// S3에서 파일 삭제 메서드
+	private void deleteFileFromS3(String fileName) {
+	    amazonS3Client.deleteObject(bucket, fileName);
+	}
+	// URL에서 파일 이름 추출 메서드
+	private String extractFileNameFromUrl(String url) {
+	    int lastSlashIndex = url.lastIndexOf('/');
+	    if (lastSlashIndex != -1 && lastSlashIndex < url.length() - 1) {
+	        return url.substring(lastSlashIndex + 1);
+	    } else {
+	        // 적절한 파일 이름을 추출할 수 없는 경우 예외처리 또는 기본값을 반환할 수 있습니다.
+	        throw new IllegalArgumentException("URL에서 파일 이름을 추출할 수 없습니다.");
+	    }
 	}
 }
