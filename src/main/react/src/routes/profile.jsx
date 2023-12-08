@@ -16,6 +16,7 @@ import UserLogo from '../assets/user-logo.svg';
 import PasswordLogo from '../assets/password-logo.svg';
 import PhoneLogo from '../assets/phone-logo.svg';
 import { BoardProfile } from '../components/board-sns';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -242,7 +243,6 @@ const ProfileUpdateBox = styled.div`
 
 const ProfileUpdateTop = styled.div`
   width: 100%;
-  height: 300px;
   padding: 20px 0px;  
   position: relative; 
   display: flex;
@@ -287,14 +287,15 @@ const ProfileUpdateInput = styled.input`
   }
 `;
 
-const ProfileUpdateBtn = styled.div`
+const ProfileUpdateBtn = styled.button`
   padding: 10px 20px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: none;
   cursor: pointer;
-  background-color: #00ae68;
+  background-color: #2A9D8F;
   font-weight: 600;
   &:hover {
     color: #ffffff;
@@ -305,7 +306,6 @@ const ProfileUpdateBtn = styled.div`
 
 const ProfileUpdateBoxTop = styled.div`
   width: 75%;
-  height: 300px;
   display: flex;
   justify-content: space-around;
 `;
@@ -327,9 +327,9 @@ const ProfileHeader = styled.div`
 
 const ProfileImageBox = styled.div`
   width: 80%;
-  height: 80%;
   border-radius: 50%;
   margin: auto;
+  margin-bottom: 20px;
   border: 1px solid #99999944;
   overflow: hidden;
 `;
@@ -364,6 +364,15 @@ const ProfileImgInput = styled.input`
 export default function Profile() {
   const [onMenu, setOnMenu] = useState('content1');
 
+  let userData;
+  const userDataString = sessionStorage.getItem('userData');
+
+  if (userDataString) {
+      userData = JSON.parse(userDataString);
+  } else {
+      console.error('세션스토리지에 userData가 존재하지 않습니다.');
+  }
+
   const handleContentClick = (contentClass) => {
     setOnMenu(contentClass);
   };
@@ -374,18 +383,18 @@ export default function Profile() {
       <WrapperBox>
         <LeftMenu>
           <UserImageBox>
-            <UserImage src={UserDefault} />
+            <UserImage src={userData.userProfile || UserDefault} />
           </UserImageBox>
-          <UserNickname>UserNickname</UserNickname>
+          <UserNickname>{userData.userName}</UserNickname>
           <UserPoint>
             <PointImage src={Coin} />2000 P
             <PointexplanationBox>
               <Pointexplanation src={Exclamation} />
               <ExplanationTip className="tip">
                 <TipHead>포인트 획득 기준</TipHead>
-                일일 로그인시 : 50 P<br />
                 뉴스 조회시 : 10 P<br />
                 커뮤니티 글작성 : 20 P<br />
+                커뮤니티 댓글작성 : 10 P<br />
               </ExplanationTip>
             </PointexplanationBox>
           </UserPoint>
@@ -433,11 +442,11 @@ export default function Profile() {
             </ProfileUpdateTop>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={EmailLogo} />
-              <ProfileUpdateInput type='email' value="email" disabled />
+              <ProfileUpdateInput type='email' value={userData.userEmail} disabled />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={UserLogo} />
-              <ProfileUpdateInput type='text' placeholder="username" />
+              <ProfileUpdateInput type='text' value={userData.userName} />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={PasswordLogo} />
@@ -449,10 +458,10 @@ export default function Profile() {
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={PhoneLogo} />
-              <ProfileUpdateInput placeholder="phone number" />
+              <ProfileUpdateInput value={userData.userPhone} />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
-              <ProfileUpdateBtn>수정하기</ProfileUpdateBtn>
+              <ProfileUpdateBtn type='submit'>수정하기</ProfileUpdateBtn>
             </ProfileUpdateBox>
           </ProfileUpdateForm>
         </Content>

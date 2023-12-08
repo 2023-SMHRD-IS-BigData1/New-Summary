@@ -4,7 +4,7 @@ import styled from "styled-components"
 import Like from "../assets/heart-icon.svg"
 import Comment from "../assets/comment-icon.svg"
 import ViewsLogo from "../assets/views.svg"
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Pagination from 'react-js-pagination';
 import { Link } from 'react-router-dom';
 import { useBoardContext, useBoardViewContext, useBoardWriteContext } from '../data/board-data';
@@ -15,6 +15,7 @@ import moment from 'moment';
 import PhotoLogo from '../assets/photo-logo.svg';
 import LinkLogo from '../assets/link-logo.svg';
 import ResetLogo from '../assets/reset-logo.svg';
+import { useInView } from 'react-intersection-observer';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -55,10 +56,10 @@ const TextContent = styled.div`
     margin-bottom: 20px;
     font-size: 20px;
     line-height: 1.2;
+    word-wrap: break-word;
+    white-space: pre-wrap;
     /* overflow: hidden;
     position: relative;
-    white-space: normal;
-    word-wrap: break-word;
     display: -webkit-box;
     text-overflow: ellipsis;
     -webkit-line-clamp: 4;
@@ -252,6 +253,11 @@ const BoardTextAreaInput = styled.textarea`
 
 `;
 
+const BoardBottomBox = styled.div`
+    width: 100%;
+    height: 300px;
+`;
+
 
 
 
@@ -283,15 +289,171 @@ const PaginationBox = styled.div`
 
 
 
+// export function BoardSNS() {
+//     // const { boardData, setBoardData, loading } = useBoardContext();
+//     const { loading } = useBoardContext();
+//     const { boardViewData, loadingViews } = useBoardViewContext();
+//     const [columns, setColumns] = useState(3);
+//     const [itemsPerPage, setItemsPerPage] = useState(20);
+//     const [modalOn, setModalOn] = useState(false);
+//     const [selectedItem, setSelectedItem] = useState(null);
+
+//     const [boardData, setBoardData] = useState([]);
+//     const [page, setPage] = useState(1);
+//     const [load, setLoad] = useState(false);
+
+//     useEffect(() => {
+//         if (page !== 1) getPost();
+//     }, [page]);
+
+
+//     const getPost = useCallback(async () => { //글 불러오기  
+//         setLoad(true); //로딩 시작
+//         try {
+//             const res = await axios.get(`/api/board/list?page=${page}`);
+//             if (res.data.end) { //마지막 페이지일 경우
+//                 endRef.current = true;
+//                 noPostShow();
+//                 setList(prev => [...prev, ...setBoardData]); //리스트 추가
+//                 prevent_duple.current = true;
+//             }
+//             } catch (e) {
+//                 console.error(e)
+//             } finally {
+//                 setLoad(false); //로딩 종료      
+//             }
+//         }, [page]);
+
+//     // 게시판 반응형 사이즈조절
+//     useEffect(() => {
+//         const handleResize = () => {
+//             const newColumns = window.innerWidth <= 700 ? 1 : window.innerWidth <= 1100 ? 2 : 3;
+//             setColumns(newColumns);
+//         };
+
+//         handleResize();
+//         window.addEventListener('resize', handleResize);
+
+//         return () => {
+//             window.removeEventListener('resize', handleResize);
+//         };
+//     }, []);
+
+//     // DB 게시판데이터 변동시 재요청
+//     useEffect(() => {
+//         const axiosData = async () => {
+//             try {
+//                 const response = await axios.get('/api/board/list');
+//                 setBoardData(response.data);
+//                 console.log('게시판 갱신 데이터가 성공적으로 로드되었습니다:', response.data);
+//             } catch (error) {
+//                 console.error('게시판 갱신 데이터 로드 중 오류 발생:', error);
+//             }
+//         };
+//         axiosData();
+//     }, [setBoardData]);
+
+//     const handleModal = async (item) => {
+//         setSelectedItem(item);
+//         setModalOn(!modalOn);
+
+//         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+//         try {
+//             const response = await axios.get(`/api/board/detail/${item.bdIdx}`);
+//             setNewsData(response.data);
+//             console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+//         } catch (error) {
+//             console.error('데이터 로드 중 오류 발생:', error);
+//         }
+//     };
+
+//     // 가져온 데이터를 사용하여 UI를 렌더링
+//     const boardItems = boardData && boardData.map((item, index) => {
+//         // Moment.js를 사용하여 날짜 포맷 변경
+//         const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
+
+//         return (
+//             <>
+//                 <Item key={item.id} onClick={() => handleModal(item)}>
+//                     {/* 이미지 추가시 들어갈 코드 */}
+//                     {/* {imageUrl[item.id] && <ItemImage src={imageUrl[item.id]} />} */}
+//                     <ItemTextBox>
+//                         <TextDate>{formattedDate}</TextDate>
+//                         <TextContent>{item.bdContent}</TextContent>
+//                         {item.bdUrl && <TextUrl>{item.bdUrl}</TextUrl>}
+//                         <LikeBox>
+//                             {/* 댓글추가시 댓글 카운트해서 넣을것 */}
+//                             <Comments src={Comment} /> 10
+//                             <Likes src={Like} /> {item.bdLikes}
+//                             <Views src={ViewsLogo} /> {item.bdViews}
+//                         </LikeBox>
+//                         <UserBox>
+//                             {/*  유저 프로필사진 들어가기 */}
+//                             <UserBoxImage></UserBoxImage>
+//                             {/* 유저이름 출력 / 아직 시큐리티 적용안되서 null 받는중 */}
+//                             <UserBoxName>{item.userName}</UserBoxName>
+//                         </UserBox>
+//                     </ItemTextBox>
+//                 </Item>
+//             </>
+//         );
+//     });
+
+//     return (
+//         <Wrapper>
+//             <Masonry columns={columns} spacing={2} defaultHeight={150} defaultColumns={1} defaultSpacing={2}>
+//                 {loading ? (
+//                     <LoadingScreen />
+//                 ) : (
+//                     boardItems
+//                 )}
+//             </Masonry>
+//             <BoardBottomBox></BoardBottomBox>
+//             <BoardModalPortal>
+//                 {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+//             </BoardModalPortal>
+//         </Wrapper>
+//     );
+// };
+
+
 export function BoardSNS() {
-    const { boardData, setBoardData, loading } = useBoardContext();
+    // const { boardData, setBoardData, loading } = useBoardContext();
+    const { loading } = useBoardContext();
     const { boardViewData, loadingViews } = useBoardViewContext();
     const [columns, setColumns] = useState(3);
-    const [page, setPage] = useState(1);
-    const [itemsBoard, setItemsBoard] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(20);
     const [modalOn, setModalOn] = useState(false);
-    const [totalPages, setTotalPages] = useState(1);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [page, setPage] = useState(0); // 현재 페이지 번호 (페이지네이션)
+    const [ref, inView] = useInView();
+    const [boardData, setBoardData] = useState([]);
+
+    // 무한 스크롤
+    // 지정한 타겟 div가 화면에 보일 때 마다 서버에 요청을 보냄
+    const productFetch = () => {
+        axios
+            .get(`/api/board/list?page=${page + 1}&perPage=${itemsPerPage}`)
+            .then((res) => {
+                console.log(res.data);
+                // 이미 존재하는 데이터를 필터링하여 새로운 아이템만 가져오기
+                // const newItems = res.data.filter((newItem) => !boardData.some((item) => item.id === newItem.id));
+                // 리스트 뒤로 붙여주기
+                // setBoardData((prevData) => [...prevData, ...newItems]);
+                setBoardData((prevData) => [...prevData, ...(res.data)]);
+                // 요청 성공 시에 페이지에 1 카운트 해주기
+                setPage((page) => page + 1);
+            })
+            .catch((err) => { console.log(err) });
+    };
+
+    useEffect(() => {
+        // inView가 true 일때만 실행한다.
+        if (inView) {
+            console.log(inView, '무한 스크롤 요청 🎃');
+            productFetch();
+        }
+    }, [inView, boardData, page, itemsPerPage]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -299,14 +461,7 @@ export function BoardSNS() {
             setColumns(newColumns);
         };
 
-        const handleImageLoad = (index, height) => {
-            const boardData = [...data];
-            boardData[index] = 300 + height;
-            setData(boardData);
-        };
-
         handleResize();
-
         window.addEventListener('resize', handleResize);
 
         return () => {
@@ -328,29 +483,6 @@ export function BoardSNS() {
         axiosData();
     }, [setBoardData]);
 
-    // 페이징 코드
-    const handlePageChange = (page) => {
-        window.scrollTo({ top: 0 });
-        setPage(page);
-    };
-
-    const calculateTotalPages = (totalItems, itemsPerPage) => {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        setTotalPages(totalPages);
-    };
-
-    // 검색 결과에 대해 페이징된 데이터 가져오기
-    const startIndex = (page - 1) * itemsBoard;
-    const endIndex = startIndex + itemsBoard;
-    // data에 게시판 데이터 넣기
-    const paginatedData = boardData.slice(startIndex, endIndex);
-
-    const searchList = () => {
-        return paginatedData.filter((itemData) =>
-            itemData.title.toUpperCase().includes(searchTerm.toUpperCase())
-        );
-    };
-
     const handleModal = async (item) => {
         setSelectedItem(item);
         setModalOn(!modalOn);
@@ -358,16 +490,13 @@ export function BoardSNS() {
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
             const response = await axios.get(`/api/board/detail/${item.bdIdx}`);
-            useEffect(() => {
-                setNewsData(response.data);
-                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
-            }, [response.data, setNewsData]);
-
+            setNewsData(response.data);
+            console.log('데이터가 성공적으로 로드되었습니다:', response.data);
         } catch (error) {
             console.error('데이터 로드 중 오류 발생:', error);
         }
-    };
 
+    };
 
     // 가져온 데이터를 사용하여 UI를 렌더링
     const boardItems = boardData && boardData.map((item, index) => {
@@ -397,64 +526,26 @@ export function BoardSNS() {
                         </UserBox>
                     </ItemTextBox>
                 </Item>
-                <BoardModalPortal>
-                    {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
-                </BoardModalPortal>
             </>
         );
     });
 
     return (
         <Wrapper>
-            <Masonry
-                columns={columns}
-                spacing={2}
-                defaultHeight={150}
-                defaultColumns={1}
-                defaultSpacing={2}
-            >
+            <Masonry columns={columns} spacing={2} defaultHeight={150} defaultColumns={1} defaultSpacing={2}>
                 {loading ? (
                     <LoadingScreen />
                 ) : (
                     boardItems
                 )}
-                {/* 테스트 데이터 출력용 */}
-                {/* {data.map((data, index) => (
-                    <Item key={index} style={{ height: `auto` }}>
-                        {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
-                        <ItemTextBox>
-                            <TextDate>2023.11.16 16:06</TextDate>
-                            <TextContent>
-                                사용자가 작성한 게시판 글이 여기에 나올 예정입니다 AAAAABABABABABBABABABBABABABABVAAVAVAVA 사용자가 작성한 게시판 글이 여기에 나올 예정입니다
-                            </TextContent>
-                            <TextUrl>https://www.naver.com/</TextUrl>
-                            <LikeBox>
-                                <Comments src={Comment} /> 10
-                                <Likes src={Like} /> 52
-                            </LikeBox>
-                            <UserBox>
-                                <UserBoxImage></UserBoxImage>
-                                <UserBoxName>UserName</UserBoxName>
-                            </UserBox>
-                        </ItemTextBox>
-                    </Item>
-                ))} */}
             </Masonry>
-            <BoardWriteBox>
-                {/* 검색창 만들기 */}
-            </BoardWriteBox>
-            <PaginationBox>
-                <Pagination
-                    activePage={page}
-                    itemsCountPerPage={itemsBoard}
-                    totalItemsCount={boardData.length}
-                    pageRangeDisplayed={5}
-                    onChange={handlePageChange}>
-                </Pagination>
-            </PaginationBox>
+            <BoardBottomBox ref={ref}></BoardBottomBox>
+            <BoardModalPortal>
+                {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+            </BoardModalPortal>
         </Wrapper>
-    )
-}
+    );
+};
 
 export function BoardMain() {
     const { boardData, loading } = useBoardContext();
@@ -751,7 +842,6 @@ export function BoardWriteArea() {
         const minHeight = '0px';
         const newHeight = `${Math.max(e.target.scrollHeight - 10, parseInt(minHeight, 10))}px`;
 
-        // 동적으로 textarea 높이 조절
         setTextareaHeight(newHeight);
     };
 
