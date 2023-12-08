@@ -1,10 +1,15 @@
 package com.newSummary.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.newSummary.domain.dto.board.BoardRequestDTO;
@@ -34,6 +39,19 @@ public class BoardService {
 		return boardRepository.findAllByOrderByCreatedAtDesc().stream()
 				.map(board -> new BoardResponseDTO(board, board.getUser().getUserName())).collect(Collectors.toList());
 
+	}
+	public List<BoardResponseDTO> getBoardListPaged(int page, int pageSize) {
+	    // 적절한 페이지와 페이지당 아이템 수를 이용하여 데이터를 가져오는 로직을 구현합니다.
+	    // 예를 들어, JPA의 PagingAndSortingRepository를 사용한다면 Pageable을 이용할 수 있습니다.
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdAt"));
+	    Pageable pageable = PageRequest.of(page, pageSize,Sort.by(sorts));
+	    Page<Board> boardPage = boardRepository.findAll(pageable);
+	    
+	    // 가져온 데이터를 DTO로 변환하여 반환합니다.
+	    return boardPage.stream()
+	            .map(board -> new BoardResponseDTO(board, board.getUser().getUserName()))
+	            .collect(Collectors.toList());
 	}
 
 	// 상세 게시글 가져오기 및 조회수 올리기

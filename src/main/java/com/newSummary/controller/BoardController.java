@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newSummary.domain.dto.board.BoardRequestDTO;
@@ -28,12 +29,16 @@ public class BoardController {
 	@Autowired
 	private final BoardService boardService;
 	
-	// 게시판 전체 목록
+//	// 게시판 전체 목록
+//	@GetMapping("/list")
+//	public List<BoardResponseDTO> boardList(){
+//		return boardService.boardList();
+//	}
 	@GetMapping("/list")
-	public List<BoardResponseDTO> boardList(){
-		return boardService.boardList();
+	public List<BoardResponseDTO> boardList(@RequestParam("page") int page, @RequestParam("pageSize") int pageSize) {
+	    // page와 pageSize를 이용하여 적절한 범위의 데이터를 가져와 응답합니다.
+	    return boardService.getBoardListPaged(page, pageSize);
 	}
-	
 	// 게시글 상세 보기
 	@GetMapping("/detail/{bdIdx}")
 	public BoardResponseDTO boardDetail(@PathVariable("bdIdx") Long bdIdx) {

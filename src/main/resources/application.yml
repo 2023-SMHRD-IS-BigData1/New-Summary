@@ -8,6 +8,10 @@ server:
   port: 8081
 
 spring:
+  profiles:
+    include:
+      - aws
+      - credentials
   # 코드 변경시 재부팅
   devtools:
     livereload:
@@ -23,8 +27,12 @@ spring:
   data:
     mongodb:
       uri:  mongodb://bignews:news@43.201.59.116:27017/newsummary?authSource=admin&authMechanism=SCRAM-SHA-1
-      # uri : mongodb://bignews:news@43.201.59.116:27017/?authMechanism=DEFAULT
-    
+  # 파일 최대 업로드 용량 지정
+  servlet:
+    multipart:
+      enabled: true
+      maxFileSize: 20MB
+      maxRequestSize: 20MB
   # JPA 설정
   jpa:
     hibernate:
