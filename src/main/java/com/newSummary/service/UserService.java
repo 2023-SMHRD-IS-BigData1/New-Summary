@@ -2,6 +2,7 @@ package com.newSummary.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +21,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 
+	@Autowired
 	private final UserRepository userRepository;
 	private final PasswordEncyptor encoder;
+	private final PointService pointService;
 
 	// userEmail 중복 체크 중복되면 true return
 	@Transactional(readOnly = true)
@@ -43,6 +46,7 @@ public class UserService {
 	// 암호화된 회원가입
 	public void join2(JoinRequest req) {
 		userRepository.save(req.toEntity(PasswordEncyptor.encryptPassword(req.getUserPw())));
+		pointService.initializePoint(req.getUserEmail());
 	}
 
 	// 이메일로 회원조회

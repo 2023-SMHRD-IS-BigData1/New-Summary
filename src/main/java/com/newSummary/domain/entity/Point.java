@@ -14,23 +14,41 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Builder
-@NoArgsConstructor(access= AccessLevel.PROTECTED) 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name ="tb_point")
+@Table(name = "tb_point")
 public class Point {
+	// 포인트 순번
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pointIdx;
 
+	// 회원 아이디
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_email")
 	private User user;
-	
-	@Column(length = 30)
-	private String pointType;
+
+	// 획득 구분
+	@Column(columnDefinition = "int default 0")
+	private int newsClick;
+
+	@Column(columnDefinition = "int default 0")
+	private int boardWrite;
+
+	@Column(columnDefinition = "int default 0")
+	private int commentWrite;
+
+	// 획득 점수
+	@Column(columnDefinition = "int default 0")
 	private int pointVal;
+
+	public void incrementNewsClick() {
+		this.newsClick++;
+	}
 }
