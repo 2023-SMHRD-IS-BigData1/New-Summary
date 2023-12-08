@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import { BoardSNS, BoardWriteArea } from '../components/board-sns';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 
 const Wrapper = styled.div`

@@ -583,7 +583,7 @@ const SearchNewsContent = styled.div`
     line-height: 1.2;
     overflow: hidden;
     position: relative;
-    white-space: normal;
+    white-space: pre-wrap;
     word-wrap: break-word;
     display: -webkit-box;
     text-overflow: ellipsis;
@@ -734,7 +734,7 @@ const CategoryNewsContent = styled.div`
     line-height: 1.2;
     overflow: hidden;
     position: relative;
-    white-space: normal;
+    white-space: pre-wrap;
     word-wrap: break-word;
     display: -webkit-box;
     text-overflow: ellipsis;
