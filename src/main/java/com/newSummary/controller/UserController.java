@@ -1,5 +1,7 @@
 package com.newSummary.controller;
 
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -9,12 +11,16 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.newSummary.domain.dto.FileUploadResponse;
 import com.newSummary.domain.dto.user.JoinRequest;
 import com.newSummary.domain.dto.user.LoginRequest;
 import com.newSummary.domain.dto.user.UserDTO;
 import com.newSummary.domain.entity.User;
+import com.newSummary.service.S3UploaderService;
 import com.newSummary.service.UserService;
 
 import jakarta.validation.Valid;
@@ -26,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserController {
 	private final UserService userService;
+	private final S3UploaderService s3UploaderService;
 
 	@PostMapping("/users/join")
 	public ResponseEntity<?> join(@Valid @RequestBody JoinRequest joinRequest, BindingResult bindingResult) {
@@ -123,5 +130,12 @@ public class UserController {
 	}
 
 	// 회원 프로필 업로드
+	@PostMapping("/user/profile/{userEmail}")
+	public ResponseEntity<?> uploadProfilePhoto(@PathVariable("userEmail") String userEmail, @RequestParam("profilePhoto") MultipartFile multipartFile) throws IOException {
+		//S3 Bucket 내부에 "/profile"
+
+		FileUploadResponse profile = s3UploaderService.upload(userEmail, multipartFile, "profile");
+		return ResponseEntity.ok(profile);
+	}
 
 }
