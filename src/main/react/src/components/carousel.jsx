@@ -86,7 +86,7 @@ const NewsContent = styled.div`
     font-size: 18px;
     overflow: hidden;
     line-height: 1.3;
-    white-space: normal;
+    white-space: pre-wrap;
     word-wrap: break-word;
     display: -webkit-box;
     text-overflow: ellipsis;

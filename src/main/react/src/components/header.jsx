@@ -93,7 +93,7 @@ const UserButton = styled.div`
 
 const MenuBox = styled.div`
     width: 100%;
-    max-width: 1100px;
+    max-width: 1400px;
     height: 40px;
     padding-right: 50px;
     display: flex;
@@ -241,19 +241,19 @@ export default function Header({ ...props }) {
             </WrapperTop>
             <WrapperBottom>
                 <MenuBox>
-                    <Link to="/" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                    <Link to="/" style={{ textDecoration: "none", color: "black", width: "25%" }}>
                         {curruntURL == "/" ? <MenuItem {...props} onPage>메인페이지</MenuItem> : <MenuItem>메인페이지</MenuItem>}
                     </Link>
-                    <Link to="/category-news" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                    <Link to="/category-news" style={{ textDecoration: "none", color: "black", width: "25%" }}>
                         {curruntURL == "/category-news" ? <MenuItem {...props} onPage>뉴스 모아보기</MenuItem> : <MenuItem>뉴스 모아보기</MenuItem>}
                     </Link>
-                    <Link to="/search" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                    <Link to="/search" style={{ textDecoration: "none", color: "black", width: "25%" }}>
                         {curruntURL == "/search" ? <MenuItem {...props} onPage>뉴스 찾아보기</MenuItem> : <MenuItem>뉴스 찾아보기</MenuItem>}
                     </Link>
-                    <Link to="/board" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                    <Link to="/board" style={{ textDecoration: "none", color: "black", width: "25%" }}>
                         {curruntURL == "/board" ? <MenuItem {...props} onPage>커뮤니티</MenuItem> : <MenuItem>커뮤니티</MenuItem>}
                     </Link>
-                    <Link to="/profile" style={{ textDecoration: "none", color: "black", width: "20%" }}>
+                    <Link to="/profile" style={{ textDecoration: "none", color: "black", width: "25%" }}>
                         {curruntURL == "/profile" ? <MenuItem {...props} onPage>마이페이지</MenuItem> : <MenuItem>마이페이지</MenuItem>}
                     </Link>
                 </MenuBox>

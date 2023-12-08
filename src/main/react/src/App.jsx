@@ -9,10 +9,11 @@ import Login from './routes/login';
 import Board from './routes/board';
 import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
-import { CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider } from './data/news-data.context';
+import { BookMarkProvider, CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider } from './data/news-data.context';
 import { AuthProvider } from './data/user-login';
 import { BoardProvider, BoardViewProvider, BoardWriteProvider } from './data/board-data';
 import TopButtonLogo from '../src/assets/top-logo.svg'
+import ProtectedRoute from './components/protected-route';
 
 // 초기 시작페이지를 잡아주기
 const router = createBrowserRouter([
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: <ProtectedRoute><Profile /></ProtectedRoute>,
       },
       {
         path: "login",
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
       },
       {
         path: "board",
-        element: <Board />,
+        element: <ProtectedRoute><Board /></ProtectedRoute>,
       },
     ],
   },
@@ -121,22 +122,25 @@ function App() {
           <NewsViewProvider>
             {/* 유저 로그인 */}
             <AuthProvider>
-              {/* 게시판 */}
-              <BoardProvider>
-                {/* 게시판 상세글 */}
-                <BoardViewProvider>
-                  {/* 게시판 글 작성 */}
-                  <BoardWriteProvider>
-                  <Wrapper>
-                    <GlobalStyles />
-                    {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-                    <TopButton onClick={handlePage}>
-                      <TopButtonImage src={TopButtonLogo} />
-                    </TopButton>
-                  </Wrapper>
-                  </BoardWriteProvider>
-                </BoardViewProvider>
-              </BoardProvider>
+              {/* 북마크 하기 */}
+              <BookMarkProvider>
+                {/* 게시판 */}
+                <BoardProvider>
+                  {/* 게시판 상세글 */}
+                  <BoardViewProvider>
+                    {/* 게시판 글 작성 */}
+                    <BoardWriteProvider>
+                      <Wrapper>
+                        <GlobalStyles />
+                        {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+                        <TopButton onClick={handlePage}>
+                          <TopButtonImage src={TopButtonLogo} />
+                        </TopButton>
+                      </Wrapper>
+                    </BoardWriteProvider>
+                  </BoardViewProvider>
+                </BoardProvider>
+              </BookMarkProvider>
             </AuthProvider>
           </NewsViewProvider>
         </NewsProvider>

@@ -103,12 +103,11 @@ const CarouselButton = styled.button`
 
 export default function ViewsCarousel() {
   const { newsData, loading } = useNewsContext();
-  const { newsViewData, viewLoading } = useNewsViewContext();
+  const { newsViewData, setNewsData, viewLoading } = useNewsViewContext();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [viewsModalOn, setViewsModalOn] = useState(false);
   const [selectedViewsItem, setSelectedViewsItem] = useState(null);
   const [numOfCards, setNumOfCards] = useState(4);
-
   const onChange = (value) => {
     setActiveItemIndex(value);
   };
@@ -139,14 +138,10 @@ export default function ViewsCarousel() {
     setSelectedViewsItem(item);
     setViewsModalOn(!viewsModalOn);
 
+    // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
     try {
-      // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
       const response = await axios.get(`/api/news/detail/${item.id}`);
 
-      // useNewsViewContext 훅을 함수 컴포넌트 내에서 호출
-      const { setNewsData } = useNewsViewContext();
-
-      // 훅을 호출하는 함수를 useEffect 내에서 실행
       useEffect(() => {
         setNewsData(response.data);
         console.log('데이터가 성공적으로 로드되었습니다:', response.data);
