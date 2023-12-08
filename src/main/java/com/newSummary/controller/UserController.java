@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -137,5 +138,16 @@ public class UserController {
 		FileUploadResponse profile = s3UploaderService.upload(userEmail, multipartFile, "profile");
 		return ResponseEntity.ok(profile);
 	}
+	// 회원 프로필 수정
+    @PutMapping("/user/profile/{userEmail}")
+    public ResponseEntity<?> updateProfilePhoto(@PathVariable("userEmail") String userEmail, @RequestParam("newProfilePhoto") MultipartFile newProfilePhoto) throws IOException {
+        // S3 Bucket 내부에 "/profile"
+        String dirName = "profile";
+
+        // 프로필 수정 메소드 호출
+        FileUploadResponse updatedProfile = s3UploaderService.updateProfile(userEmail, newProfilePhoto, dirName);
+
+        return ResponseEntity.ok(updatedProfile);
+    }
 
 }
