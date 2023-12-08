@@ -41,14 +41,10 @@ public class CommentService {
         List<CommentResponseDTO> commentResponseDTOList = commentRepository.findAllByBoardOrderByCreatedAtDesc(board).stream()
                 .map(comment -> new CommentResponseDTO(comment, bdIdx, comment.getUser().getUserName()))
                 .collect(Collectors.toList());
-        
-
 
         return commentResponseDTOList;
     		
 	}
-	
-	
 	
 	
 	// 댓글 작성
