@@ -1,33 +1,42 @@
-//package com.newSummary.config;
-//
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//
-//import com.amazonaws.auth.AWSStaticCredentialsProvider;
-//import com.amazonaws.auth.BasicAWSCredentials;
-//import com.amazonaws.services.s3.AmazonS3Client;
-//import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-//
-//@Configuration
-//public class AWSConfiguration {
-//	
-//	@Value("${cloud.aws.credentials.accessKey}")
-//	private String accessKey;
-//	
-//	@Value("${cloud.aws.credentials.secretKey}")
-//	private String secretKey;
-//
-//	@Value("${cloud.aws.region.static}")
-//	private String region;
-//	
-//	@Bean
-//	public AmazonS3Client amazonS3Client() {
-//		BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-//		return (AmazonS3Client)AmazonS3ClientBuilder.standard()
-//				.withRegion(region)
-//				.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-//				.build();
-//	}
-//
-//}
+package com.newSummary.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+
+import jakarta.annotation.PostConstruct;
+
+@Configuration
+public class AWSConfiguration {
+	
+	@Value("${cloud.aws.credentials.accessKey}")
+	private String accessKey;
+	
+	@Value("${cloud.aws.credentials.secretKey}")
+	private String secretKey;
+
+	@Value("${cloud.aws.region.static}")
+	private String region;
+	
+	@Bean(name = "amazonS3Client")
+	public AmazonS3Client amazonS3Client() {
+		BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+	    return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+	            .withRegion(region)
+	            .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+	            .build();
+	}
+    @PostConstruct
+    public void init() {
+        // Log or print the values for debugging
+        System.out.println("Access Key: " + accessKey);
+        System.out.println("Secret Key: " + secretKey);
+        System.out.println("Region: " + region);
+    }
+
+}

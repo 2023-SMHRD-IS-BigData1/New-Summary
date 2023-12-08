@@ -59,7 +59,7 @@ dependencies {
 	
 	//spring-cloud-starter-aws
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.529')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
 	//commons-io 는 File을 처리하기 위함
 	implementation 'commons-io:commons-io:2.6'
