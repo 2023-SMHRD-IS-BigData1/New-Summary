@@ -6,7 +6,6 @@ server:
       force: true
       force-response: true
   port: 8081
-
 spring:
   # 코드 변경시 재부팅
   devtools:
@@ -33,7 +32,15 @@ spring:
       hibernate:
          format_sql:true #sql 보기 편하게 해줌
 #         show-sql: true
-
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIATNUJUUJBDTFVJD6D
+      secretKey: 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
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: newsummary-bucket
 logging.level:  #띄어쓰기 없음
   '[org.hibernate.SQL]': debug   
 logging:

@@ -56,6 +56,13 @@ dependencies {
 	// JUnit5
     testImplementation("org.junit.platform:junit-platform-launcher:1.5.2")
 	testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
+	
+	//spring-cloud-starter-aws
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.529')
+	implementation 'com.amazonaws:aws-java-sdk-s3'
+	//commons-io 는 File을 처리하기 위함
+	implementation 'commons-io:commons-io:2.6'
 }
 
 tasks.named('bootBuildImage') {
