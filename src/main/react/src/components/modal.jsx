@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Close from "../assets/x-logo.svg"
 import Bookmark from "../assets/bookmark.svg"
 import BookmarkOn from "../assets/bookmark-on.svg"
+import DefaultUser from "../assets/image/user-avatar.png"
 import moment from 'moment';
 import ViewsLogo from '../assets/views.svg'
 import LikesLogo from '../assets/heart-icon.svg'
@@ -34,7 +35,7 @@ const Background = styled.div`
   top: 0;
   text-align: center;
   z-index: 200;
-  background: #14141411;
+  background: #14141499;
 `;
 
 const Content = styled.div`
@@ -219,11 +220,10 @@ const BoardDateBox = styled.div`
 
 const BoardImageBox = styled.div`
   width: 100%;
-  height: 300px;
+  max-height: 300px;
   margin: 20px 0;
   display: flex;
   overflow: hidden;
-  background-color: gray;
 `;
 
 const BoardTextBox = styled.div`
@@ -256,7 +256,7 @@ const BoardUserImage = styled.img`
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
-  background-color: gray;
+  border: 1px solid #99999944;
 `;
 
 const BoardUserName = styled.div``;
@@ -300,6 +300,13 @@ const CommentBox = styled.div`
   width: 100%;
   padding: 20px 10px;
   border: 1px solid #99999999;
+  border-radius: 5px;
+`;
+
+const CommentForm = styled.div`
+  width: 100%;
+  padding: 20px 10px;
+  border: 1px solid #99999999;
 `;
 
 const CommentBoxNull = styled.div`
@@ -332,18 +339,26 @@ const CommentBottom = styled.div`
 
 const CommentButtonBox = styled.div`
   width: 100%;
-  padding: 20px 20px;
+  padding: 20px 20px 10px 20px;
   display: flex;
   justify-content: right;
   gap: 10px;
 `;
 
-const CommentBtnDelete = styled.div`
+const CommentButtonBoxForm = styled.form`
+  width: 100%;
+  padding: 20px 20px 10px 20px;
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+`;
+
+const CommentBtnDelete = styled.button`
   padding: 4px 10px;
   border: 1px solid #99999999;
 `;
 
-const CommentBtnUpdate = styled.div`
+const CommentBtnUpdate = styled.button`
   padding: 4px 10px;
   border: 1px solid #99999999;
 `;
@@ -361,7 +376,7 @@ const CommentTextBtnBox = styled.div`
   align-items: center;
 `;
 
-const CommentBtnInsert = styled.div`
+const CommentBtnInsert = styled.button`
   padding: 4px 10px;
   border: 1px solid #99999999; 
 `;
@@ -372,24 +387,22 @@ const Modal = ({ onClose, item }) => {
   const [bookMarkData, setBookMarkData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isLogined, setIsLogined] = useState(false);
+  const [currentBookmarkIdx, setCurrentBookmarkIdx] = useState(null); // 현재 모달의 bookmarkIdx를 관리하는 상태
 
   let userData;
   let userEmailData;
   let bookmarkIdx;
   const userDataString = sessionStorage.getItem('userData');
 
-  useEffect(() => {
-    if (userDataString) {
-      userData = JSON.parse(userDataString);
-      userEmailData = userData.userEmail;
-      setIsLogined(true);
-    } else {
-      console.error('세션스토리지에 userData가 존재하지 않습니다.');
-      setIsLogined(false);
-    }
-  }, []);
 
+  if (userDataString) {
+    userData = JSON.parse(userDataString);
+    userEmailData = userData.userEmail;
+  } else {
+    console.error('세션스토리지에 userData가 존재하지 않습니다.');
+  }
+
+  console.log(userEmailData);
   console.log(item.id);
   // 아이디로 북마크여부 조회
   useEffect(() => {
@@ -402,8 +415,10 @@ const Modal = ({ onClose, item }) => {
         // 해당 아이템에 대한 북마크 여부를 설정
         const isBookmarkedItem = getResponse.data.some((bookmark) => bookmark.newsObjectId === item.id);
         setIsBookmarked(isBookmarkedItem);
-        // 북마크 아이디값
-        bookmarkIdx = getResponse.data.bookmark_idx;
+        // 현재 모달에 대한 bookmarkIdx 설정
+        const modalBookmark = getResponse.data.find((bookmark) => bookmark.newsObjectId === item.id);
+        setCurrentBookmarkIdx(modalBookmark ? modalBookmark.bookmark_idx : null);
+
         console.log('북마크 조회 완료:', getResponse.data);
       } catch (error) {
         console.error('북마크 조회 중 오류 발생:', error);
@@ -460,21 +475,14 @@ const Modal = ({ onClose, item }) => {
     }
   };
 
-
   // 북마크 여부에 따라 북마크를 추가하거나 삭제하는 로직을 작성
   const handleBookmarkClick = (e) => {
     e.stopPropagation();
     if (isBookmarked) {
-      deleteBookMark();
-      const firstBookmarkIdx = bookMarkData.length > 0 ? bookMarkData[0].idx : null;
-      if (firstBookmarkIdx) {
-        deleteBookMark(firstBookmarkIdx);
-      }
+      deleteBookMark(currentBookmarkIdx);
     } else {
       createBookMark();
     }
-
-
   }
 
   return (
@@ -514,22 +522,139 @@ const Modal = ({ onClose, item }) => {
 export default Modal;
 
 const BoardModal = ({ onClose, item }) => {
-  // 모달이 열릴 때 body에 스타일을 추가하여 스크롤을 막음
+  const [commentData, setCommentData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isCommented, setIsCommented] = useState(false);
+  const [commentWriteData, setCommentWriteData] = useState([]);
+  const [cmtContent, setCmtContent] = useState(""); // 댓글작성내용 가져오기
+
+  let userData;
+  let userEmailData;
+  let userNameData;
+  let userProfileData = null;
+  const userDataString = sessionStorage.getItem('userData');
+
+
+  if (userDataString) {
+    userData = JSON.parse(userDataString);
+    userEmailData = userData.userEmail;
+    userNameData = userData.userName;
+    userProfileData = userData.userProfile;
+  } else {
+    console.error('세션스토리지에 userData가 존재하지 않습니다.');
+  }
+
+  const fetchCommentData = async () => {
+    try {
+      // GET 요청으로 댓글 데이터 조회
+      const getResponse = await axios.get(`/api/comment/list/${item.bdIdx}`);
+      setCommentData(getResponse.data);
+      // 댓글 데이터가 존재하는지 여부를 설정
+      setIsCommented(getResponse.data.length > 0);
+
+      console.log('북마크 조회 완료:', getResponse.data);
+    } catch (error) {
+      console.error('북마크 조회 중 오류 발생:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCommentData();
+  }, [userEmailData, item.id]);
+
+  // 댓글 작성하기
+  const uploadCommentData = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/api/comment/create', {
+        bdIdx: item.bdIdx,
+        cmtContent: cmtContent,
+        userEmail: userEmailData
+      });
+      setCommentWriteData(response.data);
+    } catch (error) {
+      console.error('댓글 작성 중 오류 발생:', error);
+    }
+  };
+
+  // 댓글 삭제하기
+  const deleteComment = async (cmtIdx) => {
+    try {
+      // DELETE 요청으로 삭제
+      const deleteResponse = await axios.delete(`/api/comment/delete/${cmtIdx}`, {
+        headers: {
+          'Content-Type': 'application/json', // 요청 헤더에 Content-Type을 추가
+        },
+        data: { userEmail: userEmailData }, // 삭제 요청에 필요한 데이터를 data 속성에 추가
+      });
+      console.log('댓글 삭제 완료:', deleteResponse.data);
+  
+      // 댓글 목록 다시 가져오기
+      fetchCommentData();
+    } catch (error) {
+      console.error('댓글삭제 중 오류 발생:', error);
+    }
+  };
+  
+  
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
-      // 모달이 닫힐 때 body 스타일을 초기화하여 스크롤을 활성화
       document.body.style.overflow = "visible";
     };
   }, []);
 
   const handleModalClick = (e) => {
-    // 모달 내부의 클릭 이벤트일 경우 이벤트 전파 중지
     e.stopPropagation();
   };
 
+  const handleCommentClick = (cmtIdx) => {
+    // e.stopPropagation();
+    deleteComment(cmtIdx)
+  }
+
   // Moment.js를 사용하여 날짜 포맷 변경
   const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
+
+  // 가져온 데이터를 사용하여 UI를 렌더링
+  const CommentItems = commentData && commentData.map((comment, index) => {
+    // Moment.js를 사용하여 날짜 포맷 변경
+    const formattedDate = moment(comment.createdAt).format('YYYY-MM-DD HH:mm');
+    // comment.userName과 userNameData를 비교하여 일치하면 true를 반환
+    const isCurrentUserComment = comment.userName === userNameData;
+
+    return (
+      <CommentBox key={comment.cmtIdx}>
+        <CommentHead>
+          <BoardUserBox>
+            {/* 해당부분 유저프로필 사진데이터 댓글등록시 가져와야함 */}
+            <BoardUserImage src={userProfileData || DefaultUser} />
+            <BoardUserName>{comment.userName}</BoardUserName>
+          </BoardUserBox>
+          <BoardDateBox>{formattedDate}</BoardDateBox>
+        </CommentHead>
+        <CommentContent>{comment.cmtContent}</CommentContent>
+        {isCurrentUserComment && (
+          <CommentButtonBox>
+          {/* <CommentButtonBoxForm action={`/api/comment/delete/${comment.cmtIdx}`} method="delete"> */}
+          <CommentBtnDelete onClick={() => handleCommentClick(comment.cmtIdx)}>삭제</CommentBtnDelete>
+            <CommentBtnUpdate>수정</CommentBtnUpdate>
+          {/* </CommentButtonBoxForm> */}
+          </CommentButtonBox>
+        )}
+        {/* 좋아요 추가시 작성 */}
+        {/* <CommentBottom>
+                <BoardCommentText>
+                  <BoardCommentIcon src={LikesLogo} />
+                  {comment.cmtLikes}
+                </BoardCommentText>
+              </CommentBottom> */}
+      </CommentBox>
+    );
+  });
 
   return (
     <Background onClick={onClose}>
@@ -540,122 +665,49 @@ const BoardModal = ({ onClose, item }) => {
         <BoardArea>
           <BoardHeadBox>
             <BoardUserBox>
-              <BoardUserImage />
-              <BoardUserName>{item.userName}</BoardUserName>
+              <BoardUserImage src={userProfileData || DefaultUser} />
+              <BoardUserName>{item.userName || "Unknown User"}</BoardUserName>
             </BoardUserBox>
             <BoardDateBox>{formattedDate}</BoardDateBox>
           </BoardHeadBox>
           <BoardImageBox>
-            <BoardImage src="https://i.pinimg.com/originals/49/a7/de/49a7dec9f79f6b345da7a57b4e9e82cb.gif" />
+            {item.image && <BoardImage src={item.image} />}
           </BoardImageBox>
           <BoardTextBox>{item.bdContent}</BoardTextBox>
           {item.bdUrl && <BoardUrlBox href={item.bdUrl} target="_blank">{item.bdUrl}</BoardUrlBox>}
           <BoardCommentBox>
             <BoardCommentText>
               <BoardCommentIcon src={CommentLogo} />
-              0
+              {commentData.length}
             </BoardCommentText>
             <BoardCommentText>
               <BoardCommentIcon src={ViewsLogo} />
               {item.bdViews}
             </BoardCommentText>
-            <BoardCommentText>
+            {/* <BoardCommentText>
               <BoardCommentIcon src={LikesLogo} />
               {item.bdLikes}
-            </BoardCommentText>
+            </BoardCommentText> */}
           </BoardCommentBox>
         </BoardArea>
         <CommentArea>
-          <CommentBoxNull>아직 작성된 댓글이 없어요!</CommentBoxNull>
-          {/* 테스트용 */}
-          <CommentBox>
-            <CommentHead>
-              <BoardUserBox>
-                <BoardUserImage />
-                <BoardUserName>{item.user}유저이름</BoardUserName>
-              </BoardUserBox>
-              <BoardDateBox>{formattedDate}</BoardDateBox>
-            </CommentHead>
-            <CommentContent>
-              댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정
-            </CommentContent>
-            {/* 해당 버튼박스는 자신이 쓴 댓글에만 노출하기 */}
-            <CommentBottom>
-              <BoardCommentText>
-                <BoardCommentIcon src={LikesLogo} />
-                0
-              </BoardCommentText>
-            </CommentBottom>
-          </CommentBox>
-          {/* 테스트용 */}
-          <CommentBox>
-            <CommentHead>
-              <BoardUserBox>
-                <BoardUserImage />
-                <BoardUserName>{item.user}유저이름</BoardUserName>
-              </BoardUserBox>
-              <BoardDateBox>{formattedDate}</BoardDateBox>
-            </CommentHead>
-            <CommentContent>
-              댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정
-            </CommentContent>
-            {/* 해당 버튼박스는 자신이 쓴 댓글에만 노출하기 */}
-            <CommentBottom>
-              <BoardCommentText>
-                <BoardCommentIcon src={LikesLogo} />
-                0
-              </BoardCommentText>
-            </CommentBottom>
-          </CommentBox>
-          {/* 테스트용 */}
-          <CommentBox>
-            <CommentHead>
-              <BoardUserBox>
-                <BoardUserImage />
-                <BoardUserName>{item.user}유저이름</BoardUserName>
-              </BoardUserBox>
-              <BoardDateBox>{formattedDate}</BoardDateBox>
-            </CommentHead>
-            <CommentContent>
-              댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정댓글내용이 여기에 작성 될 예정
-            </CommentContent>
-            {/* 해당 버튼박스는 자신이 쓴 댓글에만 노출하기 */}
-            <CommentBottom>
-              <BoardCommentText>
-                <BoardCommentIcon src={LikesLogo} />
-                0
-              </BoardCommentText>
-            </CommentBottom>
-          </CommentBox>
-          <CommentBox>
-            <CommentHead>
-              <BoardUserBox>
-                <BoardUserImage />
-                <BoardUserName>{item.user}유저이름</BoardUserName>
-              </BoardUserBox>
-              <BoardDateBox>{formattedDate}</BoardDateBox>
-            </CommentHead>
-            <CommentContent>
-              댓글내용이 여기에 작성 될 예정
-            </CommentContent>
-            {/* 해당 버튼박스는 자신이 쓴 댓글에만 노출하기 */}
-            <CommentButtonBox>
-              <CommentBtnDelete>삭제</CommentBtnDelete>
-              <CommentBtnUpdate>수정</CommentBtnUpdate>
-            </CommentButtonBox>
-            <CommentBottom>
-              <BoardCommentText>
-                <BoardCommentIcon src={LikesLogo} />
-                0
-              </BoardCommentText>
-            </CommentBottom>
-          </CommentBox>
-          <CommentBox>
-            <CommentTextArea />
+          {
+            isCommented ? (
+              CommentItems
+            ) : (
+              <CommentBoxNull>아직 작성된 댓글이 없어요!</CommentBoxNull>
+            )
+          }
+          <CommentForm action="/api/comment/create" method="post">
+            <CommentTextArea
+              name="cmtContent"
+              value={cmtContent}
+              onChange={(e) => setCmtContent(e.target.value)}
+            />
             <CommentTextBtnBox>
-              <CommentBtnInsert>작성</CommentBtnInsert>
+              <CommentBtnInsert type="submit" onClick={uploadCommentData}>작성</CommentBtnInsert>
             </CommentTextBtnBox>
-          </CommentBox>
+          </CommentForm>
         </CommentArea>
       </BoardContent>
     </Background>
