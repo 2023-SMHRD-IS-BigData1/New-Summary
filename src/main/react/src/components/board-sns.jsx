@@ -51,19 +51,19 @@ const TextDate = styled.div`
 
 const TextContent = styled.div`
     width: 100%;
-    /* height: 105px; */
-    padding: 10px 10px 0 10px;
+    max-height: 396px;
+    padding: 10px 10px 10px 10px;
     margin-bottom: 20px;
     font-size: 20px;
     line-height: 1.2;
     word-wrap: break-word;
     white-space: pre-wrap;
-    /* overflow: hidden;
+    overflow: hidden;
     position: relative;
     display: -webkit-box;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical; */
+    -webkit-line-clamp: 16;
+    -webkit-box-orient: vertical;
 `;
 
 const TextUrl = styled.div`
@@ -418,42 +418,40 @@ const PaginationBox = styled.div`
 
 
 export function BoardSNS() {
-    // const { boardData, setBoardData, loading } = useBoardContext();
     const { loading } = useBoardContext();
     const { boardViewData, loadingViews } = useBoardViewContext();
     const [columns, setColumns] = useState(3);
-    const [itemsPerPage, setItemsPerPage] = useState(20);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [modalOn, setModalOn] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [page, setPage] = useState(0); // 현재 페이지 번호 (페이지네이션)
+    const [page, setPage] = useState(-1);
     const [ref, inView] = useInView();
     const [boardData, setBoardData] = useState([]);
+    const currentScrollPosition = window.scrollY;
 
     // 무한 스크롤
     // 지정한 타겟 div가 화면에 보일 때 마다 서버에 요청을 보냄
     const productFetch = () => {
         axios
-            .get(`/api/board/list?page=${page + 1}&perPage=${itemsPerPage}`)
+            .get(`/api/board/list?page=${page + 1}&pageSize=${itemsPerPage}`)
             .then((res) => {
                 console.log(res.data);
-                // 이미 존재하는 데이터를 필터링하여 새로운 아이템만 가져오기
-                // const newItems = res.data.filter((newItem) => !boardData.some((item) => item.id === newItem.id));
-                // 리스트 뒤로 붙여주기
-                // setBoardData((prevData) => [...prevData, ...newItems]);
                 setBoardData((prevData) => [...prevData, ...(res.data)]);
-                // 요청 성공 시에 페이지에 1 카운트 해주기
-                setPage((page) => page + 1);
+                setPage((prevPage) => prevPage + 1);
             })
             .catch((err) => { console.log(err) });
     };
 
     useEffect(() => {
-        // inView가 true 일때만 실행한다.
-        if (inView) {
-            console.log(inView, '무한 스크롤 요청 🎃');
+        if (inView && !loading) {
+            console.log(inView, '무한 스크롤 요청💫');
             productFetch();
         }
-    }, [inView, boardData, page, itemsPerPage]);
+    }, [inView, loading]);
+
+    useEffect(() => {
+        window.scrollTo(0, currentScrollPosition);
+    }, [boardData]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -515,14 +513,13 @@ export function BoardSNS() {
                         <LikeBox>
                             {/* 댓글추가시 댓글 카운트해서 넣을것 */}
                             <Comments src={Comment} /> 10
-                            <Likes src={Like} /> {item.bdLikes}
+                            {/* <Likes src={Like} /> {item.bdLikes} */}
                             <Views src={ViewsLogo} /> {item.bdViews}
                         </LikeBox>
                         <UserBox>
                             {/*  유저 프로필사진 들어가기 */}
                             <UserBoxImage></UserBoxImage>
-                            {/* 유저이름 출력 / 아직 시큐리티 적용안되서 null 받는중 */}
-                            <UserBoxName>{item.userName}</UserBoxName>
+                            <UserBoxName>{item.userName || "Unknown User"}</UserBoxName>
                         </UserBox>
                     </ItemTextBox>
                 </Item>

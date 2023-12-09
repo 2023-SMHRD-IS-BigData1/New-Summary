@@ -26,30 +26,40 @@ public class CommentController {
 
 	@Autowired
 	private final CommentService commentService;
-	
-	
+
 	// 게시글에 작성된 댓글 가져오기
 	@GetMapping("/list/{bdIdx}")
 	public List<CommentResponseDTO> commentList(@PathVariable("bdIdx") Long bdIdx) {
 		return commentService.commentList(bdIdx);
 	}
-	
+
 	// 댓글 입력
 	@PostMapping("/create")
 	public CommentResponseDTO createComment(@RequestBody CommentRequestDTO commentRequestDTO) {
 		return commentService.createComment(commentRequestDTO);
 	}
-	
+
 	// 댓글 수정
 	@PutMapping("/update/{cmtIdx}")
-	public CommentResponseDTO updateComment(@PathVariable Long cmtIdx, @RequestBody CommentRequestDTO commentRequestDTO) throws Exception {
+	public CommentResponseDTO updateComment(@PathVariable Long cmtIdx, @RequestBody CommentRequestDTO commentRequestDTO)
+			throws Exception {
 		return commentService.updateComment(cmtIdx, commentRequestDTO);
 	}
-	
+
 	// 댓글 삭제
-	@DeleteMapping("delete/{cmtIdx}")
-	public CommentSuccessDTO deleteComment(@PathVariable Long cmtIdx, @RequestBody CommentRequestDTO commentRequestDTO) throws Exception {
+	@DeleteMapping("/delete/{cmtIdx}")
+	public CommentSuccessDTO deleteComment(@PathVariable Long cmtIdx,
+			@RequestBody CommentRequestDTO commentRequestDTO)
+			throws Exception {
 		return commentService.deleteComment(cmtIdx, commentRequestDTO);
 	}
-	
+	// 댓글 삭제
+	// @DeleteMapping("/delete/{cmtIdx}/{userEmail}")
+	// public CommentSuccessDTO deleteComment(@PathVariable(name = "cmtIdx") Long
+	// cmtIdx,
+	// @PathVariable(name = "userEmail") String userEmail)
+	// throws Exception {
+	// return commentService.deleteComment(cmtIdx, userEmail);
+	// }
+
 }
