@@ -2,6 +2,9 @@ package com.newSummary.domain.dto.point;
 
 import com.newSummary.domain.entity.Point;
 
+import lombok.Data;
+
+@Data
 public class PointResponseDTO {
 
 	private String userName;
