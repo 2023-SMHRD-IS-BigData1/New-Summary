@@ -1,5 +1,7 @@
 package com.newSummary.domain.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,6 +35,10 @@ public class Point {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_email")
 	private User user;
+	
+	// 날짜
+    @Column(name = "point_date")
+    private LocalDate pointDate;
 
 	// 획득 구분
 	@Column(columnDefinition = "int default 0")
