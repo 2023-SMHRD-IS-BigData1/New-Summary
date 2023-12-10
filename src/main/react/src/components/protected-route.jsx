@@ -1,14 +1,20 @@
 import React from 'react';
-import {  Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-export default function ProtectedRoute({ children }){
+export default function ProtectedRoute({ children }) {
   const userDataString = sessionStorage.getItem('userData');
+  const notify = () => toast.error('로그인이 필요합니다!');
 
   if (!userDataString) {
-    alert("로그인이 필요합니다!")
-    // 로그인 페이지로 리디렉션 (replace 속성 사용)
-    return <Navigate to="/login"/>
+    notify();
+    return (
+      <>
+        <Navigate to="/login" />
+      </>
+    );
   }
-  return children
+
+  return children;
 }

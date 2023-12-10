@@ -9,6 +9,7 @@ const CategoryNewsContext = createContext();
 const NewsContext = createContext();
 const NewsViewContext = createContext();
 const BookMarkContext = createContext();
+const UserViewNewsContext = createContext();
 
 export const CategoryProvider = ({ children }) => {
   const [categoryData, setCategoryData] = useState([]);
@@ -127,73 +128,80 @@ export const NewsViewProvider = ({ children }) => {
 };
 
 export const BookMarkProvider = ({ children }) => {
-  const [bookMarkData, setBookMarkData] = useState([]);
+  const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  
+
   useEffect(() => {
-    const fetchBookMarkData = async () => {
+    const fetchData = async () => {
       try {
-        // GET 요청으로 북마크 데이터 조회
-        const getResponse = await axios.get(`/api/news/bookmark/${userEmail}`);
-        setBookMarkData(getResponse.data);
-
-        // 북마크 데이터가 있으면 즉, 길이가 1 이상이면 북마크가 되어 있다고 판단
-        setIsBookmarked(getResponse.data.length > 0);
-
-        console.log('북마크 조회 완료:', getResponse.data);
+        const response = await axios.get('/api/news/list');
+        setNewsData(response.data);
+        const filteredData = response.data.filter(item =>
+          item.picture !== null && item.picture !== "" &&
+          item.summary !== null && item.summary !== ""
+        );
+        console.log('뉴스 데이터가 성공적으로 로드되었습니다:', filteredData);
       } catch (error) {
-        console.error('북마크 조회 중 오류 발생:', error);
+        console.error('뉴스 데이터 로드 중 오류 발생:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    const createBookMark = async () => {
-      try {
-        // POST 요청으로 북마크 생성
-        const createResponse = await axios.post(`/api/news/bookmark/create`);
-        setBookMarkData(createResponse.data);
-        setIsBookmarked(true); // 북마크가 생성되었으므로 true로 설정
-        console.log('북마크 등록 완료:', createResponse.data);
-      } catch (error) {
-        console.error('북마크 등록 중 오류 발생:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchData();
+  }, []);
 
-    const deleteBookMark = async (bookmarkIdx) => {
-      try {
-        // DELETE 요청으로 북마크 삭제
-        const deleteResponse = await axios.delete(`/api/news/bookmark/delete/${bookmarkIdx}/${userEmail}`);
-        setBookMarkData(deleteResponse.data);
-        setIsBookmarked(false); // 북마크가 삭제되었으므로 false로 설정
-        console.log('북마크 삭제 완료:', deleteResponse.data);
-      } catch (error) {
-        console.error('북마크 삭제 중 오류 발생:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // 북마크 데이터 조회
-    fetchBookMarkData();
-
-    // 북마크 생성 (POST 요청)
-    createBookMark();
-
-    // 북마크 삭제 (DELETE 요청) - 예시로 첫 번째 북마크를 삭제하도록 설정
-    const firstBookmarkIdx = bookMarkData.length > 0 ? bookMarkData[0].idx : null;
-    if (firstBookmarkIdx) {
-      deleteBookMark(firstBookmarkIdx);
-    }
-  }, []); // 주의: eslint-disable-line react-hooks/exhaustive-deps // 의존성 배열이 완전하지 않아도 됩니다. (모든 의존성을 나열하지 않음)
+  const getNewsById = (newsId) => {
+    // newsId에 해당하는 뉴스를 찾아서 반환
+    return newsData.find(news => news.newsObjectId === newsId);
+  };
 
   return (
-    <BookMarkContext.Provider value={{ bookMarkData, loading, isBookmarked }}>
+    <BookMarkContext.Provider value={{ newsData, loading, getNewsById }}>
       {children}
     </BookMarkContext.Provider>
+  );
+};
+
+export const UserViewNewsProvider = ({ children }) => {
+  const [userViewNewskData, setUserViewNewsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  let userData;
+  let userEmailData;
+  const userDataString = sessionStorage.getItem('userData');
+
+
+  if (userDataString) {
+    userData = JSON.parse(userDataString);
+    userEmailData = userData.userEmail;
+  } else {
+    console.error('세션스토리지에 userData가 존재하지 않습니다.');
+  }
+  
+  useEffect(() => {
+    const fetchUserViewNewsData = async () => {
+      try {
+        const getResponse = await axios.get(`/api/log/list`,{
+          userEmail: userEmailData,
+        });
+        setUserViewNewsData(getResponse.data);
+
+
+        console.log('조회기록 조회 완료:', getResponse.data);
+      } catch (error) {
+        console.error('조회기록 조회 중 오류 발생:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserViewNewsData();
+
+  }, []);
+
+  return (
+    <UserViewNewsContext.Provider value={{ userViewNewskData, loading }}>
+      {children}
+    </UserViewNewsContext.Provider>
   );
 };
 
@@ -217,4 +225,8 @@ export const useNewsViewContext = () => {
 
 export const useBookMarkContext = () => {
   return useContext(BookMarkContext);
+};
+
+export const useUserViewNewsContext = () => {
+  return useContext(UserViewNewsContext);
 };

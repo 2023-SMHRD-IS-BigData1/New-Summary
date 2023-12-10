@@ -1,53 +1,55 @@
-import { useEffect, useState } from 'react';
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Outlet, RouterProvider, createBrowserRouter, useRoutes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from './routes/home';
 import LoadingScreen from './components/loading-screen';
-import reset from "styled-reset";
+import reset from 'styled-reset';
 import styled, { createGlobalStyle } from 'styled-components';
 import Profile from './routes/profile';
 import Login from './routes/login';
 import Board from './routes/board';
 import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
-import { BookMarkProvider, CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider } from './data/news-data.context';
+import { BookMarkProvider, CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider, UserViewNewsProvider } from './data/news-data.context';
 import { AuthProvider } from './data/user-login';
 import { BoardProvider, BoardViewProvider, BoardWriteProvider } from './data/board-data';
-import TopButtonLogo from '../src/assets/top-logo.svg'
+import TopButtonLogo from '../src/assets/top-logo.svg';
 import ProtectedRoute from './components/protected-route';
+import 'react-toastify/dist/ReactToastify.css';
 
-// 초기 시작페이지를 잡아주기
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Outlet />,
     children: [
       {
-        path: "", // 위와 동일한 path 경로를 갖는다
+        path: '', // 위와 동일한 path 경로를 갖는다
         element: <Home />,
       },
       {
-        path: "profile",
+        path: 'profile',
         element: <ProtectedRoute><Profile /></ProtectedRoute>,
       },
       {
-        path: "login",
+        path: 'login',
         element: <Login />,
       },
       {
-        path: "search",
+        path: 'search',
         element: <SearchNews />,
       },
       {
-        path: "category-news",
+        path: 'category-news',
         element: <CategoryNews />,
       },
       {
-        path: "board",
+        path: 'board',
         element: <ProtectedRoute><Board /></ProtectedRoute>,
       },
     ],
   },
-])
+]);
 
 // reset css
 const GlobalStyles = createGlobalStyle`
@@ -59,14 +61,14 @@ const GlobalStyles = createGlobalStyle`
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #f0e6dd;
   }
-  `;
+`;
 
 const Wrapper = styled.div`
-width: 100%;
-height: 100vh;
-display: flex;
-justify-content: center;
-position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  position: relative;
 `;
 
 const TopButton = styled.a`
@@ -96,12 +98,11 @@ const TopButtonImage = styled.img`
   padding: 8px;
 `;
 
-
 function App() {
   const [isLoading, setLoading] = useState(true);
   const init = () => {
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     init();
@@ -122,31 +123,44 @@ function App() {
           <NewsViewProvider>
             {/* 유저 로그인 */}
             <AuthProvider>
-              {/* 북마크 하기 */}
-              <BookMarkProvider>
-                {/* 게시판 */}
-                <BoardProvider>
-                  {/* 게시판 상세글 */}
-                  <BoardViewProvider>
-                    {/* 게시판 글 작성 */}
-                    <BoardWriteProvider>
-                      <Wrapper>
-                        <GlobalStyles />
-                        {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-                        <TopButton onClick={handlePage}>
-                          <TopButtonImage src={TopButtonLogo} />
-                        </TopButton>
-                      </Wrapper>
-                    </BoardWriteProvider>
-                  </BoardViewProvider>
-                </BoardProvider>
-              </BookMarkProvider>
+              {/* 유저 뉴스시청기록 */}
+              <UserViewNewsProvider>
+                {/* 북마크 하기 */}
+                <BookMarkProvider>
+                  {/* 게시판 */}
+                  <BoardProvider>
+                    {/* 게시판 상세글 */}
+                    <BoardViewProvider>
+                      {/* 게시판 글 작성 */}
+                      <BoardWriteProvider>
+                        <Wrapper>
+                          <GlobalStyles />
+                          <RouterProvider router={router} />
+                          <TopButton onClick={handlePage}>
+                            <TopButtonImage src={TopButtonLogo} />
+                          </TopButton>
+                        </Wrapper>
+                      </BoardWriteProvider>
+                    </BoardViewProvider>
+                  </BoardProvider>
+                </BookMarkProvider>
+              </UserViewNewsProvider>
             </AuthProvider>
           </NewsViewProvider>
         </NewsProvider>
       </CategoryNewsProvider>
+      <ToastContainer
+        position="top-center"
+        limit={1}
+        closeButton={false}
+        autoClose={4000}
+        bodyStyle={{
+          textAlign: 'center',
+          color: '#000000',
+        }}
+      />
     </CategoryProvider>
-  )
+  );
 }
 
-export default App
+export default App;

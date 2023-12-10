@@ -100,16 +100,4 @@ public class CommentService {
 		return new CommentSuccessDTO(true);
 	}
 
-	// @Transactional
-	// public CommentSuccessDTO deleteComment(Long cmtIdx, String userEmail) throws
-	// Exception {
-	// Comment comment = commentRepository.findById(cmtIdx)
-	// .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
-
-	// if (!userEmail.equals(comment.getUser().getUserEmail()))
-	// throw new Exception("댓글 작성자만 수정할 수 있습니다.");
-	// commentRepository.deleteById(cmtIdx);
-	// return new CommentSuccessDTO(true);
-	// }
-
 }

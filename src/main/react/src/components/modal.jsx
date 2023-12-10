@@ -9,6 +9,8 @@ import ViewsLogo from '../assets/views.svg'
 import LikesLogo from '../assets/heart-icon.svg'
 import CommentLogo from '../assets/comment-icon.svg'
 import { useBookMarkContext } from "../data/news-data.context";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BackgroundNews = styled.div`
   height: 100%;
@@ -35,7 +37,7 @@ const Background = styled.div`
   top: 0;
   text-align: center;
   z-index: 200;
-  background: #14141499;
+  background: #14141411;
 `;
 
 const Content = styled.div`
@@ -332,6 +334,14 @@ const CommentContent = styled.div`
   white-space: pre-wrap;
 `;
 
+const CommentContentUpdate = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  line-height: 1.1;
+  white-space: pre-wrap;
+`;
+
 const CommentBottom = styled.div`
   display: flex;
   justify-content: right;
@@ -359,6 +369,11 @@ const CommentBtnDelete = styled.button`
 `;
 
 const CommentBtnUpdate = styled.button`
+  padding: 4px 10px;
+  border: 1px solid #99999999;
+`;
+
+const CommentBtnCancel = styled.button`
   padding: 4px 10px;
   border: 1px solid #99999999;
 `;
@@ -452,6 +467,7 @@ const Modal = ({ onClose, item }) => {
 
       setBookMarkData(createResponse.data);
       setIsBookmarked(true);
+      setCurrentBookmarkIdx(createResponse.data.bookmark_idx); // 새로 생성된 북마크의 인덱스를 설정
       console.log('북마크 등록 완료:', createResponse.data);
     } catch (error) {
       console.error('북마크 등록 중 오류 발생:', error);
@@ -527,6 +543,9 @@ const BoardModal = ({ onClose, item }) => {
   const [isCommented, setIsCommented] = useState(false);
   const [commentWriteData, setCommentWriteData] = useState([]);
   const [cmtContent, setCmtContent] = useState(""); // 댓글작성내용 가져오기
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState("");
+  const [selectedCommentIdx, setSelectedCommentIdx] = useState(null);
 
   let userData;
   let userEmailData;
@@ -573,6 +592,9 @@ const BoardModal = ({ onClose, item }) => {
         cmtContent: cmtContent,
         userEmail: userEmailData
       });
+      setCommentData(prevComments => [...prevComments, response.data]);
+      const notify = () => toast.success('댓글작성 완료');
+      notify();
       setCommentWriteData(response.data);
     } catch (error) {
       console.error('댓글 작성 중 오류 발생:', error);
@@ -589,16 +611,41 @@ const BoardModal = ({ onClose, item }) => {
         },
         data: { userEmail: userEmailData }, // 삭제 요청에 필요한 데이터를 data 속성에 추가
       });
-      console.log('댓글 삭제 완료:', deleteResponse.data);
-  
-      // 댓글 목록 다시 가져오기
+      const notify = () => toast.success('댓글삭제 완료');
+      notify();
       fetchCommentData();
     } catch (error) {
       console.error('댓글삭제 중 오류 발생:', error);
     }
   };
-  
-  
+
+
+  // 댓글 수정하기
+  const updateComment = async () => {
+    try {
+      const updateResponse = await axios.put(`/api/comment/update/${selectedCommentIdx}`, {
+        cmtContent: editedComment,
+        userEmail: userEmailData,
+        bdIdx: item.bdIdx,
+      });
+
+      const updatedComments = commentData.map((comment) => {
+        if (comment.cmtIdx === selectedCommentIdx) {
+          return { ...comment, cmtContent: editedComment };
+        }
+        return comment;
+      });
+
+      setCommentData(updatedComments);
+      const notify = () => toast.success('댓글 수정 완료');
+      notify();
+      setIsEditing(false);
+    } catch (error) {
+      console.error('댓글 수정 중 오류 발생:', error);
+    }
+  };
+
+
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -611,10 +658,17 @@ const BoardModal = ({ onClose, item }) => {
     e.stopPropagation();
   };
 
+  // 댓글삭제 핸들러
   const handleCommentClick = (cmtIdx) => {
-    // e.stopPropagation();
     deleteComment(cmtIdx)
   }
+
+  // 댓글수정 핸들러
+  const handleEditClick = (cmtIdx, cmtContent) => {
+    setIsEditing(true);
+    setEditedComment(cmtContent);
+    setSelectedCommentIdx(cmtIdx);
+  };
 
   // Moment.js를 사용하여 날짜 포맷 변경
   const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
@@ -636,13 +690,24 @@ const BoardModal = ({ onClose, item }) => {
           </BoardUserBox>
           <BoardDateBox>{formattedDate}</BoardDateBox>
         </CommentHead>
+        {isEditing ?
+        <CommentContentUpdate
+        value={editedComment}
+        onChange={(e) => setEditedComment(e.target.value)}
+        />:
         <CommentContent>{comment.cmtContent}</CommentContent>
+        }
         {isCurrentUserComment && (
           <CommentButtonBox>
-          {/* <CommentButtonBoxForm action={`/api/comment/delete/${comment.cmtIdx}`} method="delete"> */}
-          <CommentBtnDelete onClick={() => handleCommentClick(comment.cmtIdx)}>삭제</CommentBtnDelete>
-            <CommentBtnUpdate>수정</CommentBtnUpdate>
-          {/* </CommentButtonBoxForm> */}
+            <CommentBtnDelete onClick={() => handleCommentClick(comment.cmtIdx)}>삭제</CommentBtnDelete>
+            {isEditing ? (
+              <>
+                <CommentBtnUpdate onClick={updateComment}>확인</CommentBtnUpdate>
+                <CommentBtnCancel onClick={() => setIsEditing(false)}>취소</CommentBtnCancel>
+              </>
+            ) : (
+              <CommentBtnUpdate onClick={() => handleEditClick(comment.cmtIdx, comment.cmtContent)}>수정</CommentBtnUpdate>
+            )}
           </CommentButtonBox>
         )}
         {/* 좋아요 추가시 작성 */}

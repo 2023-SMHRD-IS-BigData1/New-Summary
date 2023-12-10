@@ -29,11 +29,11 @@ public class BoardController {
 	@Autowired
 	private final BoardService boardService;
 	
-//	// 게시판 전체 목록
-//	@GetMapping("/list")
-//	public List<BoardResponseDTO> boardList(){
-//		return boardService.boardList();
-//	}
+	// 게시판 전체 목록
+	@GetMapping("/listdata")
+	public List<BoardResponseDTO> boardList(){
+		return boardService.boardList();
+	}
 	@GetMapping("/list")
 	public List<BoardResponseDTO> boardList(@RequestParam("page") int page, @RequestParam("pageSize") int pageSize) {
 	    // page와 pageSize를 이용하여 적절한 범위의 데이터를 가져와 응답합니다.
