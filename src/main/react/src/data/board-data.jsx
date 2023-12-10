@@ -8,11 +8,12 @@ const BoardWriteContext = createContext();
 export const BoardProvider = ({ children }) => {
   const [boardData, setBoardData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [newPostAdded, setNewPostAdded] = useState(false);
 
   useEffect(() => {
     const aixosData = async () => {
       try {
-        const response = await axios.get('/api/board/list');
+        const response = await axios.get('/api/board/listdata');
         setBoardData(response.data);
         console.log('게시판 데이터가 성공적으로 로드되었습니다:', response.data);
       } catch (error) {
@@ -23,10 +24,10 @@ export const BoardProvider = ({ children }) => {
     };
 
     aixosData();
-  }, [setBoardData]);
+  }, [setBoardData, newPostAdded]);
 
   return (
-    <BoardContext.Provider value={{ boardData, setBoardData, loading }}>
+    <BoardContext.Provider value={{ newPostAdded, setNewPostAdded, boardData, setBoardData, loading }}>
       {children}
     </BoardContext.Provider>
   );
@@ -60,6 +61,7 @@ export const BoardViewProvider = ({ children }) => {
 export const BoardWriteProvider = ({ children }) => {
   const [boardWriteData, setBoardWriteData] = useState([]);
   const [loadingWrite, setLoadingWrite] = useState(true);
+  const [newPostAdded, setNewPostAdded] = useState(false);
 
   useEffect(() => {
     const aixosData = async () => {
@@ -76,7 +78,7 @@ export const BoardWriteProvider = ({ children }) => {
   }, [setBoardWriteData]);
 
   return (
-    <BoardWriteContext.Provider value={{ boardWriteData, setBoardWriteData, loadingWrite }}>
+    <BoardWriteContext.Provider value={{ newPostAdded, setNewPostAdded, boardWriteData, setBoardWriteData, loadingWrite }}>
       {children}
     </BoardWriteContext.Provider>
   );

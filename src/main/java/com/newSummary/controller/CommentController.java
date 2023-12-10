@@ -53,13 +53,5 @@ public class CommentController {
 			throws Exception {
 		return commentService.deleteComment(cmtIdx, commentRequestDTO);
 	}
-	// 댓글 삭제
-	// @DeleteMapping("/delete/{cmtIdx}/{userEmail}")
-	// public CommentSuccessDTO deleteComment(@PathVariable(name = "cmtIdx") Long
-	// cmtIdx,
-	// @PathVariable(name = "userEmail") String userEmail)
-	// throws Exception {
-	// return commentService.deleteComment(cmtIdx, userEmail);
-	// }
 
 }
