@@ -68,28 +68,45 @@ public class UserController {
 
 	// 이메일 중복체크
 	@GetMapping("/users/duplication-email/{userEmail}")
-	public ResponseEntity<String> checkUserEmail(@PathVariable("userEmail") String userEmail) {
+	public Boolean checkUserEmail(@PathVariable("userEmail") String userEmail) {
 		// 이메일 형식 검사
 		if (!isValidEmail(userEmail)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효한 이메일 형식이 아닙니다.");
+			log.info("userEmail={},message={}", userEmail, "이메일 형식이 맞지 않습니다.");
+			System.out.println("이메일 형식 맞지않음");
+			return false;
 		}
 
-		// 이메일 중복 체크
-		if (userService.checkUserEmailDuplicate(userEmail)) {
-			log.info("userEmail={}, message={}", userEmail, "이메일이 중복됩니다. 다시 확인해주세요.");
-			return ResponseEntity.ok("이메일이 중복됩니다. 다시 확인해주세요.");
+		if (userService.checkUserEmailDuplicate(userEmail) == true) {
+			log.info("userEmail={},message={}", userEmail, "이메일이 중복됩니다.다시 확인해주세요.");
+			System.out.println("이메일 중복");
+			return true;
 		} else {
-			log.info("userEmail={}, message={}", userEmail, "이메일 사용 가능합니다.");
-			return ResponseEntity.ok("이메일 사용 가능합니다.");
+			log.info("userEmail={},message={}", userEmail, "이메일 사용가능합니다.");
+			System.out.println("이메일 사용가능");
+			return false;
 		}
+
 	}
 
 	// 이메일 형식 검사 메서드
 	private boolean isValidEmail(String email) {
-		// 여기에 이메일 형식을 검사하는 로직 추가
-		// 예: 정규 표현식 사용
+		// 정규 표현식 사용 이메일 형식을 검사하는 로직 추가
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 		return email.matches(emailRegex);
+	}
+
+	// 닉네임 중복확인
+	@GetMapping("/users/duplication-userName/{userName}")
+	public Boolean checkUserName(@PathVariable("userName") String userName) {
+		if (userService.checkUserNameDuplicate(userName) == true) {
+			log.info("userName={},message={}", userName, "닉네임이 중복됩니다.다시 확인해주세요.");
+			System.out.println("닉네임중복");
+			return true;
+		} else {
+			log.info("userName={},message={}", userName, "닉네임 사용가능합니다.");
+			System.out.println("닉네임사용가능");
+			return false;
+		}
 	}
 
 	// 전화번호 중복확인
