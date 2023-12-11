@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,17 +50,20 @@ public class BoardController {
 	}
 
 	// 게시글 입력
-	@PostMapping(path = "/create", consumes = "application/json")
-	public BoardResponseDTO createBoard(@RequestBody BoardRequestDTO boardRequestDTO,
-			@RequestParam("boardPhoto") MultipartFile multipartFile) throws IOException {
-		return boardService.createBoard(boardRequestDTO, multipartFile);
+	@PostMapping("/create")
+	public BoardResponseDTO createBoard(@RequestPart(value = "BoardRequestDTO") BoardRequestDTO boardRequestDTO,
+			@RequestPart(value = "boardPhoto", required = false) MultipartFile multipartFile) throws IOException {
+		return (multipartFile != null) ? boardService.createBoard(boardRequestDTO, multipartFile)
+				: boardService.createBoard(boardRequestDTO);
 	}
 
 	// 게시글 수정
 	@PutMapping("/update/{bdIdx}")
-	public BoardResponseDTO updateBoard(@PathVariable Long bdIdx, @RequestBody final BoardRequestDTO boardRequestDTO)
-			throws Exception {
-		return boardService.updateBoard(bdIdx, boardRequestDTO);
+	public BoardResponseDTO updateBoard(@PathVariable Long bdIdx,
+			@RequestPart(value = "BoardRequestDTO") final BoardRequestDTO boardRequestDTO,
+			@RequestPart(value = "boardPhoto", required = false) MultipartFile multipartFile) throws Exception {
+		return (multipartFile != null) ? boardService.updateBoard(bdIdx, boardRequestDTO, multipartFile)
+				: boardService.updateBoard(bdIdx, boardRequestDTO);
 	}
 
 	// 게시글 삭제
