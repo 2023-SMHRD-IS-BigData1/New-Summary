@@ -24,7 +24,8 @@ public class BoardResponseDTO {
 	private int bdLikes;
 	// 작성자
 	private String userName;
-		
+	// 사진
+	private String bdProfile;
 
 	public BoardResponseDTO(Board board, String userName) {
 		this.bdIdx = board.getBdIdx();
@@ -33,6 +34,7 @@ public class BoardResponseDTO {
 		this.createdAt = board.getCreatedAt();
 		this.bdLikes = board.getBdLikes();
 		this.bdViews = board.getBdViews();
+		this.bdProfile = board.getBdProfile();
 		this.userName = userName;
 
 	}

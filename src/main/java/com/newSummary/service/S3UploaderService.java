@@ -13,7 +13,9 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.newSummary.domain.dto.FileUploadResponse;
+import com.newSummary.domain.entity.Board;
 import com.newSummary.domain.entity.User;
+import com.newSummary.repository.BoardRepository;
 import com.newSummary.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class S3UploaderService {
 	
 	private final AmazonS3Client amazonS3Client;
 	private final UserRepository userRepository;
+	private final BoardRepository boardRepository;
 
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
@@ -94,6 +97,28 @@ public class S3UploaderService {
 		return new FileUploadResponse(fileName, uploadImageUrl);
 		//return uploadImageUrl;
 	}
+	// 게시물 파일 수정
+	public FileUploadResponse updateBoardProfile(Long bdIdx, MultipartFile newProfile, String dirName) throws IOException {
+	    // 현재 사용자의 프로필 정보 조회
+	    Board board = boardRepository.findBybdIdx(bdIdx).get();
+	    // 현재 프로필 이미지의 파일 이름 가져오기
+	    String currentFileName = extractFileNameFromUrl(board.getBdProfile());
+
+	    // 기존 파일 삭제
+	    deleteFileFromS3(currentFileName);
+
+	    // 새로운 파일 업로드
+	    File newUploadFile = convert(newProfile)
+	            .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+	    String newFileName = dirName + "/" + newUploadFile.getName();
+	    String newUploadImageUrl = putS3(newUploadFile, newFileName);
+	    removeNewFile(newUploadFile);
+
+	    // 데이터베이스에 새로운 게시판 이미지 URL 업데이트
+	    board.setBdProfile(newUploadImageUrl);
+	    boardRepository.save(board);
+	    return new FileUploadResponse(newFileName, newUploadImageUrl);
+	}
 	
 	// S3에 파일을 업로드하고, URL반환하는 메소드
 	private String putS3(File uploadFile, String fileName) {
@@ -122,11 +147,11 @@ public class S3UploaderService {
 		return Optional.empty();
 	}
 	// S3에서 파일 삭제 메서드
-	private void deleteFileFromS3(String fileName) {
+	public void deleteFileFromS3(String fileName) {
 	    amazonS3Client.deleteObject(bucket, fileName);
 	}
 	// URL에서 파일 이름 추출 메서드
-	private String extractFileNameFromUrl(String url) {
+	public String extractFileNameFromUrl(String url) {
 	    int lastSlashIndex = url.lastIndexOf('/');
 	    if (lastSlashIndex != -1 && lastSlashIndex < url.length() - 1) {
 	        return url.substring(lastSlashIndex + 1);
