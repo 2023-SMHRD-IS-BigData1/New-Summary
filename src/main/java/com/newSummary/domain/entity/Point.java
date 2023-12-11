@@ -39,7 +39,7 @@ public class Point {
 	// 날짜
     @Column(name = "point_date")
     private LocalDate pointDate;
-
+    
 	// 획득 구분
 	@Column(columnDefinition = "int default 0")
 	private int newsClick;
@@ -54,7 +54,15 @@ public class Point {
 	@Column(columnDefinition = "int default 0")
 	private int pointVal;
 
+	// 점수 증가 메서드
 	public void incrementNewsClick() {
 		this.newsClick++;
 	}
+	public void incrementBoardWrite() {
+		this.newsClick++;
+	}
+	public void incrementCommentWrite() {
+		this.newsClick++;
+	}
+	
 }

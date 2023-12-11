@@ -32,6 +32,12 @@ public class UserService {
 		return userRepository.existsByUserEmail(userEmail);
 	}
 
+	// userName 중복 체크 중복되면 true return
+	@Transactional(readOnly = true)
+	public boolean checkUserNameDuplicate(String userName) {
+		return userRepository.existsByUserName(userName);
+	}
+
 	// userPhone 중복 체크 중복되면 true return
 	@Transactional(readOnly = true)
 	public boolean checkUserPhoneDuplicate(String userPhone) {
@@ -56,10 +62,8 @@ public class UserService {
 	}
 
 	/**
-	 * 로그인 기능 화면에서 LoginRequest(userEmail, userPw)을 입력받아
-	 * userEmail과 userPw가 일치하면 User return
-	 * userEmail이 존재하지 않거나 userPw가 일치하지 않으면 null return
-	 * 안씀
+	 * 로그인 기능 화면에서 LoginRequest(userEmail, userPw)을 입력받아 userEmail과 userPw가 일치하면
+	 * User return userEmail이 존재하지 않거나 userPw가 일치하지 않으면 null return 안씀
 	 */
 	public User login(LoginRequest req) {
 		Optional<User> optionalUser = userRepository.findByUserEmail(req.getUserEmail());
@@ -80,10 +84,9 @@ public class UserService {
 	}
 
 	/**
-	 * userEmail(String)를 입력받아 User을 return 해주는 기능 인증,
-	 * 인가 시 사용 userEmail가 null이거나(로그인 X)
-	 * userEmail로 찾아온 User가 없으면 null return
-	 * userEmail로 찾아온 User가 존재하면 User return
+	 * userEmail(String)를 입력받아 User을 return 해주는 기능 인증, 인가 시 사용 userEmail가
+	 * null이거나(로그인 X) userEmail로 찾아온 User가 없으면 null return userEmail로 찾아온 User가 존재하면
+	 * User return
 	 */
 	public User getLoginUserByEmail(String userEmail) {
 		if (userEmail == null) {
