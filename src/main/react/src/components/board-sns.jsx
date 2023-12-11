@@ -314,7 +314,7 @@ const PaginationBox = styled.div`
 `;
 
 export function BoardSNS() {
-    const { loading } = useBoardContext();
+    const { newPostAdd, setNewPostAdd, boardData, setBoardData, loading } = useBoardContext();
     const { boardViewData, loadingViews } = useBoardViewContext();
     const { newPostAdded, setNewPostAdded } = useBoardWriteContext();
     const [columns, setColumns] = useState(3);
@@ -323,7 +323,7 @@ export function BoardSNS() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [page, setPage] = useState(-1);
     const [ref, inView] = useInView();
-    const [boardData, setBoardData] = useState([]);
+    const [boardDataSlice, setBoardDataSlice] = useState([]);
     const currentScrollPosition = window.scrollY;
 
     // 무한 스크롤
@@ -333,7 +333,7 @@ export function BoardSNS() {
             .get(`/api/board/list?page=${page + 1}&pageSize=${itemsPerPage}`)
             .then((res) => {
                 console.log(res.data);
-                setBoardData((prevData) => [...prevData, ...(res.data)]);
+                setBoardDataSlice((prevData) => [...prevData, ...(res.data)]);
                 setPage((prevPage) => prevPage + 1);
             })
             .catch((err) => { console.log(err) });
@@ -346,11 +346,44 @@ export function BoardSNS() {
             productFetch();
         }
     }, [inView, loading]);
+    // Ref를 사용하여 스크롤 위치 저장
+    const scrollPositionRef = useRef(currentScrollPosition);
+    const lastInViewRef = useRef(true);
 
+    // 스크롤 이벤트 핸들러
+    const handleScroll = () => {
+        if (!lastInViewRef.current) {
+            scrollPositionRef.current = window.scrollY;
+        }
+    };
 
+    // 스크롤 위치 복원 함수
+    const restoreScrollPosition = useCallback(() => {
+        window.scrollTo(0, scrollPositionRef.current);
+    }, []);
+
+    // 스크롤 이벤트 리스너 등록
     useEffect(() => {
-        window.scrollTo(0, currentScrollPosition);
-    }, [boardData]);
+        const handleScroll = () => {
+            scrollPositionRef.current = window.scrollY;
+        };
+    
+        window.addEventListener('scroll', handleScroll);
+    
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    // 데이터 로드 후 스크롤 위치 복원
+    useEffect(() => {
+        if (!loading && inView && lastInViewRef.current) {
+            // inView 상태이면서 이전에 inView 상태가 아닌 경우에만 스크롤 위치 복원
+            restoreScrollPosition();
+        }
+        lastInViewRef.current = inView;
+    }, [loading, inView, restoreScrollPosition]);
+
 
     // 새로운글이 작성되었을때
     const NewBoardData = () => {
@@ -360,7 +393,7 @@ export function BoardSNS() {
                 .then((res) => {
                     console.log(res.data);
                     const newData = res.data[0];
-                    setBoardData((prevData) => [newData, ...prevData]);
+                    setBoardDataSlice((prevData) => [newData, ...prevData]);
                 })
                 .catch((err) => { console.log(err) });
         }
@@ -385,19 +418,25 @@ export function BoardSNS() {
         };
     }, []);
 
+    // 게시판 글 삭제시
+    const handleDelete = (deletedBdIdx) => {
+        setBoardDataSlice((prevData) => prevData.filter((item) => item.bdIdx !== deletedBdIdx));
+    };
+
+
     // DB 게시판데이터 변동시 재요청
     useEffect(() => {
         const axiosData = async () => {
             try {
                 const response = await axios.get('/api/board/list');
-                setBoardData(response.data);
+                setBoardDataSlice(response.data);
                 console.log('게시판 갱신 데이터가 성공적으로 로드되었습니다:', response.data);
             } catch (error) {
                 console.error('게시판 갱신 데이터 로드 중 오류 발생:', error);
             }
         };
         axiosData();
-    }, [setBoardData]);
+    }, [setBoardDataSlice]);
 
     const handleModal = async (item) => {
         setSelectedItem(item);
@@ -406,7 +445,7 @@ export function BoardSNS() {
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
             const response = await axios.get(`/api/board/detail/${item.bdIdx}`);
-            setNewsData(response.data);
+            setBoardData(response.data);
             console.log('데이터가 성공적으로 로드되었습니다:', response.data);
         } catch (error) {
             console.error('데이터 로드 중 오류 발생:', error);
@@ -415,7 +454,7 @@ export function BoardSNS() {
     };
 
     // 가져온 데이터를 사용하여 UI를 렌더링
-    const boardItems = boardData && boardData.map((item, index) => {
+    const boardItems = boardDataSlice && boardDataSlice.map((item, index) => {
         // Moment.js를 사용하여 날짜 포맷 변경
         const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
 
@@ -456,7 +495,7 @@ export function BoardSNS() {
             </Masonry>
             <BoardBottomBox ref={ref}></BoardBottomBox>
             <BoardModalPortal>
-                {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+                {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} onDelete={handleDelete} />}
             </BoardModalPortal>
         </Wrapper>
     );
@@ -570,8 +609,8 @@ export function BoardMain() {
         "https://i.pinimg.com/564x/6f/8f/3e/6f8f3ed0dd2e68f06419444fad297239.jpg",
         "https://i.pinimg.com/564x/11/4a/e1/114ae149fa58b7a1d331f04f19a44f21.jpg"
     ];
-    const comment = [ 54, 16, 42, 50, 76, 42];
-    const view = [ 63, 22, 48, 76, 99, 56];
+    const comment = [54, 16, 42, 50, 76, 42];
+    const view = [63, 22, 48, 76, 99, 56];
     return (
         <Link to="/board" style={{ width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000" }}>
             <Masonry columns={columns} spacing={2} defaultHeight={150} defaultColumns={1} defaultSpacing={2}>
@@ -583,7 +622,7 @@ export function BoardMain() {
                 )} */}
                 {/* 테스트용 데이터 */}
                 {heights.map((height, index) => (
-                    <Item key={index} style={{ height: `${height}px`}}>
+                    <Item key={index} style={{ height: `${height}px` }}>
                         {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
                         <ItemTextBox>
                             <TextDate>{date[index]}</TextDate>
@@ -700,7 +739,7 @@ export function BoardProfile() {
                     </ItemTextBox>
                 </Item>
                 <BoardModalPortal>
-                    {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
+                    {modalOn && <BoardModal fetchLatestBoardData={fetchLatestBoardData} item={selectedItem} onClose={() => setModalOn(false)} />}
                 </BoardModalPortal>
             </>
         );

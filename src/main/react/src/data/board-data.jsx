@@ -8,7 +8,7 @@ const BoardWriteContext = createContext();
 export const BoardProvider = ({ children }) => {
   const [boardData, setBoardData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [newPostAdded, setNewPostAdded] = useState(false);
+  const [newPostAdd, setNewPostAdd] = useState(false);
 
   useEffect(() => {
     const aixosData = async () => {
@@ -24,10 +24,10 @@ export const BoardProvider = ({ children }) => {
     };
 
     aixosData();
-  }, [setBoardData, newPostAdded]);
+  }, [setBoardData, newPostAdd]);
 
   return (
-    <BoardContext.Provider value={{ newPostAdded, setNewPostAdded, boardData, setBoardData, loading }}>
+    <BoardContext.Provider value={{ newPostAdd, setNewPostAdd, boardData, setBoardData, loading }}>
       {children}
     </BoardContext.Provider>
   );

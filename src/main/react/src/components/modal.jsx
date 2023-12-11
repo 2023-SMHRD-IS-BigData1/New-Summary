@@ -223,7 +223,6 @@ const BoardDateBox = styled.div`
 const BoardImageBox = styled.div`
   width: 100%;
   max-height: 300px;
-  margin: 20px 0;
   display: flex;
   overflow: hidden;
 `;
@@ -300,14 +299,14 @@ const CommentArea = styled.div`
 
 const CommentBox = styled.div`
   width: 100%;
-  padding: 20px 10px;
+  padding: 20px 20px;
   border: 1px solid #99999999;
   border-radius: 5px;
 `;
 
 const CommentForm = styled.div`
   width: 100%;
-  padding: 20px 10px;
+  padding: 0px 20px 20px 20px;
   border: 1px solid #99999999;
 `;
 
@@ -321,7 +320,6 @@ const CommentBoxNull = styled.div`
 
 const CommentHead = styled.div`
   width: 100%;
-  padding: 10px;
   display: flex;
   justify-content: space-between;
 `;
@@ -334,12 +332,53 @@ const CommentContent = styled.div`
   white-space: pre-wrap;
 `;
 
-const CommentContentUpdate = styled.textarea`
-  width: 100%;
-  padding: 10px;
-  text-align: left;
-  line-height: 1.1;
-  white-space: pre-wrap;
+const ContentUpdate = styled.textarea`
+    height: 80px;
+    width: 100%;
+    min-height: 120px;
+    padding: 20px 0;
+    /* background-color: aqua; */
+    font-size: 18px;
+    line-height: 1.2;
+    font-family: 'Malgun Gothic';
+    border: none;
+    resize: none;
+    outline: none;
+    transition: .2s;
+    border-bottom: 3px solid #D1D1D4;
+    &::placeholder {
+        text-align: center;
+    }
+    &:active,
+    &:focus,
+    &:hover {
+        outline: none;
+        border-color: #E9C46A;
+    }
+`;
+
+const ContentUpdateBoard = styled.textarea`
+    width: 100%;
+    min-height: 600px;
+    padding: 20px 0;
+    /* background-color: aqua; */
+    font-size: 18px;
+    line-height: 1.2;
+    font-family: 'Malgun Gothic';
+    border: none;
+    resize: none;
+    outline: none;
+    transition: .2s;
+    border-bottom: 3px solid #D1D1D4;
+    &::placeholder {
+        text-align: center;
+    }
+    &:active,
+    &:focus,
+    &:hover {
+        outline: none;
+        border-color: #E9C46A;
+    }
 `;
 
 const CommentBottom = styled.div`
@@ -363,24 +402,80 @@ const CommentButtonBoxForm = styled.form`
   gap: 10px;
 `;
 
-const CommentBtnDelete = styled.button`
-  padding: 4px 10px;
-  border: 1px solid #99999999;
+const DeleteButton = styled.button`
+    padding: 10px 20px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #E76F51;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    &:hover {
+        background-color: #264653;
+        color: #ffffff;
+        transition: .5s;
+    }
 `;
 
-const CommentBtnUpdate = styled.button`
-  padding: 4px 10px;
-  border: 1px solid #99999999;
+const EditButton = styled.button`
+    padding: 10px 20px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #E9C46A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    &:hover {
+        background-color: #264653;
+        color: #ffffff;
+        transition: .5s;
+    }
 `;
 
-const CommentBtnCancel = styled.button`
-  padding: 4px 10px;
-  border: 1px solid #99999999;
+const CancelButton = styled.button`
+    padding: 10px 20px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #E9C46A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    &:hover {
+        background-color: #264653;
+        color: #ffffff;
+        transition: .5s;
+    }
 `;
 
 const CommentTextArea = styled.textarea`
-  width: 100%;
-  height: 80px;
+    height: 80px;
+    width: 100%;
+    min-height: 120px;
+    padding: 20px 0;
+    /* background-color: aqua; */
+    font-size: 18px;
+    line-height: 1.2;
+    font-family: 'Malgun Gothic';
+    border: none;
+    resize: none;
+    outline: none;
+    transition: .2s;
+    border-bottom: 3px solid #D1D1D4;
+    &::placeholder {
+        text-align: center;
+    }
+    &:active,
+    &:focus,
+    &:hover {
+        outline: none;
+        border-color: #E9C46A;
+    }
 `;
 
 const CommentTextBtnBox = styled.div`
@@ -392,8 +487,29 @@ const CommentTextBtnBox = styled.div`
 `;
 
 const CommentBtnInsert = styled.button`
-  padding: 4px 10px;
-  border: 1px solid #99999999; 
+    padding: 10px 20px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #E9C46A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    &:hover {
+        background-color: #264653;
+        color: #ffffff;
+        transition: .5s;
+    }
+`;
+
+const ButtonBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding: 10px 20px;
+  gap: 10px;
 `;
 
 
@@ -404,20 +520,22 @@ const Modal = ({ onClose, item }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [currentBookmarkIdx, setCurrentBookmarkIdx] = useState(null); // 현재 모달의 bookmarkIdx를 관리하는 상태
 
+
   let userData;
   let userEmailData;
-  let bookmarkIdx;
+  let userNameData;
   const userDataString = sessionStorage.getItem('userData');
 
 
   if (userDataString) {
     userData = JSON.parse(userDataString);
     userEmailData = userData.userEmail;
+    userNameData = userData.userName;
   } else {
     console.error('세션스토리지에 userData가 존재하지 않습니다.');
   }
 
-  console.log(userEmailData);
+  console.log(userNameData);
   console.log(item.id);
   // 아이디로 북마크여부 조회
   useEffect(() => {
@@ -501,6 +619,8 @@ const Modal = ({ onClose, item }) => {
     }
   }
 
+
+
   return (
     <BackgroundNews onClick={onClose}>
       <Content onClick={handleModalClick}>
@@ -520,6 +640,7 @@ const Modal = ({ onClose, item }) => {
           <Media>{item.press}</Media>
           <Date>{item.articleWriteTime}</Date>
         </DateBox>
+
         <ImageBox>
           <ImageUrl src={item.picture} />
         </ImageBox>
@@ -537,7 +658,7 @@ const Modal = ({ onClose, item }) => {
 
 export default Modal;
 
-const BoardModal = ({ onClose, item }) => {
+const BoardModal = ({ onClose, item, fetchLatestBoardData, onDelete }) => {
   const [commentData, setCommentData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCommented, setIsCommented] = useState(false);
@@ -546,6 +667,9 @@ const BoardModal = ({ onClose, item }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState("");
   const [selectedCommentIdx, setSelectedCommentIdx] = useState(null);
+  const [isBoarEditing, setIsBoardEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(item.bdContent);
+  const [textareaHeight, setTextareaHeight] = useState('auto');
 
   let userData;
   let userEmailData;
@@ -582,6 +706,67 @@ const BoardModal = ({ onClose, item }) => {
   useEffect(() => {
     fetchCommentData();
   }, [userEmailData, item.id]);
+
+
+  // 게시글 수정 코드
+
+  const updateBoardContent = async () => {
+    try {
+      const updateResponse = await axios.put(`/api/board/update/${item.bdIdx}`, {
+        headers: {
+          'Content-Type': 'application/json', // 요청 헤더에 Content-Type을 추가
+        },
+        data: {
+          bdContent: editedContent,
+          userEmail: userEmailData,
+        }, // 요청에 필요한 데이터를 data 속성에 추가
+      });
+
+      const notify = () => toast.success('게시글 수정 완료');
+      notify();
+      setIsBoardEditing(false);
+    } catch (error) {
+      console.error('게시물 수정 중 오류 발생:', error);
+    }
+  };
+
+  const deleteBoardContent = async (cmtIdx) => {
+    try {
+      // DELETE 요청으로 삭제
+      const deleteResponse = await axios.delete(`/api/board/delete/${item.bdIdx}`, {
+        headers: {
+          'Content-Type': 'application/json', // 요청 헤더에 Content-Type을 추가
+        },
+        data: { userEmail: userEmailData }, // 삭제 요청에 필요한 데이터를 data 속성에 추가
+      });
+      const notify = () => toast.success('글삭제 완료');
+      notify();
+      await fetchLatestBoardData();
+
+    } catch (error) {
+      console.error('댓글삭제 중 오류 발생:', error);
+    }
+  };
+
+  const handleEditBoardClick = () => {
+    setIsBoardEditing(true);
+    setEditedContent(item.bdContent);
+  };
+
+
+  const handleBoardDeleteClick = (bdIdx) => {
+    deleteBoardContent(item.bdIdx);
+    onClose(); // 모달 닫기
+    onDelete(item.bdIdx); // onDelete를 통해 부모 컴포넌트로 삭제한 글의 bdIdx 전달
+  };
+
+  const handleTextareaChange = (e) => {
+    setBdContent(e.target.value);
+    const minHeight = '0px';
+    const newHeight = `${Math.max(e.target.scrollHeight - 10, parseInt(minHeight, 10))}px`;
+    setTextareaHeight(newHeight);
+  };
+
 
   // 댓글 작성하기
   const uploadCommentData = async (e) => {
@@ -691,22 +876,23 @@ const BoardModal = ({ onClose, item }) => {
           <BoardDateBox>{formattedDate}</BoardDateBox>
         </CommentHead>
         {isEditing ?
-        <CommentContentUpdate
-        value={editedComment}
-        onChange={(e) => setEditedComment(e.target.value)}
-        />:
-        <CommentContent>{comment.cmtContent}</CommentContent>
+          <ContentUpdate
+            id="Boardtextarea"
+            value={editedComment}
+            onChange={(e) => setEditedComment(e.target.value)}
+          /> :
+          <CommentContent>{comment.cmtContent}</CommentContent>
         }
         {isCurrentUserComment && (
           <CommentButtonBox>
-            <CommentBtnDelete onClick={() => handleCommentClick(comment.cmtIdx)}>삭제</CommentBtnDelete>
+            <DeleteButton onClick={() => handleCommentClick(comment.cmtIdx)}>삭제</DeleteButton>
             {isEditing ? (
               <>
-                <CommentBtnUpdate onClick={updateComment}>확인</CommentBtnUpdate>
-                <CommentBtnCancel onClick={() => setIsEditing(false)}>취소</CommentBtnCancel>
+                <EditButton onClick={updateComment}>확인</EditButton>
+                <CancelButton onClick={() => setIsEditing(false)}>취소</CancelButton>
               </>
             ) : (
-              <CommentBtnUpdate onClick={() => handleEditClick(comment.cmtIdx, comment.cmtContent)}>수정</CommentBtnUpdate>
+              <EditButton onClick={() => handleEditClick(comment.cmtIdx, comment.cmtContent)}>수정</EditButton>
             )}
           </CommentButtonBox>
         )}
@@ -738,8 +924,33 @@ const BoardModal = ({ onClose, item }) => {
           <BoardImageBox>
             {item.image && <BoardImage src={item.image} />}
           </BoardImageBox>
-          <BoardTextBox>{item.bdContent}</BoardTextBox>
+          {isBoarEditing ?
+            <ContentUpdateBoard
+              value={editedContent}
+              onChange={(e) => {
+                setEditedContent(e.target.value);
+                handleTextareaChange;
+              }}
+              style={{ height: textareaHeight }}
+            /> :
+            <BoardTextBox>{item.bdContent}</BoardTextBox>
+          }
+
           {item.bdUrl && <BoardUrlBox href={item.bdUrl} target="_blank">{item.bdUrl}</BoardUrlBox>}
+          {userData && item.userName === userData.userName ?
+            <ButtonBox>
+              {isBoarEditing ? (
+                <>
+                  <EditButton onClick={updateBoardContent}>확인</EditButton>
+                  <CancelButton onClick={() => setIsBoardEditing(false)}>취소</CancelButton>
+                </>
+              ) : (
+                <EditButton onClick={handleEditBoardClick}>수정</EditButton>
+              )}
+              <DeleteButton onClick={handleBoardDeleteClick}>삭제</DeleteButton>
+            </ButtonBox>
+            : ""
+          }
           <BoardCommentBox>
             <BoardCommentText>
               <BoardCommentIcon src={CommentLogo} />
@@ -770,7 +981,7 @@ const BoardModal = ({ onClose, item }) => {
               onChange={(e) => setCmtContent(e.target.value)}
             />
             <CommentTextBtnBox>
-              <CommentBtnInsert type="submit" onClick={uploadCommentData}>작성</CommentBtnInsert>
+              <CommentBtnInsert type="submit" onClick={uploadCommentData}>작성하기</CommentBtnInsert>
             </CommentTextBtnBox>
           </CommentForm>
         </CommentArea>
