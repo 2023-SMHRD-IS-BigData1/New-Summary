@@ -923,6 +923,19 @@ export function CategoryNewsComponent() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [onMenu, setOnMenu] = useState('content1');
     const [totalItemsCount, setTotalItemsCount] = useState()
+    let userData;
+    let userEmailData;
+    const userDataString = sessionStorage.getItem('userData');
+  
+  
+    if (userDataString) {
+      userData = JSON.parse(userDataString);
+      userEmailData = userData.userEmail;
+    } else {
+      console.error('세션스토리지에 userData가 존재하지 않습니다.');
+    }
+  
+    console.log(userEmailData);
 
     // 데이터를 최근 날짜순으로 초기 데이터 필터링
     useEffect(() => {
@@ -990,7 +1003,11 @@ export function CategoryNewsComponent() {
 
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            const response = await axios.get(`/api/news/detail/${item.id}`);
+            if(userEmailData){
+                const response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
+            }else {
+                const response = await axios.get(`/api/news/detail/${item.id}`);
+            }
             const { setNewsData } = useNewsViewContext();
             useEffect(() => {
                 setNewsData(response.data);
@@ -1196,6 +1213,20 @@ export function SearchNewsComponent() {
     const [filteredNewsData, setFilteredNewsData] = useState([]);
     const [modalOn, setModalOn] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    let userData;
+    let userEmailData;
+    const userDataString = sessionStorage.getItem('userData');
+  
+  
+    if (userDataString) {
+      userData = JSON.parse(userDataString);
+      userEmailData = userData.userEmail;
+    } else {
+      console.error('세션스토리지에 userData가 존재하지 않습니다.');
+    }
+  
+    console.log(userEmailData);
+
 
     // 데이터를 최근 날짜순으로 정렬 및 검색어에 따라 초기 데이터 필터링
     useEffect(() => {
@@ -1265,7 +1296,11 @@ export function SearchNewsComponent() {
 
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            const response = await axios.get(`/api/news/detail/${item.id}`);
+            if(userEmailData){
+                const response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
+            }else {
+                const response = await axios.get(`/api/news/detail/${item.id}`);
+            }
             const { setNewsData } = useNewsViewContext();
             useEffect(() => {
                 setNewsData(response.data);

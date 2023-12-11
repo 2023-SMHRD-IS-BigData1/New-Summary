@@ -116,6 +116,20 @@ export default function AutoPlayCarousel() {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [modalOn, setModalOn] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  let userData;
+  let userEmailData;
+  const userDataString = sessionStorage.getItem('userData');
+
+
+  if (userDataString) {
+    userData = JSON.parse(userDataString);
+    userEmailData = userData.userEmail;
+  } else {
+    console.error('세션스토리지에 userData가 존재하지 않습니다.');
+  }
+
+  console.log(userEmailData);
+
 
   useEffect(() => {
     const interval = setInterval(tick, autoPlayDelay);
@@ -141,23 +155,23 @@ export default function AutoPlayCarousel() {
     setSelectedItem(item);
     setModalOn(true);
 
+    // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
     try {
-      // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
-      const response = await axios.get(`/api/news/detail/${item.id}`);
-      
-      // useNewsViewContext 훅을 함수 컴포넌트 내에서 호출
-      const { setNewsData } = useNewsViewContext();
-      
-      // 훅을 호출하는 함수를 useEffect 내에서 실행
-      useEffect(() => {
-        setNewsData(response.data);
-        console.log('데이터가 성공적으로 로드되었습니다:', response.data);
-      }, [response.data, setNewsData]);
-      
+        if(userEmailData){
+            const response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
+        }else {
+            const response = await axios.get(`/api/news/detail/${item.id}`);
+        }
+        const { setNewsData } = useNewsViewContext();
+        useEffect(() => {
+            setNewsData(response.data);
+            console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+        }, [response.data, setNewsData]);
+
     } catch (error) {
-      console.error('데이터 로드 중 오류 발생:', error);
+        console.error('데이터 로드 중 오류 발생:', error);
     }
-  };
+};
 
   // newsData가 있는 경우에만 실행
 const sortedNewsData = newsData && newsData

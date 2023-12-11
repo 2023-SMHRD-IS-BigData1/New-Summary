@@ -625,8 +625,8 @@ const BoardModal = ({ onClose, item }) => {
     try {
       const updateResponse = await axios.put(`/api/comment/update/${selectedCommentIdx}`, {
         cmtContent: editedComment,
-        userEmail: userEmailData,
         bdIdx: item.bdIdx,
+        userEmail: userEmailData,
       });
 
       const updatedComments = commentData.map((comment) => {
