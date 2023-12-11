@@ -222,7 +222,6 @@ const BoardDateBox = styled.div`
 
 const BoardImageBox = styled.div`
   width: 100%;
-  max-height: 300px;
   display: flex;
   overflow: hidden;
 `;
@@ -263,7 +262,8 @@ const BoardUserImage = styled.img`
 const BoardUserName = styled.div``;
 
 const BoardImage = styled.img`
-  width: 100%;
+      width:100%;
+    object-fit:cover;
 `;
 
 const BoardCommentIcon = styled.img`
@@ -922,7 +922,7 @@ const BoardModal = ({ onClose, item, fetchLatestBoardData, onDelete }) => {
             <BoardDateBox>{formattedDate}</BoardDateBox>
           </BoardHeadBox>
           <BoardImageBox>
-            {item.image && <BoardImage src={item.image} />}
+            {item.bdProfile && <BoardImage src={item.bdProfile} />}
           </BoardImageBox>
           {isBoarEditing ?
             <ContentUpdateBoard
