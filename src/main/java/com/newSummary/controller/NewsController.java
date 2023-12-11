@@ -29,14 +29,22 @@ public class NewsController {
     	List<NewsDTO> newsList = newsService.getNewsList();
         return newsList;
     }
-    @GetMapping("/detail/{id}")
+    // 뉴스 오늘 데이터
+    @GetMapping("/today")
+    public List<NewsDTO> getTodayNews() {
+    	List<NewsDTO> newsList = newsService.todayNews();
+        return newsList;
+    }
     // 뉴스 상세 데이터
+    @GetMapping("/detail/{id}")
 	public NewsDTO NewsDetail(@PathVariable("id") String id,@RequestParam(name = "userEmail", required = false) String userEmail) {
     	return (userEmail != null) ? newsService.historyNews(id, userEmail) : newsService.detailNews(id);
     }
-    @GetMapping("/search")
-    public List<NewsDTO> searchNews(@RequestParam String term) {
-        return newsService.searchNews(term);
+    // 조회수 상위 20개 뉴스
+    @GetMapping("topView")
+    public List<NewsDTO> viewTop20News() {
+    	List<NewsDTO> newsList = newsService.viewTop20News();
+    	return newsList;
     }
     // 카테고리 뉴스 데이터
     @GetMapping("/item")
