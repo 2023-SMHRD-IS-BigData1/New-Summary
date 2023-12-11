@@ -77,6 +77,23 @@ public class S3UploaderService {
 
 	    return new FileUploadResponse(newFileName, newUploadImageUrl);
 	}
+	// 게시물 멀티파일 파일로 변환
+	public FileUploadResponse boardUpload(String userEmail, MultipartFile multipartFile, String dirname) throws IOException {
+		File uploadFile = convert(multipartFile)
+				.orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+
+			return boardUpload(userEmail, uploadFile, dirname);
+	}
+	
+	// 게시물 파일 업로드
+	private FileUploadResponse boardUpload(String userEmail, File uploadFile, String dirName) {
+		String fileName = dirName + "/" + uploadFile.getName();
+		String uploadImageUrl = putS3(uploadFile, fileName);
+		removeNewFile(uploadFile);
+		//FileUploadResponse DTO로 반환해준다.
+		return new FileUploadResponse(fileName, uploadImageUrl);
+		//return uploadImageUrl;
+	}
 	
 	// S3에 파일을 업로드하고, URL반환하는 메소드
 	private String putS3(File uploadFile, String fileName) {
