@@ -6,7 +6,7 @@ import Comment from "../assets/comment-icon.svg"
 import ViewsLogo from "../assets/views.svg"
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Pagination from 'react-js-pagination';
-import { Link } from 'react-router-dom';
+import { Link, json } from 'react-router-dom';
 import { useBoardContext, useBoardViewContext, useBoardWriteContext } from '../data/board-data';
 import LoadingScreen from './loading-screen';
 import { BoardModalPortal } from './portal';
@@ -30,7 +30,7 @@ const Item = styled.div`
 
 const ItemImage = styled.img`
     width:100%;
-    height: calc(100% - 300px);
+    height: calc(auto - 300px);
     object-fit:cover;
 `;
 
@@ -367,9 +367,9 @@ export function BoardSNS() {
         const handleScroll = () => {
             scrollPositionRef.current = window.scrollY;
         };
-    
+
         window.addEventListener('scroll', handleScroll);
-    
+
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
@@ -462,7 +462,7 @@ export function BoardSNS() {
             <>
                 <Item key={item.id} onClick={() => handleModal(item)}>
                     {/* 이미지 추가시 들어갈 코드 */}
-                    {/* {imageUrl[item.id] && <ItemImage src={imageUrl[item.id]} />} */}
+                    {item.bdProfile && <ItemImage src={item.bdProfile} />}
                     <ItemTextBox>
                         <TextDate>{formattedDate}</TextDate>
                         <TextContent>{item.bdContent}</TextContent>
@@ -486,7 +486,7 @@ export function BoardSNS() {
 
     return (
         <Wrapper>
-            <Masonry columns={columns} spacing={2} defaultHeight={150} defaultColumns={1} defaultSpacing={2}>
+            <Masonry columns={columns} spacing={2} defaultHeight="auto" defaultColumns={1} defaultSpacing={2}>
                 {loading ? (
                     <LoadingScreen />
                 ) : (
@@ -802,9 +802,9 @@ export function BoardWriteArea() {
     // 이미지 업로드 처리
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
+        console.log(file.name);
         setUploadedImage(file);
 
-        // 이미지 미리보기를 표시할 경우 아래 코드를 사용할 수 있습니다.
         // console.log('업로드된 이미지:', file.name);
     };
 
@@ -816,25 +816,102 @@ export function BoardWriteArea() {
     // 게시물 작성 제출 처리
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // const boardData = {
+        //     bdContent: bdContent,
+        //     userEmail: userEmail
+        //   };
+          
+        //   const formData = new FormData();
+        //   formData.append('BoardRequestDTO', JSON.stringify(boardData));
+        //   formData.append('boardPhoto', uploadedImage); // 'file'은 사용자가 선택한 파일 객체
+          
+        //   axios.post('/api/board/create', formData, {
+        //     headers: {
+        //       'Content-Type': 'multipart/form-data',
+        //     }
+        //   })
+        //     .then(response => {
+        //       // 서버 응답 처리
+        //       console.log(response.data);
+        //       setBoardWriteData(response.data);
+        //       setBoardData((prevData) => [response.data, ...prevData]);
+        //       console.log('글 작성이 성공했습니다:', response.data);
+  
+        //       setNewPostAdded(true);
+        //       setUploadedImage(null);
+        //       formRef.current.reset();
+        //     })
+        //     .catch(error => {
+        //       // 오류 처리
+        //       console.error('Error:', error);
+        //                   if (error.response) {
+        //         console.error('서버 응답 오류:', error.response.data);
+        //     } else if (error.request) {
+        //         console.error('서버 응답이 없음:', error.request);
+        //     } else {
+        //         console.error('요청 전 오류 발생:', error.message);
+        //     }
+        //     });
+
+
+
         try {
-            const response = await axios.post('/api/board/create', {
-                bdContent,
-                userEmail,
-                // 이미지 파일도 함께 전송 가능 (FormData 활용)
-            });
+            const formData = new FormData();
+            const jsonData = JSON.stringify({
+                bdContent : bdContent,
+                userEmail : userEmail
+            })
+            const jsonBlob = new Blob([jsonData], {type: "application/json"})
+            formData.append('BoardRequestDTO', jsonBlob);
+            console.log(formData);
+            // formData.append('bdContent', bdContent);
+            // formData.append('userEmail', userEmail);
+            // console.log('Keys:', formData.keys());
+            // console.log('All entries:', Array.from(formData.entries()));
+            // console.log(formData.entries());
+            // console.log('bdContent:', formData.get('BoardRequestDTO[bdContent]'));
+            // console.log('userEmail:', formData.get('BoardRequestDTO[userEmail]'));
+            // console.log('boardPhoto:', formData.get('boardPhoto'));
+            if (uploadedImage) {
+                formData.append('boardPhoto', uploadedImage);
+            }
+
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',  // 이 부분을 추가해보세요
+                },
+            };
+            console.log('axios config:', config);
+            const response = await axios.post('/api/board/create', formData, config);
+
             setBoardWriteData(response.data);
             setBoardData((prevData) => [response.data, ...prevData]);
             console.log('글 작성이 성공했습니다:', response.data);
 
             setNewPostAdded(true);
-
-            // 이미지 및 입력값 초기화
-            setUploadedImage(null);
-            formRef.current.reset();
         } catch (error) {
             console.error('글 작성 중 오류 발생:', error);
+            if (error.response) {
+                console.error('서버 응답 오류:', error.response.data);
+            } else if (error.request) {
+                console.error('서버 응답이 없음:', error.request);
+            } else {
+                console.error('요청 전 오류 발생:', error.message);
+            }
+        } finally {
+            setUploadedImage(null);
+            formRef.current.reset();
         }
     };
+
+
+
+
+
+
+
+
 
     return (
         <BoardWriteForm action='/api/board/create' ref={formRef} onSubmit={handleSubmit} method='post'>
