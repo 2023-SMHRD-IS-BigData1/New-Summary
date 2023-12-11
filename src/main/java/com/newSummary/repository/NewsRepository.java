@@ -22,5 +22,8 @@ public interface NewsRepository extends MongoRepository<News, String>{
     
     // 카테고리 내 추천 기능
     List<News> findByCategory(String category);
+    
+    // 조회수 상위 20개의 뉴스 가져오기
+    List<News> findTop20ByOrderByViewCountDesc();
 
 }
