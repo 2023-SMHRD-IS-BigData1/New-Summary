@@ -106,10 +106,9 @@ public class UserController {
 
 	// 회원정보 수정
 	@PatchMapping("/users/{userEmail}")
-	public UserDTO editMypageUser(@PathVariable("userEmail") String userEmail,
-								  @RequestBody UserDTO userDTO) {
+	public UserDTO editMypageUser(@PathVariable("userEmail") String userEmail, @RequestBody UserDTO userDTO) {
 		if (userService.checkUserPhoneDuplicate(userDTO.getUserPhone()) == false) {
-			log.info("userUpdate : userEmail={}, message={} ", userEmail,"회원정보 update 성공");
+			log.info("userUpdate : userEmail={}, message={} ", userEmail, "회원정보 update 성공");
 			UserDTO originUserDTO = userService.findByUserEmail(userEmail);
 			userService.updateUserInfo(originUserDTO, userDTO);
 
@@ -117,7 +116,7 @@ public class UserController {
 			UserDTO UpdateuserDTO = UserDTO.toUserDTO(user);
 			return UpdateuserDTO;
 		} else {
-			log.info("userUpdate : userEmail={}, message={} ", userEmail,"회원정보 update 실패");
+			log.info("userUpdate : userEmail={}, message={} ", userEmail, "회원정보 update 실패");
 			return null;
 		}
 
@@ -126,28 +125,31 @@ public class UserController {
 	// 회원 정보 삭제
 	@DeleteMapping("/users/{userEmail}")
 	public void deleteUser(@PathVariable("userEmail") String userEmail) {
-		log.info("delete : userEmail={}, message={}", userEmail,"삭제 성공");
+		log.info("delete : userEmail={}, message={}", userEmail, "삭제 성공");
 		userService.userDelete(userEmail);
 	}
 
 	// 회원 프로필 업로드
 	@PostMapping("/user/profile/{userEmail}")
-	public ResponseEntity<?> uploadProfilePhoto(@PathVariable("userEmail") String userEmail, @RequestParam("profilePhoto") MultipartFile multipartFile) throws IOException {
-		//S3 Bucket 내부에 "/profile"
+	public ResponseEntity<?> uploadProfilePhoto(@PathVariable("userEmail") String userEmail,
+			@RequestParam("profilePhoto") MultipartFile multipartFile) throws IOException {
+		// S3 Bucket 내부에 "/profile"
 
 		FileUploadResponse profile = s3UploaderService.upload(userEmail, multipartFile, "profile");
 		return ResponseEntity.ok(profile);
 	}
+
 	// 회원 프로필 수정
-    @PutMapping("/user/profile/{userEmail}")
-    public ResponseEntity<?> updateProfilePhoto(@PathVariable("userEmail") String userEmail, @RequestParam("newProfilePhoto") MultipartFile newProfilePhoto) throws IOException {
-        // S3 Bucket 내부에 "/profile"
-        String dirName = "profile";
+	@PutMapping("/user/profile/{userEmail}")
+	public ResponseEntity<?> updateProfilePhoto(@PathVariable("userEmail") String userEmail,
+			@RequestParam("newProfilePhoto") MultipartFile newProfilePhoto) throws IOException {
+		// S3 Bucket 내부에 "/profile"
+		String dirName = "profile";
 
-        // 프로필 수정 메소드 호출
-        FileUploadResponse updatedProfile = s3UploaderService.updateProfile(userEmail, newProfilePhoto, dirName);
+		// 프로필 수정 메소드 호출
+		FileUploadResponse updatedProfile = s3UploaderService.updateProfile(userEmail, newProfilePhoto, dirName);
 
-        return ResponseEntity.ok(updatedProfile);
-    }
+		return ResponseEntity.ok(updatedProfile);
+	}
 
 }

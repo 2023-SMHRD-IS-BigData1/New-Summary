@@ -1,5 +1,6 @@
 package com.newSummary.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.newSummary.domain.dto.FileUploadResponse;
 import com.newSummary.domain.dto.board.BoardRequestDTO;
 import com.newSummary.domain.dto.board.BoardResponseDTO;
 import com.newSummary.domain.dto.board.BoardSuccessDTO;
@@ -31,6 +34,7 @@ public class BoardService {
 	@Autowired
 	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
+	private final S3UploaderService s3UploaderService;
 
 	// 전체 게시글 리스트 가져오기
 	@Transactional
@@ -40,9 +44,8 @@ public class BoardService {
 				.map(board -> new BoardResponseDTO(board, board.getUser().getUserName())).collect(Collectors.toList());
 
 	}
+	// 게시글 페이징 리스트
 	public List<BoardResponseDTO> getBoardListPaged(int page, int pageSize) {
-	    // 적절한 페이지와 페이지당 아이템 수를 이용하여 데이터를 가져오는 로직을 구현합니다.
-	    // 예를 들어, JPA의 PagingAndSortingRepository를 사용한다면 Pageable을 이용할 수 있습니다.
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createdAt"));
 	    Pageable pageable = PageRequest.of(page, pageSize,Sort.by(sorts));
@@ -73,15 +76,15 @@ public class BoardService {
 
 	// 게시물 작성
 	@Transactional
-	public BoardResponseDTO createBoard(BoardRequestDTO boardRequestDTO) {
+	public BoardResponseDTO createBoard(BoardRequestDTO boardRequestDTO, MultipartFile multipartFile) throws IOException {
 
 		User user = userRepository.findByUserEmail(boardRequestDTO.getUserEmail())
 				.orElseThrow(() -> new EntityNotFoundException("User not found"));
+		FileUploadResponse photo = s3UploaderService.boardUpload(boardRequestDTO.getUserEmail(),multipartFile,"bdProfile");
 		Board board = Board.builder().bdContent(boardRequestDTO.getBdContent()).bdUrl(boardRequestDTO.getBdUrl())
-				.user(user).build();
+				.user(user).bdProfile(photo.getUrl()).build();
 		boardRepository.save(board);
 		return new BoardResponseDTO(board, user.getUserName());
-
 	}
 
 	// 게시물 수정

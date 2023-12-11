@@ -6,9 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.newSummary.domain.dto.board.BoardRequestDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -56,7 +54,10 @@ public class Board {
 
 	@Column(columnDefinition = "int default 0")
 	private int bdLikes;
-
+	
+	@Column(length = 1200)
+	private String bdProfile;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_email")
 	@JsonBackReference
@@ -66,11 +67,6 @@ public class Board {
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
 	private List<Comment> comments;
 
-	@JsonManagedReference
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-	private List<File> files;
-
-	
 	public void incrementBdViews() {
 		this.bdViews++;
 	}
