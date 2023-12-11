@@ -92,16 +92,21 @@ const UserBox = styled.div`
 `;
 
 const UserImageBox = styled.div`
-  width: 80%;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   margin: auto;
   border: 1px solid #99999944;
   overflow: hidden;
+  position: relative;
 `;
 
 const UserImage = styled.img`
-  width: 100%;
-  transform: translateY(20px);
+  position: absolute;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const UserNickname = styled.div`
