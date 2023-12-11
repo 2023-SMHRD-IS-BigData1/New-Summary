@@ -774,10 +774,11 @@ const PaginationBox = styled.div`
 
 
 export function HomeMainNews() {
-    const { categoryData, loadingCategory } = useCategoryContext();
+    // const { categoryData, loadingCategory } = useCategoryContext();
     const { categoryNewsData, loadingCategoryNews } = useCategoryNewsContext();
     const { newsData, loading } = useNewsContext();
     const [isFirst, setIsFirst] = useState(true);
+    const [selectedKeyword, setSelectedKeyword] = useState('');    // 선택된 키워드를 저장할 상태
     let sortedKeywords;
 
     // 카드뉴스 뒤집기 핸들러
@@ -806,34 +807,54 @@ export function HomeMainNews() {
     // // 결과 출력
     // console.log("Today : ",sortedKeywords);
 
+    // 테스트용 카테고리 데이터
+    const categoryData = ["트위치 한국시장 철수", "방탄소년단", "호우주의보", "크리스마스", "캐럴", "머라이어 케리", "아프리카TV"];
+
     // // 오늘의 카테고리 데이터
     console.log(categoryData);
 
 
-    // // 가져온 데이터를 사용하여 UI를 렌더링  
+    // 컴포넌트가 마운트될 때 로컬 스토리지에서 값을 가져와 선택된 키워드 상태를 초기화
+    useEffect(() => {
+        const storedKeyword = localStorage.getItem('selectedKeyword');
+        if (storedKeyword) {
+            setSelectedKeyword(storedKeyword);
+        }
+    }, []);
+
+
+    // 선택된 키워드가 변경될 때 로컬 스토리지를 업데이트하는 효과
+    useEffect(() => {
+        if (selectedKeyword) {
+            localStorage.setItem('selectedKeyword', selectedKeyword);
+        }
+    }, [selectedKeyword]);
+
+    // MainTrendBadge를 클릭하는 핸들러
+    const handleKeywordClick = (categoryData) => {
+        setSelectedKeyword(categoryData);
+        localStorage.setItem('selectedKeyword', categoryData);
+    };
+
+    // categoryData를 매핑하여 MainTrendBadge 구성 요소 및 클릭 핸들러 생성
     const CategoryItems = categoryData.map((categoryData, index) => (
         <Link to="/search" key={index} style={{ textDecoration: "none", color: "black" }} >
-            <MainTrendBadge># {categoryData}</MainTrendBadge>
+            <MainTrendBadge key={index} onClick={() => handleKeywordClick(categoryData)}>
+                #{categoryData}
+            </MainTrendBadge>
         </Link>
     ));
+
 
     return (
         <Main>
             <MainDailyHeader>오늘의 키워드</MainDailyHeader>
             <MainTrendBox>
-                {/* {loading ? (
+                {loading ? (
                     <LoadingScreen />
                 ) : (
                     CategoryItems
-                )} */}
-                {/* 테스트용 키워드 */}
-                <MainTrendBadge># 국정원 정찰위성 보고</MainTrendBadge>
-                <MainTrendBadge># 조달청 전산망 먹통</MainTrendBadge>
-                <MainTrendBadge># 네덜란드 총선</MainTrendBadge>
-                <MainTrendBadge># 폴리코노미</MainTrendBadge>
-                <MainTrendBadge># 슈링크플레이션 신고</MainTrendBadge>
-                <MainTrendBadge># 친일파 부당이득 반환</MainTrendBadge>
-                <MainTrendBadge># 초록낙엽</MainTrendBadge>
+                )}
             </MainTrendBox>
             <MainCardNewsBox>
                 <MainCardHeader>1분 카드뉴스</MainCardHeader>
@@ -926,15 +947,15 @@ export function CategoryNewsComponent() {
     let userData;
     let userEmailData;
     const userDataString = sessionStorage.getItem('userData');
-  
-  
+
+
     if (userDataString) {
-      userData = JSON.parse(userDataString);
-      userEmailData = userData.userEmail;
+        userData = JSON.parse(userDataString);
+        userEmailData = userData.userEmail;
     } else {
-      console.error('세션스토리지에 userData가 존재하지 않습니다.');
+        console.error('세션스토리지에 userData가 존재하지 않습니다.');
     }
-  
+
     console.log(userEmailData);
 
     // 데이터를 최근 날짜순으로 초기 데이터 필터링
@@ -1003,9 +1024,9 @@ export function CategoryNewsComponent() {
 
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            if(userEmailData){
+            if (userEmailData) {
                 const response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
-            }else {
+            } else {
                 const response = await axios.get(`/api/news/detail/${item.id}`);
             }
             const { setNewsData } = useNewsViewContext();
@@ -1205,7 +1226,7 @@ export function CategoryNewsComponent() {
 
 export function SearchNewsComponent() {
     const { newsData, loading } = useNewsContext();
-    const { newsViewData, viewLoading } = useNewsViewContext();
+    const { newsViewData, setNewsData, viewLoading } = useNewsViewContext();
     const [page, setPage] = useState(1);
     const [items, setItems] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
@@ -1213,20 +1234,29 @@ export function SearchNewsComponent() {
     const [filteredNewsData, setFilteredNewsData] = useState([]);
     const [modalOn, setModalOn] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+
     let userData;
     let userEmailData;
     const userDataString = sessionStorage.getItem('userData');
-  
-  
+
     if (userDataString) {
-      userData = JSON.parse(userDataString);
-      userEmailData = userData.userEmail;
+        userData = JSON.parse(userDataString);
+        userEmailData = userData.userEmail;
     } else {
-      console.error('세션스토리지에 userData가 존재하지 않습니다.');
+        console.error('세션스토리지에 userData가 존재하지 않습니다.');
     }
-  
+
     console.log(userEmailData);
 
+    // 컴포넌트가 마운트될 때 로컬 스토리지에서 검색어 값을 가져와 초기 검색어 상태를 설정
+    useEffect(() => {
+        // 로컬 스토리지에서 selectedKeyword 값을 가져와 초기 검색어 상태를 설정
+        const storedSelectedKeyword = localStorage.getItem('selectedKeyword');
+        if (storedSelectedKeyword) {
+            setSearchTerm(storedSelectedKeyword);
+            localStorage.removeItem('selectedKeyword');
+        }
+    }, []);
 
     // 데이터를 최근 날짜순으로 정렬 및 검색어에 따라 초기 데이터 필터링
     useEffect(() => {
@@ -1238,13 +1268,14 @@ export function SearchNewsComponent() {
             });
 
             // 검색어에 따라 초기 데이터 필터링 ( 검색어 제목,내용 )
-            const filteredResults = sortedData.filter((item) =>
+            const filteredResults = newsData.filter((item) =>
                 item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 item.summary && item.summary.toLowerCase().includes(searchTerm.toLowerCase())
             );
 
-            setFilteredNewsData(filteredResults);
             calculateTotalPages(filteredResults.length, items);
+            setFilteredNewsData(filteredResults);
+            setPage(1);
         }
     }, [newsData, searchTerm, items]);
 
@@ -1252,7 +1283,6 @@ export function SearchNewsComponent() {
     const handleSearchInputChange = (e) => {
         const newSearchTerm = e.target.value;
         setSearchTerm(newSearchTerm);
-        console.log(newsData);
 
         // 검색어에 따라 전체 데이터 필터링
         const filteredResults = newsData.filter((item) =>
@@ -1283,8 +1313,8 @@ export function SearchNewsComponent() {
 
     const searchList = () => {
         return paginatedData.filter((itemData) =>
-        itemData.title && itemData.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        itemData.summary && itemData.summary.toLowerCase().includes(searchTerm.toLowerCase())
+            itemData.title && itemData.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            itemData.summary && itemData.summary.toLowerCase().includes(searchTerm.toLowerCase())
         );
     };
 
@@ -1296,17 +1326,15 @@ export function SearchNewsComponent() {
 
         // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
         try {
-            if(userEmailData){
-                const response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
-            }else {
-                const response = await axios.get(`/api/news/detail/${item.id}`);
+            let response;
+            if (userEmailData) {
+                response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
+            } else {
+                response = await axios.get(`/api/news/detail/${item.id}`);
             }
-            const { setNewsData } = useNewsViewContext();
-            useEffect(() => {
-                setNewsData(response.data);
-                console.log('데이터가 성공적으로 로드되었습니다:', response.data);
-            }, [response.data, setNewsData]);
 
+            setNewsData(response.data);
+            console.log('데이터가 성공적으로 로드되었습니다:', response.data);
         } catch (error) {
             console.error('데이터 로드 중 오류 발생:', error);
         }
@@ -1349,14 +1377,13 @@ export function SearchNewsComponent() {
                         itemsCountPerPage={items}
                         totalItemsCount={filteredNewsData.length}
                         pageRangeDisplayed={5}
-                        onChange={handlePageChange}>
-                    </Pagination>
+                        onChange={handlePageChange}
+                    />
                 </PaginationBox>
                 <ModalPortal>
                     {modalOn && <Modal item={selectedItem} onClose={() => setModalOn(false)} />}
                 </ModalPortal>
             </WrapperBox>
         </>
-    )
+    );
 }
-
