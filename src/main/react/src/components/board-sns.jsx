@@ -545,23 +545,37 @@ export function BoardMain() {
 
     const heights = [600, 300, 600, 900, 600, 600];
     const imageUrl = [
-        "https://images.ddengle.com/files/attach/images/64/029/476/019/b48a83cbac7ca97c12171c119ad4d761.jpg",
+        "https://imgnews.pstatic.net/image/448/2023/12/11/2023121190002_0_20231211064101489.jpg?type=w647",
         undefined,
         "https://i.pinimg.com/564x/6b/d7/9d/6bd79d2a74f29643d92d5f83688ffa70.jpg",
         "https://i.pinimg.com/564x/89/92/53/89925343ad179a782689d46ad76a6e2d.jpg",
         "https://pbs.twimg.com/media/FyXzQgSacAANkRw?format=jpg&name=900x900",
         "https://i.pinimg.com/564x/f4/0f/c8/f40fc808687f837af723bad07519e8b5.jpg",
+    ];
+    const username = ["신비한마법사", "달빛소녀", "스카이워커", "초콜릿드림", "은하수여행자", "비밀의정원"];
+    const date = ["2023.11.16 16:06", "2023.12.10 11:16", "2023.11.26 14:52", "2023.12.06 10:00", "2023.12.14 11:08", "2023.12.13 22:01"];
+    const content = [
+        "참 생각할수록 아쉽네요 금메달 딴 선수들은 군면제해주고 세계에 대한민국 위상을 우뚝세운 케이팝 가수들은 군대가야되니 균형이 안맞네요.",
+        "뉴스를 훑다가 이 기사를 발견했는데, 정말 기쁘고 뿌듯한 소식이에요. 이런 긍정적인 이야기가 더 많이 공유되면 좋겠습니다.",
+        "세상에는 힘들게 노력하는 사람들이 참 많은데, 이런 성과를 보면 정말 보람을 느낍니다. 모두에게 힘과 용기를 주는 소식입니다.",
+        "뉴스를 통해 듣는 이런 이야기가 마음을 따뜻하게 만들어줍니다. 세상은 어려운 일이 많지만, 희망을 주는 순간들이 더 많아지길 기대해 봅니다.",
+        "이런 긍정적인 소식을 듣게 되면 마음이 밝아져서 좋아요. 우리 주변에는 정말 대단한 사람들이 많아서 자랑스럽습니다. 꼭 힘내세요!",
+        "뉴스에 나오는 이런 성취 소식은 정말 힘이 됩니다. 노력하는 사람들에게 큰 격려가 되고, 우리도 조금 더 희망을 가져볼 수 있게 되네요."
     ]
-
+    const userimage = [
+        "https://i.pinimg.com/564x/a3/28/28/a328280b0f9c3fcb40a9038c7394ea38.jpg",
+        "https://i.pinimg.com/564x/be/a6/e3/bea6e3867a48d27e2aa47b8eb1864f98.jpg",
+        "https://i.pinimg.com/564x/83/bf/58/83bf5862268d5810661c9e84b0772db0.jpg",
+        "https://i.pinimg.com/564x/12/ad/00/12ad0029e4a7eb6184eff9cd2e23ac1c.jpg",
+        "https://i.pinimg.com/564x/6f/8f/3e/6f8f3ed0dd2e68f06419444fad297239.jpg",
+        "https://i.pinimg.com/564x/11/4a/e1/114ae149fa58b7a1d331f04f19a44f21.jpg"
+    ];
+    const comment = [ 54, 16, 42, 50, 76, 42];
+    const view = [ 63, 22, 48, 76, 99, 56];
     return (
         <Link to="/board" style={{ width: "100%", display: 'flex', justifyContent: "center", textDecoration: "none", color: "#000000" }}>
-            <Masonry
-                columns={columns}
-                spacing={2}
-                defaultHeight={300}
-                defaultColumns={1}
-                defaultSpacing={2}
-            >
+            <Masonry columns={columns} spacing={2} defaultHeight={150} defaultColumns={1} defaultSpacing={2}>
+
                 {/* {loading ? (
                     <LoadingScreen />
                 ) : (
@@ -569,21 +583,22 @@ export function BoardMain() {
                 )} */}
                 {/* 테스트용 데이터 */}
                 {heights.map((height, index) => (
-                    <Item key={index} style={{ height: `${height}px` }}>
+                    <Item key={index} style={{ height: `${height}px`}}>
                         {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
                         <ItemTextBox>
-                            <TextDate>2023.11.16 16:06</TextDate>
+                            <TextDate>{date[index]}</TextDate>
                             <TextContent>
-                                사용자가 작성한 게시판 글이 여기에 나올 예정입니다 AAAAABABABABABBABABABBABABABABVAAVAVAVA 사용자가 작성한 게시판 글이 여기에 나올 예정입니다
+                                {content[index]}
                             </TextContent>
-                            <TextUrl>https://www.naver.com/</TextUrl>
+                            {/* <TextUrl>https://www.naver.com/</TextUrl> */}
                             <LikeBox>
-                                <Comments src={Comment} /> 10
-                                <Likes src={Like} /> 52
+                                <Comments src={Comment} /> {comment[index]}
+                                {/* <Likes src={Like} /> 52 */}
+                                <Views src={ViewsLogo} />{view[index]}
                             </LikeBox>
                             <UserBox>
-                                <UserBoxImage></UserBoxImage>
-                                <UserBoxName>UserName</UserBoxName>
+                                <UserBoxImage src={userimage[index]} />
+                                <UserBoxName>{username[index]}</UserBoxName>
                             </UserBox>
                         </ItemTextBox>
                     </Item>

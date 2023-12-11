@@ -157,16 +157,18 @@ const UserDataImageBox = styled.div`
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background-color: gray;
+    border: 1px solid #99999999;
     margin-right: 10px;
     position: relative;
     overflow: hidden;
 `;
 
 const UserDataImage = styled.img`
-    width: 100%;
-    position: absolute;
-    top: 2px;
+  position: absolute;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const UserDataName = styled.div``;
