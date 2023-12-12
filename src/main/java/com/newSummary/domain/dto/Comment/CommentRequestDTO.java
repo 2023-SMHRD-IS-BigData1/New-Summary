@@ -18,11 +18,4 @@ public class CommentRequestDTO {
 	// 유저 메일
 	private String userEmail;
 
-	public Comment fill(Comment comment) {
-		comment.setCmtContent(this.cmtContent);
-		comment.getCmtIdx();
-		return comment;
-
-	}
-
 }
