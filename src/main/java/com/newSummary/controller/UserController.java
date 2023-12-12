@@ -68,31 +68,43 @@ public class UserController {
 
 	// 이메일 중복체크
 	@GetMapping("/users/duplication-email/{userEmail}")
-	public Boolean checkUserEmail(@PathVariable("userEmail") String userEmail) {
+	public String checkUserEmail(@PathVariable("userEmail") String userEmail) {
 		// 이메일 형식 검사
-		if (!isValidEmail(userEmail)) {
-			log.info("userEmail={},message={}", userEmail, "이메일 형식이 맞지 않습니다.");
+		String emailValidationResult = isValidEmail(userEmail);
+		System.out.println(userEmail);
+		System.out.println(emailValidationResult);
+		if ("fail".equals(emailValidationResult)) {
+			log.info("userEmail={},message={}", userEmail, "이메일 형식이 맞지 않습니다!!!!");
 			System.out.println("이메일 형식 맞지않음");
-			return false;
-		}
+			String responseData = "fail";
 
-		if (userService.checkUserEmailDuplicate(userEmail) == true) {
-			log.info("userEmail={},message={}", userEmail, "이메일이 중복됩니다.다시 확인해주세요.");
-			System.out.println("이메일 중복");
-			return true;
-		} else {
-			log.info("userEmail={},message={}", userEmail, "이메일 사용가능합니다.");
-			System.out.println("이메일 사용가능");
-			return false;
-		}
+			return responseData;
+		} else if ("true".equals(emailValidationResult)) {
 
+			if (userService.checkUserEmailDuplicate(userEmail) == true) {
+
+				log.info("userEmail={},message={}", userEmail, "이메일이 중복됩니다.다시 확인해주세요.");
+				System.out.println("이메일 중복");
+				String responseData = "true";
+
+				return responseData;
+
+			} else {
+				log.info("userEmail={},message={}", userEmail, "이메일 사용가능합니다.");
+				System.out.println("이메일 사용가능");
+				String responseData = "false";
+
+				return responseData;
+			}
+		}
+		return null;
 	}
 
 	// 이메일 형식 검사 메서드
-	private boolean isValidEmail(String email) {
+	private String isValidEmail(String email) {
 		// 정규 표현식 사용 이메일 형식을 검사하는 로직 추가
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-		return email.matches(emailRegex);
+		return email.matches(emailRegex) ? "true" : "fail";
 	}
 
 	// 닉네임 중복확인

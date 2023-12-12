@@ -1,6 +1,5 @@
 package com.newSummary.domain.dto.Comment;
 
-import com.newSummary.domain.entity.Comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +17,5 @@ public class CommentRequestDTO {
 	// 유저 메일
 	private String userEmail;
 
-	public Comment fill(Comment comment) {
-		comment.setCmtContent(this.cmtContent);
-		comment.getCmtIdx();
-		return comment;
-
-	}
 
 }
