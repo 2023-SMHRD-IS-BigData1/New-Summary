@@ -131,7 +131,6 @@ const InputBox = styled.input`
     box-shadow: 0 0 5px #264653;
   }
   &#userPw,
-  &#userName,
   &.userEmail {
     margin-bottom: 20px;
   }
@@ -263,6 +262,8 @@ export default function Login() {
   const [data, setData] = useState('');
   const [isActive, setIsActive] = useState(false);
   const [isDuplicateEmail, setIsDuplicateEmail] = useState(false);
+  const [isEmail, setIsEmail] = useState(false);
+  const [isDuplicateName, setIsDuplicateName] = useState(false);
   const [isDuplicatePhone, setIsDuplicatePhone] = useState(false);
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [isDuplicatePw, setIsDuplicatePw] = useState(false);
@@ -287,14 +288,19 @@ export default function Login() {
     try {
       const response = await axios.get(url);
       const responseData = response.data;
-
-      if (responseData === true) {
+      console.log(responseData);
+      if (responseData == true) {
         // if (response.data.isDuplicate) {
         setIsDuplicateEmail(true);
         console.log("이메일 중복");
-      } else {
+        setIsEmail(true);
+      } else if(responseData == false){
         setIsDuplicateEmail(false);
         console.log("사용가능한 이메일")
+      } else {
+        console.log("이메일 형식이 아닙니다.");
+        setIsDuplicateEmail(true);
+        setIsEmail(false);
       }
     } catch (error) {
       console.error('중복 확인 에러:', error);
@@ -314,6 +320,25 @@ export default function Login() {
       } else {
         setIsDuplicatePhone(false);
         console.log("사용가능한 핸드폰번호")
+      }
+    } catch (error) {
+      console.error('중복 확인 에러:', error);
+    }
+  };
+
+  const checkDuplicateName = async () => {
+    const userName = signupFormData.userName;
+    const url = `/api/users/duplication-userName/${userName}`;
+    try {
+      const response = await axios.get(url);
+      const responseData = response.data;
+
+      if (responseData === true) {
+        setIsDuplicateName(true);
+        console.log("이미 사용중이 이름 중복");
+      } else {
+        setIsDuplicateName(false);
+        console.log("사용가능한 이름")
       }
     } catch (error) {
       console.error('중복 확인 에러:', error);
@@ -400,7 +425,7 @@ export default function Login() {
                 {signupFormData.userEmail && (
                   <>
                     {isDuplicateEmail
-                      ? "이미 사용 중인 이메일입니다 ❌"
+                      ? (isEmail ? "이미 사용 중인 이메일입니다 ❌" :"이메일 형식이 아닙니다 ❌")
                       : "사용 가능한 이메일입니다 ✔️"}
                   </>
                 )}
@@ -443,7 +468,18 @@ export default function Login() {
                 id="userName"
                 value={signupFormData.userName}
                 onChange={(e) => setSignupFormData({ ...signupFormData, userName: e.target.value })}
+                onBlur={checkDuplicateName}
+                isDuplicate={isDuplicateName}
               />
+              <DuplicateBox>
+              {signupFormData.userName && (
+                  <>
+                    {isDuplicateName
+                      ? "이미 사용중인 닉네임 입니다. ❌"
+                      : "사용 가능한 닉네임 입니다. ✔️"}
+                  </>
+                )}
+              </DuplicateBox>
               <InputBox
                 type="text"
                 placeholder="Phone Number"
@@ -462,6 +498,7 @@ export default function Login() {
                       : "사용 가능한 번호입니다 ✔️"}
                   </>
                 )}
+
               </DuplicateBox>
               <SubmitBox>
                 <SubmitButton type="submit" value="Sign Up" />
@@ -502,14 +539,14 @@ export default function Login() {
               <LinkBox href="#" onClick={() => toggle()}>회원가입</LinkBox>
             </BottomText>
             <SocialBox>
-              <SocialButtonGoogle>
+              {/* <SocialButtonGoogle>
                 <SocialButtonImage src={Google} />
-              </SocialButtonGoogle>
-              <a href='https://kauth.kakao.com/oauth/authorize?client_id=a5336752ae75dfa19b52019c374a13c6&redirect_uri=http://localhost:8081/member/kakao&response_type=code'>
+              </SocialButtonGoogle> */}
+              {/* <a href='https://kauth.kakao.com/oauth/authorize?client_id=a5336752ae75dfa19b52019c374a13c6&redirect_uri=http://localhost:8081/member/kakao&response_type=code'> */}
                 <SocialButtonKakao>
                   <SocialButtonImage src={Kakao} />
                 </SocialButtonKakao>
-              </a>
+              {/* </a> */}
               {/* <SocialButtonNaver>
                 <SocialButtonImage src={Naver} />
               </SocialButtonNaver>
