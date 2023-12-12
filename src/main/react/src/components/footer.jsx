@@ -9,7 +9,10 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: right;
     position: relative;
-`;
+    @media screen and (max-width: 900px) {
+        height: 140px;
+    }
+    `;
 
 const Menu = styled.div`
     width: 100%;
@@ -19,6 +22,10 @@ const Menu = styled.div`
     justify-content: center;
     gap: 10px;
     position: relative;
+    @media screen and (max-width: 900px) {
+        height: 140px;
+        flex-direction: column;
+    }
 `;
 
 const MenuItem = styled.div`
@@ -36,8 +43,13 @@ const GithubBox = styled.a`
     cursor: pointer;
     gap: 20px;
     position: absolute;
-    left: 200px;
+    left: 10%;
     text-decoration: none;
+    @media screen and (max-width: 900px) {
+        position: relative;
+        left: auto;
+        margin-bottom: 20px;
+    }
 `;
 
 const GithubText = styled.div`

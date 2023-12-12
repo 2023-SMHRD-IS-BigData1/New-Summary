@@ -7,6 +7,9 @@ import axios from 'axios';
 const CategoryContext = createContext();
 const CategoryNewsContext = createContext();
 const NewsContext = createContext();
+const KeywordNewsContext = createContext();
+const TodayNewsContext = createContext();
+const TopViewNewsContext = createContext();
 const NewsViewContext = createContext();
 const BookMarkContext = createContext();
 const UserViewNewsContext = createContext();
@@ -100,6 +103,96 @@ export const NewsProvider = ({ children }) => {
   );
 };
 
+export const KeywordNewsProvider = ({ children }) => {
+  const [keywordNewsData, setKeywordNewsData] = useState([]);
+  const [loadingKeyword, setLoadingKeword] = useState(true);
+
+  useEffect(() => {
+    const aixosData = async () => {
+      try {
+        const response = await axios.get('/api/news/keyword');
+        setKeywordNewsData(response.data);
+        const filteredData = response.data;
+        console.log('뉴스 데이터가 성공적으로 로드되었습니다:', filteredData);
+      } catch (error) {
+        console.error('뉴스 데이터 로드 중 오류 발생:', error);
+      } finally {
+        setLoadingKeword(false);
+      }
+    };
+
+    aixosData();
+  }, []);
+
+  return (
+    <NewsContext.Provider value={{ keywordNewsData, loadingKeyword }}>
+      {children}
+    </NewsContext.Provider>
+  );
+};
+
+export const TodayNewsProvider = ({ children }) => {
+  const [newsData, setNewsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const aixosData = async () => {
+      try {
+        const response = await axios.get('/api/news/today');
+        setNewsData(response.data);
+        const filteredData = response.data.filter(item =>
+          item.picture !== null && item.picture !== "" &&
+          item.summary !== null && item.summary !== ""
+        );
+        console.log('뉴스 데이터가 성공적으로 로드되었습니다:', filteredData);
+      } catch (error) {
+        console.error('뉴스 데이터 로드 중 오류 발생:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    aixosData();
+  }, []);
+
+  return (
+    <TodayNewsContext.Provider value={{ newsData, loading }}>
+      {children}
+    </TodayNewsContext.Provider>
+  );
+};
+
+export const TopViewNewsProvider = ({ children }) => {
+  const [newsData, setNewsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const aixosData = async () => {
+      try {
+        const response = await axios.get('/api/news/topView');
+        setNewsData(response.data);
+        const filteredData = response.data.filter(item =>
+          item.picture !== null && item.picture !== "" &&
+          item.summary !== null && item.summary !== ""
+        );
+        console.log('뉴스 데이터가 성공적으로 로드되었습니다:', filteredData);
+      } catch (error) {
+        console.error('뉴스 데이터 로드 중 오류 발생:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    aixosData();
+  }, []);
+
+  return (
+    <TopViewNewsContext.Provider value={{ newsData, loading }}>
+      {children}
+    </TopViewNewsContext.Provider>
+  );
+};
+
 export const NewsViewProvider = ({ children }) => {
   const [ViewsNewsData, setViewsNewsData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -174,10 +267,8 @@ export const UserViewNewsProvider = ({ children }) => {
   if (userDataString) {
     userData = JSON.parse(userDataString);
     userEmailData = userData.userEmail;
-  } else {
-    console.error('세션스토리지에 userData가 존재하지 않습니다.');
   }
-  
+    
   useEffect(() => {
     const fetchUserViewNewsData = async () => {
       try {
@@ -217,6 +308,18 @@ export const useCategoryNewsContext = () => {
 
 export const useNewsContext = () => {
   return useContext(NewsContext);
+};
+
+export const useKeywordNewsContext = () => {
+  return useContext(KeywordNewsContext);
+};
+
+export const useTodayNewsContext = () => {
+  return useContext(TodayNewsContext);
+};
+
+export const useTopViewNewsContext = () => {
+  return useContext(TopViewNewsContext);
 };
 
 export const useNewsViewContext = () => {

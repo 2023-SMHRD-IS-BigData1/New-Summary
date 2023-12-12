@@ -4,18 +4,14 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Footer from '../components/footer';
 import DoughnutComponent from '../components/doughnut';
-import { LineComponent } from '../components/linechart';
 import UserDefault from '../assets/image/user-avatar.png';
-import Pencil from '../assets/pencil-logo.svg'
 import Coin from '../assets/coin-logo.svg'
 import Exclamation from '../assets/exclamation-circle.svg'
-import MypagePaging from '../components/pagination';
 import EmailLogo from '../assets/email-logo.svg';
 import UserLogo from '../assets/user-logo.svg';
 import PasswordLogo from '../assets/password-logo.svg';
 import PhoneLogo from '../assets/phone-logo.svg';
 import { BoardProfile } from '../components/board-sns';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { useBookMarkContext, useNewsContext, useUserViewNewsContext } from '../data/news-data.context';
 import LoadingScreen from '../components/loading-screen';
 import Modal from '../components/modal';

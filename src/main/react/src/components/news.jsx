@@ -110,6 +110,7 @@ const MainCardHeader = styled.div`
     right: 30px;
     display: flex;
     align-items: center;
+    white-space: nowrap;
     @media screen and (max-width: 1140px) {
         left: 30px;
     }
@@ -224,6 +225,10 @@ const MainNewsBox = styled.div`
     align-items: center;
     background-color: #ffffff;
     box-shadow: 5px 5px 5px 2px #99999944;
+    @media screen and (max-width: 1340px) {
+        width: 100%;        
+        max-width: 1300px;
+    }
 `;
 
 
@@ -878,50 +883,51 @@ export function HomeMainNews() {
                 <MainCardHeader>1분 카드뉴스</MainCardHeader>
                 <MainCardNews isFirst={isFirst} onClick={handleCardClick}>
                     <MainCardImageBox isFirst={isFirst}>
-                        <MainCardImage src='https://imgnews.pstatic.net/image/243/2023/11/22/0000053053_001_20231122143201301.jpg?type=w647' />
-                        <MainCardKey>컴투스</MainCardKey>
+                        <MainCardImage src='https://img4.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/newsis/20231212211211152gmyb.jpg' />
+                        <MainCardKey>2023 AAA</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea isFirst={isFirst}>
-                        <MainCardTitle>컴투스, 글로벌 퍼블리싱 사업 확대하고 대작 라인업 강화한다</MainCardTitle>
+                        <MainCardTitle>뉴진스·임영웅·이준호…초호화 라인업 '2023 AAA' 14일 개최</MainCardTitle>
                         <MainCardContent>
-                            '스타시드'의 가장 큰 특징은 수집형 장르에서 쉽게 볼 수 없었던 시원한 실사 비율의 미소녀 캐릭터가 직접 등장하며, 이들이 펼치는 전투 신 또한 액션 RPG 급의 화려한 비주얼로 구현된다는 점이다. 각 인물의 매력을 살린 원화와 애니메이션 등으로 높은 몰입감과 수집의 재미도 느낄 수 있다.
+                            14일 필리핀 '필리핀 아레나'에서 열리는 '2023 아시아 아티스트 어워즈 인 필리핀'(2023 Asia Artist Awards IN THE PHILIPPINES, 이하 '2023 AAA')에는 대한민국과 아시아를 빛낸 총 34팀의 가수, 22팀의 배우가 참석해 축제의 장을 펼친다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
                 <MainCardNews onClick={handleCardClick}>
                     <MainCardImageBox>
-                        <MainCardImage src='https://imgnews.pstatic.net/image/081/2023/11/22/0003410814_001_20231122150401146.jpg?type=w647' />
-                        <MainCardKey>좀비 사슴</MainCardKey>
+                        <MainCardImage src='https://img2.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/interfootball/20231212185012748mvym.jpg' />
+                        <MainCardKey>손흥민</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea>
-                        <MainCardTitle>침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인     침 질질… 인간 무서워하지 않는 ‘좀비 사슴’ 미국서 확인</MainCardTitle>
+                        <MainCardTitle>토트넘 진짜 위기 찾아온다...英 매체 "손흥민, 12월 31일 본머스전 이후 출국"</MainCardTitle>
                         <MainCardContent>
-                            침을 질질 흘리면서 사람을 무서워 하지 않는 일명 ‘좀비 사슴’ 질병 사례가 미국 대표 국립공원에서 최초로 확인됐다.
-                            최근 뉴욕포스트·포브스 등 주요 외신이 보도한 내용에 따르면 미국 와이오밍주 북서부와 몬태나주 남부, 아이다호주 동부에 걸쳐 있는 세계 최초이자 미국을 대표하는 국립공원인 옐로스톤 국립공원에서 최근 사슴만성소모성질병(CWD)에 걸린 사슴이 처음으로 확인됐다.
+                            영국 '메트로'는 12일(이하 한국시간) "토트넘의 주장 손흥민은 오는 31일 본머스와의 프리미어리그(PL) 격돌 이후 아시안컵에 출전하기 위해 출국할 것이다"라고 보도했다.
+
+                            이어 "그는 잠재적으로 5경기를 결장할 것이다. 아시안컵은 1월 12일부터 2월 10일까지 열리며 대한민국은 대회 우승 후보 중 하나다. 손흥민은 2월 17일 열리는 울버햄튼과의 맞대결 전까지 돌아오지 않을 수도 있다"고 덧붙였다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
                 <MainCardNews onClick={handleCardClick}>
                     <MainCardImageBox>
-                        <MainCardImage src='https://imgnews.pstatic.net/image/009/2023/11/21/0005218104_001_20231121135401025.png?type=w647' />
-                        <MainCardKey>호텔 케이크</MainCardKey>
+                        <MainCardImage src='https://img4.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/mk/20231212215703097dgjx.jpg' />
+                        <MainCardKey>술값</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea>
-                        <MainCardTitle>크리스마스 꼬리표 달면 10만원 훌쩍...고물가 자극하는 ‘호텔 케이크’ [소비의 달인]</MainCardTitle>
+                        <MainCardTitle>크“이제 소주도 마음놓고 못 마시겠네”…‘처음처럼’ 등 술값 또 오른다</MainCardTitle>
                         <MainCardContent>
-                            12월을 앞두고 주요 호텔들이 크리스마스 케이크를 앞다퉈 내놓기 시작했다. 호텔 케이크라고 하더라도 평상시엔 10만원 미만이지만 크리스마스 꼬리표만 붙이면 10만원을 훌쩍 넘긴다. 올해도 10만원대는 기본이고 20만~30만원짜리 케이크가 줄줄이 출시되고 있다. 고물가 극복이 국가 경제의 화두로 떠오른 상황에서 치솟는 호텔 케이크 값은 사회적 위화감 조성은 물론 물가 상승을 부채질할수 있다는 우려도 나온다.
+                        12일 롯데칠성음료 관계자는 “(주류 가격 조정 계획에 대해) 가격 인상을 준비하고 있으나 시기는 아직 확정되지 않았다”고 밝혔다. 롯데칠성음료가 주류 가격 인상을 고민하는 것은 원재룟값과 유통비 등의 인상 때문으로, 특히 소주 원료인 주정(에탄올) 값의 경우 이미 지난 4월 평균 9.8% 올랐다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
                 <MainCardNews onClick={handleCardClick}>
                     <MainCardImageBox>
-                        <MainCardImage src='https://imgnews.pstatic.net/image/020/2023/11/22/0003532694_001_20231122101403702.jpg?type=w647' />
-                        <MainCardKey>찰스 3세</MainCardKey>
+                        <MainCardImage src='https://img3.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/itdonga/20231212190004358zzfm.jpg' />
+                        <MainCardKey>트위치 철수</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea>
-                        <MainCardTitle>찰스 3세, ‘윤동주 시’로 환영사…셰익스피어로 화답한 尹</MainCardTitle>
+                        <MainCardTitle>트위치 철수로 지각변동 앞둔 스트리밍 시장…갈라파고스 되나</MainCardTitle>
                         <MainCardContent>
-                            영국을 국빈 방문 중인 윤석열 대통령은 21일(현지 시간) 찰스 3세 국왕이 주최한 국빈 만찬에 참석했다. 찰스 3세가 만찬사에서 한국어로 “영국에 오신 것을 환영한다”고 말하자 참석자들 사이에선 박수가 터져나왔다.
+                        트위치의 한국 사업 철수로 국내 스트리밍 플랫폼 시장에 지각변동이 예고됐다. 트위치 철수와 비슷한 시기에 네이버가 ‘치지직(CHZZK)’으로 게임 스트리밍 플랫폼 시장에 신규 진출하면서 트위치 수요를 상당 부분 흡수할 전망이다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
@@ -1260,11 +1266,7 @@ export function SearchNewsComponent() {
     if (userDataString) {
         userData = JSON.parse(userDataString);
         userEmailData = userData.userEmail;
-    } else {
-        console.error('세션스토리지에 userData가 존재하지 않습니다.');
     }
-
-    console.log(userEmailData);
 
     // 컴포넌트가 마운트될 때 로컬 스토리지에서 검색어 값을 가져와 초기 검색어 상태를 설정
     useEffect(() => {
