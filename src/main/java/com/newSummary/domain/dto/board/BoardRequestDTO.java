@@ -18,13 +18,7 @@ public class BoardRequestDTO {
 	private String bdUrl;
 	// 유저 이메일
 	private String userEmail;
-	
-	public Board fill(Board board) {
-		board.setBdContent(this.bdContent);
-		board.setBdUrl(this.bdUrl);
-		board.getBdIdx();
-		return board;
-		
-	}
+
+
 
 }

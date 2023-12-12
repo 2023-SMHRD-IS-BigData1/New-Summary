@@ -80,8 +80,10 @@ public class CommentService {
 
 		if (!commentRequestDTO.getUserEmail().equals(comment.getUser().getUserEmail()))
 			throw new Exception("댓글 작성자만 수정할 수 있습니다.");
-		comment = commentRequestDTO.fill(comment);
-		this.commentRepository.save(comment);
+		
+		 // DTO에서 받은 정보로 댓글을 업데이트합니다.
+        comment.setCmtContent(commentRequestDTO.getCmtContent());
+       
 		return new CommentResponseDTO(comment, board.getBdIdx(), user.getUserName());
 	}
 

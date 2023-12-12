@@ -111,10 +111,12 @@ public class BoardService {
 				.orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 		if (!boardRequestDTO.getUserEmail().equals(board.getUser().getUserEmail()))
 			throw new Exception("게시글 작성자만 수정할 수 있습니다.");
-		board = boardRequestDTO.fill(board);
+		board.setBdContent(boardRequestDTO.getBdContent());
+	    board.setBdUrl(boardRequestDTO.getBdUrl());
 		this.boardRepository.save(board);
 		return new BoardResponseDTO(board, user.getUserName());
 	}
+	
 	// 게시물 사진까지 수정
 	@Transactional
 	public BoardResponseDTO updateBoard(Long bdIdx, BoardRequestDTO boardRequestDTO, MultipartFile multipartFile) throws Exception {
@@ -125,9 +127,13 @@ public class BoardService {
 				.orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 		if (!boardRequestDTO.getUserEmail().equals(board.getUser().getUserEmail()))
 			throw new Exception("게시글 작성자만 수정할 수 있습니다.");
-		board = boardRequestDTO.fill(board);
+
+		
 		FileUploadResponse photo = s3UploaderService.updateBoardProfile(bdIdx, multipartFile,
 				"bdProfile");
+		board.setBdContent(boardRequestDTO.getBdContent());
+	    board.setBdUrl(boardRequestDTO.getBdUrl());
+	    board.setBdProfile(photo.getUrl());
 		this.boardRepository.save(board);
 		return new BoardResponseDTO(board, user.getUserName());
 	}
