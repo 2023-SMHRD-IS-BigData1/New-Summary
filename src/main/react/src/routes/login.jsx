@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import LoginImage from '../assets/image/Login.jpg';
@@ -10,6 +10,8 @@ import Naver from '../assets/naver-logo.png'
 import Github from '../assets/github-mark-white.svg'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../data/user-login';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Body = styled.div`
   width: 100%;
@@ -290,11 +292,10 @@ export default function Login() {
       const responseData = response.data;
       console.log(responseData);
       if (responseData == true) {
-        // if (response.data.isDuplicate) {
         setIsDuplicateEmail(true);
         console.log("이메일 중복");
         setIsEmail(true);
-      } else if(responseData == false){
+      } else if (responseData == false) {
         setIsDuplicateEmail(false);
         console.log("사용가능한 이메일")
       } else {
@@ -347,6 +348,19 @@ export default function Login() {
 
   const toggle = () => {
     setIsActive((prevIsActive) => !prevIsActive);
+    // 회원가입 폼의 입력값 초기화
+    setSignupFormData({
+      userEmail: '',
+      userPw: '',
+      passwordCheck: '',
+      userName: '',
+      userPhone: '',
+    });
+    // 로그인 폼의 입력값 초기화
+    setLoginFormData({
+      userEmail: '',
+      userPw: '',
+    });
   };
 
   // 로그인 폼을 제출할 때 실행되는 함수
@@ -364,11 +378,13 @@ export default function Login() {
         console.log('로그인 응답 받음:', response.data);
         const userEmail = response.data.userEmail;
         if (!response.data) {
-          alert("아이디와 비밀번호를 확인해주세요");
+          const notify = () => toast.error('아이디와 비밀번호를 확인해주세요');
+          notify();
           return;
         }
         setIsLoggedIn(true);
-        console.log("유저 로그인 성공");
+        const notify = () => toast.success('로그인 성공!');
+        notify();
         axios.get(`/api/users/${userEmail}`)
           .then(userResponse => {
             console.log('유저 정보 응답 받음:', userResponse.data);
@@ -393,10 +409,13 @@ export default function Login() {
     axios.post('/api/users/join', signupFormData)
       .then(response => {
         console.log('회원가입 응답 받음:', response.data);
-        window.alert('회원가입이 성공적으로 완료되었습니다!');
-        window.location.reload()
+        const notify = () => toast.success('회원가입 성공!');
+        notify();
+        toggle();
       })
       .catch(error => {
+        const notify = () => toast.error('회원가입 실패');
+        notify();
         console.error('회원가입 에러 발생:', error);
       });
   };
@@ -425,7 +444,7 @@ export default function Login() {
                 {signupFormData.userEmail && (
                   <>
                     {isDuplicateEmail
-                      ? (isEmail ? "이미 사용 중인 이메일입니다 ❌" :"이메일 형식이 아닙니다 ❌")
+                      ? (isEmail ? "이미 사용 중인 이메일입니다 ❌" : "이메일 형식이 아닙니다 ❌")
                       : "사용 가능한 이메일입니다 ✔️"}
                   </>
                 )}
@@ -472,7 +491,7 @@ export default function Login() {
                 isDuplicate={isDuplicateName}
               />
               <DuplicateBox>
-              {signupFormData.userName && (
+                {signupFormData.userName && (
                   <>
                     {isDuplicateName
                       ? "이미 사용중인 닉네임 입니다. ❌"
@@ -538,22 +557,22 @@ export default function Login() {
               가입한 아이디가 없으신가요?
               <LinkBox href="#" onClick={() => toggle()}>회원가입</LinkBox>
             </BottomText>
-            <SocialBox>
-              {/* <SocialButtonGoogle>
+            {/* <SocialBox>
+            <SocialButtonGoogle>
                 <SocialButtonImage src={Google} />
-              </SocialButtonGoogle> */}
-              {/* <a href='https://kauth.kakao.com/oauth/authorize?client_id=a5336752ae75dfa19b52019c374a13c6&redirect_uri=http://localhost:8081/member/kakao&response_type=code'> */}
-                <SocialButtonKakao>
+              </SocialButtonGoogle>
+            <a href='https://kauth.kakao.com/oauth/authorize?client_id=a5336752ae75dfa19b52019c374a13c6&redirect_uri=http://localhost:8081/member/kakao&response_type=code'>
+            <SocialButtonKakao>
                   <SocialButtonImage src={Kakao} />
                 </SocialButtonKakao>
-              {/* </a> */}
-              {/* <SocialButtonNaver>
+            </a>
+            <SocialButtonNaver>
                 <SocialButtonImage src={Naver} />
               </SocialButtonNaver>
               <SocialButtonGithub>
                 <SocialButtonImage src={Github} />
-              </SocialButtonGithub> */}
-            </SocialBox>
+              </SocialButtonGithub>
+            </SocialBox> */}
           </LoginBox>
         </RightBox>
         <Link to="/">
