@@ -27,12 +27,19 @@ const Wrapper = styled.div`
 
 const Item = styled.div`
     width: 400px;
-    box-shadow: 5px 5px 5px 5px #99999944;
+    border: 1px solid #99999944;
+    background-color: #ffffff;
 `;
 
 const ItemImage = styled.img`
     width:100%;
     height: calc(auto - 300px);
+    object-fit:cover;
+`;
+
+const ItemImageMain = styled.img`
+    width:100%;
+    height: calc(100% - 300px);
     object-fit:cover;
 `;
 
@@ -627,7 +634,7 @@ export function BoardMain() {
                 {/* 테스트용 데이터 */}
                 {heights.map((height, index) => (
                     <Item key={index} style={{ height: `${height}px` }}>
-                        {imageUrl[index] && <ItemImage src={imageUrl[index]} />}
+                        {imageUrl[index] && <ItemImageMain src={imageUrl[index]} />}
                         <ItemTextBox>
                             <TextDate>{date[index]}</TextDate>
                             <TextContent>

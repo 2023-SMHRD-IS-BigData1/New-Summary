@@ -4,6 +4,8 @@ import '../components/font.css';
 import { useEffect, useState } from "react";
 import { useAuth } from "../data/user-login";
 import UserLogo from "../assets/image/user-avatar.png"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -185,14 +187,13 @@ export default function Header({ ...props }) {
 
     if (userDataString) {
         userData = JSON.parse(userDataString);
-    } else {
-        console.error('세션스토리지에 userData가 존재하지 않습니다.');
     }
 
     // 로그아웃을 처리하는 함수
     const handleLogout = () => {
         sessionStorage.removeItem('userData');
-        console.log('로그아웃 성공!');
+        const notify = () => toast.success('로그아웃 성공!');
+        notify();
         navigate('/');
     };
 

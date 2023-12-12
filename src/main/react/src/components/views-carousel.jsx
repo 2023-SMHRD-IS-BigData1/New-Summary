@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import ItemsCarousel from 'react-items-carousel';
 import ModalPortal from "./portal";
 import Modal from './modal';
-import { register } from 'timeago.js' //임포트하기 register 한국어 선택
-import koLocale from 'timeago.js/lib/lang/ko' //한국어 선택
-import ViewLogo from '../assets/views.svg'
+import { register } from 'timeago.js';
+import koLocale from 'timeago.js/lib/lang/ko';
+import ViewLogo from '../assets/views.svg';
 import { useNewsContext, useNewsViewContext } from '../data/news-data.context';
 
 register('ko', koLocale);
 
-// 캐러셀 임시 데이터 및 딜레이/width
+// 캐러셀 width
 const chevronWidth = 40;
 
 const Wrapper = styled.div`
@@ -116,13 +116,7 @@ export default function ViewsCarousel() {
   if (userDataString) {
     userData = JSON.parse(userDataString);
     userEmailData = userData.userEmail;
-  } else {
-    console.error('세션스토리지에 userData가 존재하지 않습니다.');
   }
-
-  console.log(userEmailData);
-
-
 
   const onChange = (value) => {
     setActiveItemIndex(value);
@@ -154,29 +148,27 @@ export default function ViewsCarousel() {
     setSelectedViewsItem(item);
     setViewsModalOn(!viewsModalOn);
 
-    // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
     try {
-        if(userEmailData){
-            const response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
-        }else {
-            const response = await axios.get(`/api/news/detail/${item.id}`);
-        }
-        const { setNewsData } = useNewsViewContext();
-        useEffect(() => {
-            setNewsData(response.data);
-            console.log('데이터가 성공적으로 로드되었습니다:', response.data);
-        }, [response.data, setNewsData]);
+      if (userEmailData) {
+        // 로그인 상태시 조회수 증가 및 조회뉴스 키워드 누적
+        const response = await axios.get(`/api/news/detail/${item.id}?userEmail=${userEmailData}`);
+      } else {
+        // API 호출 등을 통해 viewCount를 1 증가시키는 작업 수행
+        const response = await axios.get(`/api/news/detail/${item.id}`);
+      }
+      const { setNewsData } = useNewsViewContext();
+      useEffect(() => {
+        setNewsData(response.data);
+        console.log('데이터가 성공적으로 로드되었습니다:', response.data);
+      }, [response.data, setNewsData]);
 
     } catch (error) {
-        console.error('데이터 로드 중 오류 발생:', error);
+      console.error('데이터 로드 중 오류 발생:', error);
     }
-};
+  };
 
-  // viewsNewsData 있는 경우에만 실행
   const viewCountNewsData = newsData && newsData
-    // viewCount을 기준으로 내림차순 정렬
     .sort((a, b) => b.viewCount - a.viewCount)
-    // 상위 10개 항목 선택
     .slice(0, 10);
 
 
