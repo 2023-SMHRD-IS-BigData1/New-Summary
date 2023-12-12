@@ -407,10 +407,19 @@ const UserNewsImageBox = styled.div`
     height: 240px;
     object-fit:cover;
     overflow: hidden;
+    position: relative;
 `;
 
 const UserNewsImage = styled.img`
-    width: 100%;
+  position: absolute;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &:hover{
+    transition: .5s;
+    height: 110%;
+  }
 `;
 
 const UserNewsDateBox = styled.div`
@@ -607,6 +616,48 @@ export default function Profile() {
     document.getElementById('profileImagePreview').src = previewUrl;
   };
 
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      const jsonData = JSON.stringify({
+          bdContent : bdContent,
+          userEmail : userEmail
+      })
+      const jsonBlob = new Blob([jsonData], {type: "application/json"})
+      formData.append('BoardRequestDTO', jsonBlob);
+      if (uploadedImage) {
+          formData.append('boardPhoto', uploadedImage);
+      }
+
+      const config = {
+          headers: {
+              'Content-Type': 'multipart/form-data',  // 이 부분을 추가해보세요
+          },
+      };
+      console.log('axios config:', config);
+      const response = await axios.post('/api/board/create', formData, config);
+
+      setBoardWriteData(response.data);
+      setBoardData((prevData) => [response.data, ...prevData]);
+      console.log('글 작성이 성공했습니다:', response.data);
+
+      setNewPostAdded(true);
+  } catch (error) {
+      console.error('글 작성 중 오류 발생:', error);
+      if (error.response) {
+          console.error('서버 응답 오류:', error.response.data);
+      } else if (error.request) {
+          console.error('서버 응답이 없음:', error.request);
+      } else {
+          console.error('요청 전 오류 발생:', error.message);
+      }
+  } finally {
+      setUploadedImage(null);
+      formRef.current.reset();
+  }
+  }
+
 
   return (
     <Wrapper>
@@ -685,7 +736,7 @@ export default function Profile() {
         </Content>
         {/* 개인정보 수정 */}
         <Content className={`content4 ${onMenu === 'content4' ? 'active' : ''}`} active={onMenu === 'content4'}>
-          <ProfileUpdateForm action=''>
+          <ProfileUpdateForm action={`/api/user/profile/${userEmailData}`} onSubmit={handleUpdate} method='put'>
             <ProfileUpdateTop>
               <ProfileUpdateBoxTop>
                 <ProfileBoxArea>

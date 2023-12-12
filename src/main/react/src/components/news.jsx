@@ -537,10 +537,19 @@ const SearchNewsImageBox = styled.div`
     width: 30%;
     height: 240px;
     overflow: hidden;
+    position: relative;
 `;
 
 const SearchNewsImage = styled.img`
-    width: 100%;
+  position: absolute;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &:hover{
+    transition: .5s;
+    height: 110%;
+  }
 `;
 
 const SearchNewsDateBox = styled.div`
@@ -688,10 +697,19 @@ const CategoryNewsImageBox = styled.div`
     height: 240px;
     object-fit:cover;
     overflow: hidden;
+    position: relative;
 `;
 
 const CategoryNewsImage = styled.img`
-    width: 100%;
+  position: absolute;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &:hover{
+    transition: .5s;
+    height: 110%;
+  }
 `;
 
 const CategoryNewsDateBox = styled.div`
