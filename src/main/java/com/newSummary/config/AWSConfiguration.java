@@ -31,12 +31,4 @@ public class AWSConfiguration {
 	            .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
 	            .build();
 	}
-    @PostConstruct
-    public void init() {
-        // Log or print the values for debugging
-        System.out.println("Access Key: " + accessKey);
-        System.out.println("Secret Key: " + secretKey);
-        System.out.println("Region: " + region);
-    }
-
 }

@@ -107,7 +107,16 @@ public class UserService {
 		originUserDTO.setUserPw(userDTO.getUserPw());
 		originUserDTO.setUserPhone(userDTO.getUserPhone());
 		userRepository.save(User.toEditUserEntity(originUserDTO, encoder));
-
+	}
+	// 회원 정보 수정
+	public void updateUserInfo(UserDTO originUserDTO, UserDTO userDTO, String profile) {
+		originUserDTO.setUserEmail(userDTO.getUserEmail());
+		originUserDTO.setUserRole(UserRole.U);
+		originUserDTO.setUserName(userDTO.getUserName());
+		originUserDTO.setUserPw(userDTO.getUserPw());
+		originUserDTO.setUserPhone(userDTO.getUserPhone());
+		originUserDTO.setUserProfile(profile);
+		userRepository.save(User.toEditUserEntity(originUserDTO, encoder));
 	}
 
 	// 회원 정보 삭제
