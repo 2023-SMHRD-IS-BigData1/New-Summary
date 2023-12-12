@@ -36,13 +36,11 @@ public class CommentService {
 	@Transactional
 	public List<CommentResponseDTO> commentList(Long bdIdx) {
 		// 게시글을 찾기
-		Board board = boardRepository.findBybdIdx(bdIdx)
-				.orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다"));
+		Board board = boardRepository.findBybdIdx(bdIdx).orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다"));
 
 		// 게시글에 해당하는 댓글들을 찾아서 CommentResponseDTO로 변환
 		List<CommentResponseDTO> commentResponseDTOList = commentRepository.findAllByBoardOrderByCreatedAtDesc(board)
-				.stream()
-				.map(comment -> new CommentResponseDTO(comment, bdIdx, comment.getUser().getUserName()))
+				.stream().map(comment -> new CommentResponseDTO(comment, bdIdx, comment.getUser().getUserName()))
 				.collect(Collectors.toList());
 
 		return commentResponseDTOList;
@@ -57,18 +55,15 @@ public class CommentService {
 				.orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
 		User user = userRepository.findByUserEmail(commentRequestDTO.getUserEmail())
 				.orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
-		Comment comment = Comment.builder()
-				.cmtContent(commentRequestDTO.getCmtContent())
-				.board(board)
-				.user(user)
+		Comment comment = Comment.builder().cmtContent(commentRequestDTO.getCmtContent()).board(board).user(user)
 				.build();
 		commentRepository.save(comment);
 		return new CommentResponseDTO(comment, board.getBdIdx(), user.getUserName());
 
 	}
 
-	// 댓글 수정
 	@Transactional
+	// 댓글 수정
 	public CommentResponseDTO updateComment(Long cmtIdx, CommentRequestDTO commentRequestDTO) throws Exception {
 
 		User user = userRepository.findByUserEmail(commentRequestDTO.getUserEmail())
@@ -80,10 +75,9 @@ public class CommentService {
 
 		if (!commentRequestDTO.getUserEmail().equals(comment.getUser().getUserEmail()))
 			throw new Exception("댓글 작성자만 수정할 수 있습니다.");
-		
 		 // DTO에서 받은 정보로 댓글을 업데이트합니다.
         comment.setCmtContent(commentRequestDTO.getCmtContent());
-       
+
 		return new CommentResponseDTO(comment, board.getBdIdx(), user.getUserName());
 	}
 

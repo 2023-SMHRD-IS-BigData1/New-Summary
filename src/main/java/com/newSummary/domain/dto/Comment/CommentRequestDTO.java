@@ -1,6 +1,5 @@
 package com.newSummary.domain.dto.Comment;
 
-import com.newSummary.domain.entity.Comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
