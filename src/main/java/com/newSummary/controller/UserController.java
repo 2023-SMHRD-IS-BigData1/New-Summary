@@ -2,7 +2,6 @@ package com.newSummary.controller;
 
 import java.io.IOException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -169,6 +169,26 @@ public class UserController {
 			return null;
 		}
 
+	}
+
+	// 회원정보 사진까지 수정
+	@PatchMapping("/users/photo/{userEmail}")
+	public UserDTO editMypageUserphoto(@PathVariable("userEmail") String userEmail, @RequestPart("UserDTO") UserDTO userDTO,
+			@RequestPart("newProfilePhoto") MultipartFile newProfilePhoto) throws IOException  {
+		if (userService.checkUserPhoneDuplicate(userDTO.getUserPhone()) == false) {
+			log.info("userUpdate : userEmail={}, message={} ", userEmail, "회원정보 update 성공");
+			UserDTO originUserDTO = userService.findByUserEmail(userEmail);
+			String dirName = "profile";
+			// 프로필 수정 메소드 호출
+			FileUploadResponse updatedProfile = s3UploaderService.updateProfile(userEmail, newProfilePhoto, dirName);
+			userService.updateUserInfo(originUserDTO, userDTO,updatedProfile.getUrl());
+			User user = userService.getLoginUserByEmail(userDTO.getUserEmail());
+			UserDTO UpdateuserDTO = UserDTO.toUserDTO(user);
+			return UpdateuserDTO;
+		} else {
+			log.info("userUpdate : userEmail={}, message={} ", userEmail, "회원정보 update 실패");
+			return null;
+		}
 	}
 
 	// 회원 정보 삭제
