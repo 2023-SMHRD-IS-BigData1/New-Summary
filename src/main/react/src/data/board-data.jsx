@@ -4,6 +4,7 @@ import axios from 'axios';
 const BoardContext = createContext();
 const BoardViewContext = createContext();
 const BoardWriteContext = createContext();
+const CommentContext = createContext();
 
 export const BoardProvider = ({ children }) => {
   const [boardData, setBoardData] = useState([]);
@@ -84,6 +85,35 @@ export const BoardWriteProvider = ({ children }) => {
   );
 };
 
+export const CommentProvider = ({ children }) => {
+  const [commentData, setCommentData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isCommented, setIsCommented] = useState(false);
+
+  const fetchCommentData = async (bdIdx) => {
+    try {
+      const getResponse = await axios.get(`/api/comment/list/${bdIdx}`);
+      setCommentData(getResponse.data);
+      setIsCommented(getResponse.data.length > 0);
+      console.log('댓글 조회 완료:', getResponse.data);
+    } catch (error) {
+      console.error('댓글 조회 중 오류 발생:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchCommentData();
+  }, [setCommentData]);
+
+  return (
+    <CommentContext.Provider value={{ commentData, loading, isCommented, fetchCommentData }}>
+      {children}
+    </CommentContext.Provider>
+  );
+};
 
 export const useBoardContext = () => {
   return useContext(BoardContext);
@@ -95,4 +125,8 @@ export const useBoardViewContext = () => {
 
 export const useBoardWriteContext = () => {
   return useContext(BoardWriteContext);
+};
+
+export const useComment = () => {
+  return useContext(CommentContext);
 };

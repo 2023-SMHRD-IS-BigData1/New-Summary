@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Close from "../assets/x-logo.svg"
 import Bookmark from "../assets/bookmark.svg"
@@ -11,6 +11,7 @@ import CommentLogo from '../assets/comment-icon.svg'
 import { useBookMarkContext } from "../data/news-data.context";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useComment } from "../data/board-data";
 
 const BackgroundNews = styled.div`
   height: 100%;
@@ -659,9 +660,7 @@ const Modal = ({ onClose, item }) => {
 export default Modal;
 
 const BoardModal = ({ onClose, item, fetchLatestBoardData, onDelete }) => {
-  const [commentData, setCommentData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isCommented, setIsCommented] = useState(false);
+  const { commentData, loading, isCommented, fetchCommentData } = useComment();
   const [commentWriteData, setCommentWriteData] = useState([]);
   const [cmtContent, setCmtContent] = useState(""); // 댓글작성내용 가져오기
   const [isEditing, setIsEditing] = useState(false);
@@ -670,6 +669,9 @@ const BoardModal = ({ onClose, item, fetchLatestBoardData, onDelete }) => {
   const [isBoarEditing, setIsBoardEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(item.bdContent);
   const [textareaHeight, setTextareaHeight] = useState('auto');
+  const [bdContent, setBdContent] = useState('');
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [modalContent, setModalContent] = useState(item.bdContent);
 
   let userData;
   let userEmailData;
@@ -687,46 +689,57 @@ const BoardModal = ({ onClose, item, fetchLatestBoardData, onDelete }) => {
     console.error('세션스토리지에 userData가 존재하지 않습니다.');
   }
 
-  const fetchCommentData = async () => {
-    try {
-      // GET 요청으로 댓글 데이터 조회
-      const getResponse = await axios.get(`/api/comment/list/${item.bdIdx}`);
-      setCommentData(getResponse.data);
-      // 댓글 데이터가 존재하는지 여부를 설정
-      setIsCommented(getResponse.data.length > 0);
-
-      console.log('북마크 조회 완료:', getResponse.data);
-    } catch (error) {
-      console.error('북마크 조회 중 오류 발생:', error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    // 모달이 열릴 때만 데이터를 불러오도록 설정
+    if (item.bdIdx) {
+      fetchCommentData(item.bdIdx);
     }
-  };
+  }, [item.bdIdx]);
 
   useEffect(() => {
-    fetchCommentData();
-  }, [userEmailData, item.id]);
+    setModalContent(item.bdContent);
+  }, [item.bdContent]);
 
-
+  
   // 게시글 수정 코드
 
   const updateBoardContent = async () => {
     try {
-      const updateResponse = await axios.put(`/api/board/update/${item.bdIdx}`, {
-        headers: {
-          'Content-Type': 'application/json', // 요청 헤더에 Content-Type을 추가
-        },
-        data: {
-          bdContent: editedContent,
-          userEmail: userEmailData,
-        }, // 요청에 필요한 데이터를 data 속성에 추가
-      });
+        const formData = new FormData();
+        const jsonData = JSON.stringify({
+            bdContent : editedContent,
+            userEmail : userEmailData
+        })
+        const jsonBlob = new Blob([jsonData], {type: "application/json"})
+        formData.append('BoardRequestDTO', jsonBlob);
+        console.log(formData);
+        if (uploadedImage) {
+            formData.append('boardPhoto', uploadedImage);
+        }
 
-      const notify = () => toast.success('게시글 수정 완료');
-      notify();
-      setIsBoardEditing(false);
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',  
+            },
+        };
+        console.log('axios config:', config);
+        const response = await axios.put(`/api/board/update/${item.bdIdx}`, formData, config);
+
+        console.log('글 수정이 성공했습니다:', response.data);
+        const notify = () => toast.success('게시글 수정 완료');
+        notify();
+        setIsBoardEditing(false);
     } catch (error) {
-      console.error('게시물 수정 중 오류 발생:', error);
+        console.error('글 수정 중 오류 발생:', error);
+        if (error.response) {
+            console.error('서버 응답 오류:', error.response.data);
+        } else if (error.request) {
+            console.error('서버 응답이 없음:', error.request);
+        } else {
+            console.error('요청 전 오류 발생:', error.message);
+        }
+    } finally {
+        setUploadedImage(null);
     }
   };
 
@@ -750,7 +763,8 @@ const BoardModal = ({ onClose, item, fetchLatestBoardData, onDelete }) => {
 
   const handleEditBoardClick = () => {
     setIsBoardEditing(true);
-    setEditedContent(item.bdContent);
+    setEditedContent(item.bdContent); // 편집된 내용 초기화
+    setModalContent(item.bdContent); // 모달 내용 설정
   };
 
 
