@@ -13,7 +13,7 @@ import CategoryNews from './routes/category-news';
 import SearchNews from './routes/search';
 import { BookMarkProvider, CategoryNewsProvider, CategoryProvider, NewsProvider, NewsViewProvider, UserViewNewsProvider } from './data/news-data.context';
 import { AuthProvider } from './data/user-login';
-import { BoardProvider, BoardViewProvider, BoardWriteProvider } from './data/board-data';
+import { BoardProvider, BoardViewProvider, BoardWriteProvider, CommentProvider } from './data/board-data';
 import TopButtonLogo from '../src/assets/top-logo.svg';
 import ProtectedRoute from './components/protected-route';
 import 'react-toastify/dist/ReactToastify.css';
@@ -129,19 +129,22 @@ function App() {
                 <BookMarkProvider>
                   {/* 게시판 */}
                   <BoardProvider>
-                    {/* 게시판 상세글 */}
-                    <BoardViewProvider>
-                      {/* 게시판 글 작성 */}
-                      <BoardWriteProvider>
-                        <Wrapper>
-                          <GlobalStyles />
-                          <RouterProvider router={router} />
-                          <TopButton onClick={handlePage}>
-                            <TopButtonImage src={TopButtonLogo} />
-                          </TopButton>
-                        </Wrapper>
-                      </BoardWriteProvider>
-                    </BoardViewProvider>
+                    {/* 게시판 댓글 */}
+                    <CommentProvider>
+                      {/* 게시판 상세글 */}
+                      <BoardViewProvider>
+                        {/* 게시판 글 작성 */}
+                        <BoardWriteProvider>
+                          <Wrapper>
+                            <GlobalStyles />
+                            <RouterProvider router={router} />
+                            <TopButton onClick={handlePage}>
+                              <TopButtonImage src={TopButtonLogo} />
+                            </TopButton>
+                          </Wrapper>
+                        </BoardWriteProvider>
+                      </BoardViewProvider>
+                    </CommentProvider>
                   </BoardProvider>
                 </BookMarkProvider>
               </UserViewNewsProvider>
@@ -154,6 +157,7 @@ function App() {
         limit={1}
         closeButton={false}
         autoClose={4000}
+        progressBar={false}
         bodyStyle={{
           textAlign: 'center',
           color: '#000000',

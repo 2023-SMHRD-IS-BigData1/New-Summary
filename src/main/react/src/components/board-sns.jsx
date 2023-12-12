@@ -16,6 +16,8 @@ import PhotoLogo from '../assets/photo-logo.svg';
 import LinkLogo from '../assets/link-logo.svg';
 import ResetLogo from '../assets/reset-logo.svg';
 import { useInView } from 'react-intersection-observer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -457,6 +459,8 @@ export function BoardSNS() {
     const boardItems = boardDataSlice && boardDataSlice.map((item, index) => {
         // Moment.js를 사용하여 날짜 포맷 변경
         const formattedDate = moment(item.createdAt).format('YYYY-MM-DD HH:mm');
+        const commentCount = item.commentData ? item.commentData.length : 0;
+
 
         return (
             <>
@@ -469,7 +473,7 @@ export function BoardSNS() {
                         {item.bdUrl && <TextUrl>{item.bdUrl}</TextUrl>}
                         <LikeBox>
                             {/* 댓글추가시 댓글 카운트해서 넣을것 */}
-                            <Comments src={Comment} /> 10
+                            <Comments src={Comment} commentCount={commentCount} /> ()
                             {/* <Likes src={Like} /> {item.bdLikes} */}
                             <Views src={ViewsLogo} /> {item.bdViews}
                         </LikeBox>
@@ -728,7 +732,7 @@ export function BoardProfile() {
                         {item.bdUrl && <TextUrl>{item.bdUrl}</TextUrl>}
                         <LikeBox>
                             {/* 댓글추가시 댓글 카운트해서 넣을것 */}
-                            <Comments src={Comment} /> {item.bdViews}
+                            {/* <Comments src={Comment} /> {item.bdViews} */}
                             {/* <Likes src={Like} /> {item.bdLikes} */}
                             <Views src={ViewsLogo} /> {item.bdViews}
                         </LikeBox>
@@ -816,46 +820,6 @@ export function BoardWriteArea() {
     // 게시물 작성 제출 처리
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // const boardData = {
-        //     bdContent: bdContent,
-        //     userEmail: userEmail
-        //   };
-          
-        //   const formData = new FormData();
-        //   formData.append('BoardRequestDTO', JSON.stringify(boardData));
-        //   formData.append('boardPhoto', uploadedImage); // 'file'은 사용자가 선택한 파일 객체
-          
-        //   axios.post('/api/board/create', formData, {
-        //     headers: {
-        //       'Content-Type': 'multipart/form-data',
-        //     }
-        //   })
-        //     .then(response => {
-        //       // 서버 응답 처리
-        //       console.log(response.data);
-        //       setBoardWriteData(response.data);
-        //       setBoardData((prevData) => [response.data, ...prevData]);
-        //       console.log('글 작성이 성공했습니다:', response.data);
-  
-        //       setNewPostAdded(true);
-        //       setUploadedImage(null);
-        //       formRef.current.reset();
-        //     })
-        //     .catch(error => {
-        //       // 오류 처리
-        //       console.error('Error:', error);
-        //                   if (error.response) {
-        //         console.error('서버 응답 오류:', error.response.data);
-        //     } else if (error.request) {
-        //         console.error('서버 응답이 없음:', error.request);
-        //     } else {
-        //         console.error('요청 전 오류 발생:', error.message);
-        //     }
-        //     });
-
-
-
         try {
             const formData = new FormData();
             const jsonData = JSON.stringify({
@@ -865,8 +829,6 @@ export function BoardWriteArea() {
             const jsonBlob = new Blob([jsonData], {type: "application/json"})
             formData.append('BoardRequestDTO', jsonBlob);
             console.log(formData);
-            // formData.append('bdContent', bdContent);
-            // formData.append('userEmail', userEmail);
             // console.log('Keys:', formData.keys());
             // console.log('All entries:', Array.from(formData.entries()));
             // console.log(formData.entries());
@@ -888,7 +850,8 @@ export function BoardWriteArea() {
             setBoardWriteData(response.data);
             setBoardData((prevData) => [response.data, ...prevData]);
             console.log('글 작성이 성공했습니다:', response.data);
-
+            const notify = () => toast.success('글 작성 완료');
+            notify();
             setNewPostAdded(true);
         } catch (error) {
             console.error('글 작성 중 오류 발생:', error);
