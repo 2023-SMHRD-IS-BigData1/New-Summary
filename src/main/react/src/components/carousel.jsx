@@ -19,6 +19,9 @@ const Wrapper = styled.div`
   padding: 0 ${chevronWidth}px;
   max-width: 1300px;
   margin: 0 auto;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background1};
+  border-color: ${({ theme }) => theme.boardBorder1};
   @media screen and (max-width: 1340px) {max-width: 1210px;}
   @media screen and (max-width: 1240px) {max-width: 1110px;}
   @media screen and (max-width: 1140px) {max-width: 1010px;}
@@ -107,7 +110,9 @@ const CarouselButton = styled.button`
     width: 24px;
     height: 48px;
     font-size: 26px;
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder1};
     border: 1px solid #99999944;
     &:hover{
         color: #ffffff;

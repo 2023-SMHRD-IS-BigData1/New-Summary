@@ -61,7 +61,7 @@ const GlobalStyles = createGlobalStyle`
   }
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background: ${({ theme }) => theme.background1};
+    background: ${({ theme }) => theme.background2};
         color: ${({ theme }) => theme.text};
   }
 `;
@@ -88,23 +88,27 @@ const Wrapper = styled.div`
 const TopButton = styled.a`
   width: 40px;
   height: 40px;
-  border: 1px solid #99999944;
+  padding-bottom: 3px;
   border-radius: 50%;
   position: fixed;
-  bottom: 50px;
-  right: 50px;
-  font-size: 32px;
+  bottom: 5%;
+  right: 3%;
+  font-size: 24px;
   font-weight: 600;
+  border: 1px solid;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff;
-  color: #000000;
+  z-index: 999;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.button1};
+    border-color: ${({ theme }) => theme.boardBorder1};
   text-decoration: none;
   &:hover {
-    background-color: #f0be4d;
     color: #ffffff;
-    transition: 0.5s;
+    background: #264653;
+    transition: .5s;
   }
 `;
 
@@ -163,7 +167,8 @@ function App() {
                                   <GlobalStyles />
                                   <RouterProvider router={router} />
                                   <TopButton onClick={handlePage}>
-                                    <TopButtonImage src={TopButtonLogo} />
+                                    {/* <TopButtonImage src={TopButtonLogo} /> */}
+                                    ↑
                                   </TopButton>
                                   <ThemeToggle></ThemeToggle>
                                 </Wrapper>

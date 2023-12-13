@@ -27,8 +27,6 @@ const Wrapper = styled.div`
 
 const Item = styled.div`
     width: 400px;
-    border: 1px solid #99999944;
-    background-color: #ffffff;
 `;
 
 const ItemImage = styled.img`
@@ -47,7 +45,22 @@ const ItemTextBox = styled.div`
     width: 100%;
     height: auto;
     padding: 20px;
-    background-color: white;
+    border: 1px solid;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
+    position: relative;
+`;
+
+const ItemTextBoxMain = styled.div`
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    border: 1px solid;
+    border-top: none;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
     position: relative;
 `;
 
@@ -127,7 +140,7 @@ const UserBoxImage = styled.img`
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: aqua;
+    background: ${({ theme }) => theme.text};
 `;
 
 const UserBoxName = styled.div`
@@ -151,8 +164,9 @@ const BoardWriteForm = styled.form`
     max-width: 800px;
     min-height: 200px;
     padding-top: 40px;
-    background-color: #ffffff;
-    border: 1px solid #99999944;
+    border: 1px solid;
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
     border-radius: 20px;
     margin: auto;
     display: flex;
@@ -267,7 +281,7 @@ const BoardTextAreaInput = styled.textarea`
     width: 100%;
     min-height: 120px;
     padding: 20px 0;
-    /* background-color: aqua; */
+    background: ${({ theme }) => theme.background1};
     font-size: 18px;
     line-height: 1.2;
     font-family: 'Malgun Gothic';
@@ -283,6 +297,7 @@ const BoardTextAreaInput = styled.textarea`
     &:focus,
     &:hover {
         outline: none;
+        color: ${({ theme }) => theme.text};
         border-color: #E9C46A;
     }
 
@@ -480,7 +495,7 @@ export function BoardSNS() {
                         {item.bdUrl && <TextUrl>{item.bdUrl}</TextUrl>}
                         <LikeBox>
                             {/* 댓글추가시 댓글 카운트해서 넣을것 */}
-                            <Comments src={Comment} commentCount={commentCount} /> ()
+                            <Comments src={Comment} commentCount={commentCount} /> 0
                             {/* <Likes src={Like} /> {item.bdLikes} */}
                             <Views src={ViewsLogo} /> {item.bdViews}
                         </LikeBox>
@@ -568,7 +583,7 @@ export function BoardMain() {
                 <Item key={item.id} style={{ height: `auto` }} onClick={() => handleModal(item)}>
                     {/* 이미지 추가시 들어갈 코드 */}
                     {/* {imageUrl[item.id] && <ItemImage src={imageUrl[item.id]} />} */}
-                    <ItemTextBox>
+                    <ItemTextBoxMain>
                         <TextDate>{formattedDate}</TextDate>
                         <TextContent>{item.bdContent}</TextContent>
                         <TextUrl>{item.bdUrl}</TextUrl>
@@ -584,7 +599,7 @@ export function BoardMain() {
                             {/* 유저이름 출력 / 아직 시큐리티 적용안되서 null 받는중 */}
                             <UserBoxName>{item.user}</UserBoxName>
                         </UserBox>
-                    </ItemTextBox>
+                    </ItemTextBoxMain>
                 </Item>
                 <BoardModalPortal>
                     {modalOn && <BoardModal item={selectedItem} onClose={() => setModalOn(false)} />}
@@ -678,10 +693,7 @@ export function BoardProfile() {
         userData = JSON.parse(userDataString);
         userEmailData = userData.userEmail;
         userNameData = userData.userName;
-    } else {
-        console.error('세션스토리지에 userData가 존재하지 않습니다.');
     }
-    console.log(userEmailData);
 
 
     // 반응형으로 사이즈 조절
