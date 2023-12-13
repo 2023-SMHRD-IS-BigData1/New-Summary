@@ -22,9 +22,27 @@ const MainHeader = styled.div`
     width: 100%;
     font-size: 28px;
     padding: 30px 30px 0 30px;
+    border: 1px solid;
+    border-top: none;
+    border-bottom: none;
     display: flex;
     align-items: center;
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
+`;
+
+const MainHeaderView = styled.div`
+    width: 100%;
+    font-size: 28px;
+    padding: 30px 30px 0 30px;
+    border: 1px solid;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const MainDailyHeader = styled.div`
@@ -33,7 +51,6 @@ const MainDailyHeader = styled.div`
     padding: 30px 130px 0 130px;
     display: flex;
     align-items: center;
-    background-color: #ffffff;
 `;
 
 
@@ -50,20 +67,21 @@ const MainTrendBox = styled.div`
     align-items: center;
     position: relative;
     flex-wrap: wrap;
-    background-color: #ffffff;
-    box-shadow: 5px 5px 5px 2px #99999944;
 `;
 
 const MainTrendBadge = styled.div`
     height: 36px;
     font-size: 18px;
     padding: 10px 20px;
-    border: 1px solid #99999944;
+    border: 1px solid;
     border-radius: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
     white-space: nowrap;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder1};
     cursor: pointer;
     &:hover {
         color: #ffffff;
@@ -100,6 +118,8 @@ const MainCardNewsArea = styled.div`
     width: 100%;
     max-width: 1400px;
     margin: auto;
+    border-top: 1px solid;
+      border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const MainCardHeader = styled.div`
@@ -111,6 +131,7 @@ const MainCardHeader = styled.div`
     display: flex;
     align-items: center;
     white-space: nowrap;
+    color: #000000;
     @media screen and (max-width: 1140px) {
         left: 30px;
     }
@@ -172,7 +193,7 @@ const MainCardTextArea = styled.div`
   border: 1px solid #999999;
   border-radius: 30px;
   padding: 20px;
-  background-color: #ffffff;
+  background: ${({ theme }) => theme.background1};
   position: absolute;
   top: 0;
   transform: rotateY(180deg);
@@ -221,10 +242,13 @@ const MainNewsBox = styled.div`
     gap: 30px;
     padding: 30px 10px;
     margin-bottom: 100px;
+    border: 1px solid;
     display: flex;
     align-items: center;
-    background-color: #ffffff;
-    box-shadow: 5px 5px 5px 2px #99999944;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
+    border-top: none;
     @media screen and (max-width: 1340px) {
         width: 100%;        
         max-width: 1300px;
@@ -240,10 +264,15 @@ const MainNewsViewsBox = styled.div`
     gap: 30px;
     padding: 30px 10px;
     margin-bottom: 100px;
+    border: 1px solid;
+    border-top: none;
     display: flex;
     align-items: center;
-    background-color: #ffffff;
     box-shadow: 5px 5px 5px 2px #99999944;
+    color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background1};
+  border-color: ${({ theme }) => theme.boardBorder2};
+
 `;
 
 
@@ -277,8 +306,13 @@ const MainBoxBottom = styled.div`
   padding: 20px;
   display: flex;
   justify-content: space-between;
+  border: 1px solid;
+  border-top: none;
   flex-direction: row;
-  background-color: #ffffff;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background1};
+  border-color: ${({ theme }) => theme.boardBorder2};
+
   /* border: 1px solid #99999944; */
 `;
 
@@ -374,9 +408,11 @@ const SubNewsTextBox = styled.div`
   position: absolute;
   bottom: 30px;
   right: 0px;
-  border: 1px solid #99999944;
+  border: 1px solid;
   box-shadow: 5px 5px 5px 5px #99999944;
-  background-color: #ffffff;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background1};
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const SubNewsTitle = styled.div`
@@ -405,7 +441,7 @@ const BottomCategoryBox = styled.div`
 
 const BottomCategory = styled.div`
   width: 100%;
-  max-width: 1400px;
+  max-width: 1398px;
   display: flex;
   justify-content: center;
   gap: 5px;
@@ -423,8 +459,8 @@ const BottomCategoryItem = styled.div`
     border-top-right-radius: 10px;
     border-bottom: ${(props) => (props.active ? 'none' : '1px solid #99999944;')};
     cursor: pointer;
-    color: ${(props) => (props.active ? '#000000' : '#999999')};
-    background-color: ${(props) => (props.active ? '#FFFFFF' : '#f0f0f0')};
+    color: ${(props) => (props.active ? props.theme.text : '#999999')};
+    background-color: ${(props) => (props.active ? props.theme.background1 : '#f0f0f0')};
     &:hover {
       background: #F0BE4D;
       color: white;
@@ -480,7 +516,8 @@ const DateBox = styled.div`
     align-items: center;
     font-size: 22px;
     font-weight: 600;
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
     border: 1px solid #99999944;
     box-shadow: 5px 5px 10px 1px #99999944;
 `;
@@ -505,13 +542,15 @@ const ArrowBox = styled.div`
 const SearchNewsBox = styled.div`
     width: 100%;
     height: 300px;
-    border: 1px solid #99999944;
+    border: 1px solid;
     padding: 30px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
     gap: 20px;
     overflow: hidden;
     &:hover .SearchNewsBtn{
@@ -619,7 +658,9 @@ const SearchInputBack = styled.div`
     width: 100%;
     max-width: 700px;
     height: 100px;
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -642,7 +683,7 @@ const SearchInput = styled.input`
     border-color: #00ae68;
   }
   &:focus {
-    color: #000000;
+    color: ${({ theme }) => theme.text};
   }
   &::placeholder {
     color: #bbbbbb;
@@ -683,7 +724,9 @@ const CategoryNewsBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
     overflow: hidden;
     &:hover .CategoryNewsBtn{
         opacity: 1;
@@ -775,12 +818,15 @@ const PaginationBox = styled.div`
     display: inline-block;
     width: 40px;
     height: 40px;
-    border: 1px solid #e2e2e2;
+    border: 1px solid;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1rem; 
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.button1};
+    border-color: ${({ theme }) => theme.boardBorder1};
+
   }
   ul.pagination li:first-child{ border-radius: 5px 0 0 5px; }
   ul.pagination li:last-child{ border-radius: 0 5px 5px 0; }
@@ -789,7 +835,7 @@ const PaginationBox = styled.div`
   ul.pagination li.active { background-color: #F0BE4D; }
   ul.pagination li:hover,
   ul.pagination li a:hover,
-  ul.pagination li a.active { color: black; }
+  ul.pagination li a.active { color: ${({ theme }) => theme.text}; }
 `;
 
 
@@ -915,7 +961,7 @@ export function HomeMainNews() {
                     <MainCardTextArea>
                         <MainCardTitle>크“이제 소주도 마음놓고 못 마시겠네”…‘처음처럼’ 등 술값 또 오른다</MainCardTitle>
                         <MainCardContent>
-                        12일 롯데칠성음료 관계자는 “(주류 가격 조정 계획에 대해) 가격 인상을 준비하고 있으나 시기는 아직 확정되지 않았다”고 밝혔다. 롯데칠성음료가 주류 가격 인상을 고민하는 것은 원재룟값과 유통비 등의 인상 때문으로, 특히 소주 원료인 주정(에탄올) 값의 경우 이미 지난 4월 평균 9.8% 올랐다.
+                            12일 롯데칠성음료 관계자는 “(주류 가격 조정 계획에 대해) 가격 인상을 준비하고 있으나 시기는 아직 확정되지 않았다”고 밝혔다. 롯데칠성음료가 주류 가격 인상을 고민하는 것은 원재룟값과 유통비 등의 인상 때문으로, 특히 소주 원료인 주정(에탄올) 값의 경우 이미 지난 4월 평균 9.8% 올랐다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
@@ -927,7 +973,7 @@ export function HomeMainNews() {
                     <MainCardTextArea>
                         <MainCardTitle>트위치 철수로 지각변동 앞둔 스트리밍 시장…갈라파고스 되나</MainCardTitle>
                         <MainCardContent>
-                        트위치의 한국 사업 철수로 국내 스트리밍 플랫폼 시장에 지각변동이 예고됐다. 트위치 철수와 비슷한 시기에 네이버가 ‘치지직(CHZZK)’으로 게임 스트리밍 플랫폼 시장에 신규 진출하면서 트위치 수요를 상당 부분 흡수할 전망이다.
+                            트위치의 한국 사업 철수로 국내 스트리밍 플랫폼 시장에 지각변동이 예고됐다. 트위치 철수와 비슷한 시기에 네이버가 ‘치지직(CHZZK)’으로 게임 스트리밍 플랫폼 시장에 신규 진출하면서 트위치 수요를 상당 부분 흡수할 전망이다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
@@ -942,7 +988,7 @@ export function HomeMainNews() {
                     )}
                 </MainNewsBox>
             </MainCardNewsArea>
-            <MainHeader>사람들이 많이 본 뉴스</MainHeader>
+            <MainHeaderView>사람들이 많이 본 뉴스</MainHeaderView>
             <MainNewsViewsBox>
                 {loading ? (
                     <LoadingScreen />

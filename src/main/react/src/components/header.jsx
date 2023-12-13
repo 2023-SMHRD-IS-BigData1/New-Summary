@@ -11,6 +11,8 @@ const Wrapper = styled.div`
     width: 100%;
     height: 120px;
     background-color: rgba(255,255,255,0.5);
+    background: ${({ theme }) => theme.header};
+    color: ${({ theme }) => theme.text};
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,6 +61,7 @@ const Title = styled.div`
     align-items: center;
     font-size: 32px;
     font-weight: 600;
+    color: ${({ theme }) => theme.text};
     cursor: pointer;
     font-family: 'Oswald', sans-serif;
     @media screen and (max-width: 412px) {
@@ -86,6 +89,7 @@ const UserButton = styled.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    color: ${({ theme }) => theme.text};
     &:hover {
     background: #F0BE4D;
     color: white;
@@ -129,8 +133,8 @@ const MenuItem = styled.div`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: ${(props) => props.color || "#000000"};
-    background-color: ${(props) => props.background || "#ffffff00"};
+    color: ${(props) => props.color || props.theme.text};
+    background-color: ${(props) => props.background || "#ffffff00"};    
     &:hover {
     background: #F0BE4D;
     color: white;
@@ -162,7 +166,8 @@ const UserDataImageBox = styled.div`
     border: 1px solid #99999999;
     margin-right: 10px;
     position: relative;
-    overflow: hidden;
+    overflow: hidden;  
+    background: ${({ theme }) => theme.text};
 `;
 
 const UserDataImage = styled.img`
@@ -173,12 +178,15 @@ const UserDataImage = styled.img`
   transform: translate(-50%, -50%);
 `;
 
-const UserDataName = styled.div``;
+const UserDataName = styled.div`
+    color: ${({ theme }) => theme.text};
+`;
 
 
 
 export default function Header({ ...props }) {
     const { isLoggedIn, setIsLoggedIn } = useAuth();
+    const [theme, setTheme] = useState("light");
     const location = useLocation();
 
     let userData;

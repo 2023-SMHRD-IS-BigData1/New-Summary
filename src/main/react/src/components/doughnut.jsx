@@ -4,6 +4,8 @@ import { Doughnut } from 'react-chartjs-2';
 import { useUserViewNewsContext } from '../data/news-data.context';
 import axios from 'axios'; // axios import 추가
 import LoadingScreen from './loading-screen';
+import 'chartjs-plugin-datalabels';
+
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,9 +16,17 @@ const options = {
   plugins: {
     legend: {
       position: 'bottom', // 라벨 위치 설정
+      label: {
+        padding: 30,
+      },
+    },
+    datalabels:{
+      color:'#ffffff',
+      font:{size:24}
     },
   },
 };
+
 
 const DoughnutComponent = () => {
   const { userViewNewskData, loading } = useUserViewNewsContext();
@@ -31,10 +41,7 @@ const DoughnutComponent = () => {
   if (userDataString) {
     userData = JSON.parse(userDataString);
     userEmailData = userData.userEmail;
-  } else {
-    console.error('세션스토리지에 userData가 존재하지 않습니다.');
   }
-  console.log(userEmailData);
 
   useEffect(() => {
     const fetchViewNewsData = async () => {
