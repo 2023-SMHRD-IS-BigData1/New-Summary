@@ -42,7 +42,7 @@ const BoardBack = styled.div`
   width: 100%;
   height: 300px;
   position: absolute;
-  background-color: #F4A261;
+  background: ${({ theme }) => theme.backgrounfix2};
 `;
 
 export default function Board() {

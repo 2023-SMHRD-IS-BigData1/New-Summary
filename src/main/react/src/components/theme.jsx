@@ -22,6 +22,9 @@ export const light = {
   disableback:"#999999",
   modalbackground: "#14141499",
   backgroundmain: "#F0E6DD",
+  backgrounfix1: "#2A9D8F",
+  backgrounfix2: "#F4A261",
+  backgrounfix3: "#F0BE4D",
   color: { ...color },
 };
 
@@ -38,8 +41,11 @@ export const dark = {
   button2: "#908790",
   header:"#20212486",
   disableback:"#555555",
-  modalbackground: "#ffffffe4",
+  modalbackground: "#ffffffa6",
   backgroundmain: "#38393e",
+  backgrounfix1: "#ffffff00",
+  backgrounfix2: "#ffffff00",
+  backgrounfix3: "#202124",
   color: { ...color },
 };
 

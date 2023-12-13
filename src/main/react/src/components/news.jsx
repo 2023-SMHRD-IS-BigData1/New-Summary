@@ -106,7 +106,7 @@ const MainCardNewsBox = styled.div`
   justify-content: center;
   align-items: flex-end;
   flex-wrap: wrap;
-  background: linear-gradient(to bottom, rgba(233,196,106,1) 0%,rgba(240,190,77,1) 50%,rgba(240,190,77,1) 100%);
+      background: ${({ theme }) => theme.backgrounfix3};
   box-shadow: 5px 5px 5px 2px #99999944;
   @media screen and (max-width: 1140px) {
         padding-top: 120px;
@@ -131,7 +131,7 @@ const MainCardHeader = styled.div`
     display: flex;
     align-items: center;
     white-space: nowrap;
-    color: #000000;
+    color: ${({ theme }) => theme.text};
     @media screen and (max-width: 1140px) {
         left: 30px;
     }
@@ -490,7 +490,7 @@ const CategoryNewsBack = styled.div`
     height: 300px;
     display: flex;
     justify-content: center;
-    background-color: #2A9D8F;
+    background: ${({ theme }) => theme.backgrounfix1};
     position: absolute;
     z-index: -1;
 `;
@@ -568,7 +568,7 @@ const SearchBack = styled.div`
     height: 300px;
     position: absolute;
     top: 120px;
-    background-color: #2A9D8F;
+    background: ${({ theme }) => theme.backgrounfix1};
     z-index: -1;
 `;
 
@@ -669,6 +669,7 @@ const SearchInputBack = styled.div`
 const SearchInput = styled.input`
   border: none;
   border-bottom: 3px solid #D1D1D4;
+  color: ${({ theme }) => theme.text};
   background: none;
   padding: 10px;
   padding-left: 20px;
@@ -877,7 +878,7 @@ export function HomeMainNews() {
     // console.log("Today : ",sortedKeywords);
 
     // 테스트용 카테고리 데이터
-    const categoryData = ["트위치 한국시장 철수", "방탄소년단", "호우주의보", "크리스마스", "캐럴", "머라이어 케리", "아프리카TV"];
+    const categoryData = ["이재 곧 죽습니다", "토트넘", "테슬라", "꼼수 인상", "깐죽포차", "트럼프", "겨울비"];
 
     // // 오늘의 카테고리 데이터
     console.log(categoryData);
@@ -929,51 +930,58 @@ export function HomeMainNews() {
                 <MainCardHeader>1분 카드뉴스</MainCardHeader>
                 <MainCardNews isFirst={isFirst} onClick={handleCardClick}>
                     <MainCardImageBox isFirst={isFirst}>
-                        <MainCardImage src='https://img4.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/newsis/20231212211211152gmyb.jpg' />
-                        <MainCardKey>2023 AAA</MainCardKey>
+                        <MainCardImage src='https://img1.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/13/xportsnews/20231213135037913vllx.jpg' />
+                        <MainCardKey>박소담</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea isFirst={isFirst}>
-                        <MainCardTitle>뉴진스·임영웅·이준호…초호화 라인업 '2023 AAA' 14일 개최</MainCardTitle>
+                        <MainCardTitle>"기복 多+눈물"…​​​​​​​박소담, 갑상선암 후 용기낸 '이재, 곧'</MainCardTitle>
                         <MainCardContent>
-                            14일 필리핀 '필리핀 아레나'에서 열리는 '2023 아시아 아티스트 어워즈 인 필리핀'(2023 Asia Artist Awards IN THE PHILIPPINES, 이하 '2023 AAA')에는 대한민국과 아시아를 빛낸 총 34팀의 가수, 22팀의 배우가 참석해 축제의 장을 펼친다.
+                            갑상선 유두암 완치 후 '이제, 곧 죽습니다'로 죽음을 연기하게 된 박소담이 진솔한 속내를 털어놨다.
+
+                            13일 서울 용산구 CGV 용산아이파크몰에서 티빙 오리지널 시리즈 '이재, 곧 죽습니다' 제작발표회가 열렸다.
+
+                            '이재, 곧 죽습니다'는 지옥으로 떨어지기 직전의 최이재(서인국 분)가 죽음(박소담)이 내린 심판에 의해 12번의 죽음과 삶을 경험하게 되는 인생 환승 드라마로, 동명의 인기 웹툰을 원작으로 한다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
                 <MainCardNews onClick={handleCardClick}>
                     <MainCardImageBox>
-                        <MainCardImage src='https://img2.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/interfootball/20231212185012748mvym.jpg' />
+                        <MainCardImage src='https://img3.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/13/interfootball/20231213205953906dpxv.jpg' />
                         <MainCardKey>손흥민</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea>
-                        <MainCardTitle>토트넘 진짜 위기 찾아온다...英 매체 "손흥민, 12월 31일 본머스전 이후 출국"</MainCardTitle>
+                        <MainCardTitle>손흥민 토트넘 종신 계약 확실시..."SON도 토트넘서 행복, 반드시 합의 도달"</MainCardTitle>
                         <MainCardContent>
-                            영국 '메트로'는 12일(이하 한국시간) "토트넘의 주장 손흥민은 오는 31일 본머스와의 프리미어리그(PL) 격돌 이후 아시안컵에 출전하기 위해 출국할 것이다"라고 보도했다.
+                            토트넘 훗스퍼는 13일(한국시간) 구단 홈페이지를 통해 "우도지가 2030년 여름까지 이어지는 새로운 계약을 체결했다"라고 공식 발표했다.
 
-                            이어 "그는 잠재적으로 5경기를 결장할 것이다. 아시안컵은 1월 12일부터 2월 10일까지 열리며 대한민국은 대회 우승 후보 중 하나다. 손흥민은 2월 17일 열리는 울버햄튼과의 맞대결 전까지 돌아오지 않을 수도 있다"고 덧붙였다.
+                            토트넘은 계약기간이 1년만 남았을 때 처할 수 있는 위험성을 알고 있다. 팀 역사상 최고의 선수인 해리 케인을 그렇게 잃었기 때문이다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
                 <MainCardNews onClick={handleCardClick}>
                     <MainCardImageBox>
-                        <MainCardImage src='https://img4.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/mk/20231212215703097dgjx.jpg' />
-                        <MainCardKey>술값</MainCardKey>
+                        <MainCardImage src='https://img3.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/14/Edaily/20231214010952489pule.jpg' />
+                        <MainCardKey>테슬라 리콜</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea>
-                        <MainCardTitle>크“이제 소주도 마음놓고 못 마시겠네”…‘처음처럼’ 등 술값 또 오른다</MainCardTitle>
+                        <MainCardTitle>테슬라, 미국서 200만여대 리콜.."오토파일럿 오용 가능성 차단"</MainCardTitle>
                         <MainCardContent>
-                            12일 롯데칠성음료 관계자는 “(주류 가격 조정 계획에 대해) 가격 인상을 준비하고 있으나 시기는 아직 확정되지 않았다”고 밝혔다. 롯데칠성음료가 주류 가격 인상을 고민하는 것은 원재룟값과 유통비 등의 인상 때문으로, 특히 소주 원료인 주정(에탄올) 값의 경우 이미 지난 4월 평균 9.8% 올랐다.
+                            전기차 업체 테슬라가 자사 차량의 자율주행 보조장치인 ‘오토파일럿’이 장착된 200만여대를 리콜하기로 했다.
+                            이번 리콜은 2012년 10월 5일부터 올해 12월 7일 사이 생산된 차량을 포함해 미국에서 판매된 거의 모든 테슬라 차량을 대상으로 한다. 다만 미국 외 지역에도 리콜이 실시될지는 아직 명확하지 않다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
                 <MainCardNews onClick={handleCardClick}>
                     <MainCardImageBox>
-                        <MainCardImage src='https://img3.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/12/itdonga/20231212190004358zzfm.jpg' />
-                        <MainCardKey>트위치 철수</MainCardKey>
+                        <MainCardImage src='https://img3.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202312/14/seoul/20231214011902770eljx.jpg' />
+                        <MainCardKey>지드래곤</MainCardKey>
                     </MainCardImageBox>
                     <MainCardTextArea>
-                        <MainCardTitle>트위치 철수로 지각변동 앞둔 스트리밍 시장…갈라파고스 되나</MainCardTitle>
+                        <MainCardTitle>지드래곤 ‘마약 혐의없음’ 불송치 결정…“이선균은 추가 소환 검토”</MainCardTitle>
                         <MainCardContent>
-                            트위치의 한국 사업 철수로 국내 스트리밍 플랫폼 시장에 지각변동이 예고됐다. 트위치 철수와 비슷한 시기에 네이버가 ‘치지직(CHZZK)’으로 게임 스트리밍 플랫폼 시장에 신규 진출하면서 트위치 수요를 상당 부분 흡수할 전망이다.
+                            연예인 마약 투약 의혹을 수사 중인 경찰이 가수 지드래곤(35·본명 권지용)씨 사건을 다음주쯤 무혐의로 마무리한다.
+
+                            인천경찰청 마약범죄수사대는 마약류 관리에 관한 법률 위반 혐의로 조사한 권씨를 ‘혐의없음’으로 불송치할 방침이라고 13일 밝혔다.
                         </MainCardContent>
                     </MainCardTextArea>
                 </MainCardNews>
