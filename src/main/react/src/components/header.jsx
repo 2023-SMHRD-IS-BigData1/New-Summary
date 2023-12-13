@@ -172,7 +172,7 @@ const UserDataImageBox = styled.div`
 
 const UserDataImage = styled.img`
   position: absolute;
-  height: 100%;
+  width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

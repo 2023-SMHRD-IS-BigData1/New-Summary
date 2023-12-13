@@ -54,7 +54,7 @@ const Wrapper = styled.div`
 const LeftBox = styled.div`
   width: 600px;
   height: 1200px;
-  background: #fff;
+  background: ${({ theme }) => theme.background1};
   display: flex;
   flex-direction: column;
   transition: 1s;
@@ -69,7 +69,7 @@ const LeftBox = styled.div`
 const RightBox = styled.div`
   width: 600px;
   height: 1200px;
-  background: #fff;
+  background: ${({ theme }) => theme.background1};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -120,17 +120,20 @@ const FormBox = styled.form`
 const InputBox = styled.input`
   border: 0;
   outline: 0;
-  background: #f5f5f5;
+  border: 1px solid;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background2};
+  border-color: ${({ theme }) => theme.boardBorder2};
   padding: 10px 5px;
   border-radius: 5px;
   padding-left: 10px;
   &::placeholder {
-    color: #333333;
+    color: ${({ theme }) => theme.text};
     text-transform: capitalize;
     font-weight: bold;
   }
   &:focus {
-    box-shadow: 0 0 5px #264653;
+    box-shadow: 0 0 5px ${({ theme }) => theme.text};
   }
   &#userPw,
   &.userEmail {
@@ -152,7 +155,7 @@ const SubmitButton = styled.input`
   place-content: center;
   max-width: fit-content;
   padding: 0.5em 1em;
-  color: #ffffff;
+  color: ${({ theme }) => theme.boardBg};
   background: #a6c9dd;
   border-radius: 5px;
   cursor: pointer;

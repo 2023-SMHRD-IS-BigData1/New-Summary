@@ -108,7 +108,7 @@ const UserImageBox = styled.div`
 
 const UserImage = styled.img`
   position: absolute;
-  height: 100%;
+  width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -360,7 +360,7 @@ const ProfileImageBox = styled.div`
 
 const ProfileImage = styled.img`
   position: absolute;
-  height: 100%;
+  width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -691,7 +691,7 @@ export default function Profile() {
   return (
     <Wrapper>
       <Header></Header>
-      <ProfileBack></ProfileBack>
+      {/* <ProfileBack></ProfileBack> */}
       <WrapperBox>
         <LeftMenu>
           <UserBox>

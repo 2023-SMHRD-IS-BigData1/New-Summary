@@ -21,6 +21,7 @@ export const light = {
   header:"rgba(255,255,255,0.5)",
   disableback:"#999999",
   modalbackground: "#14141499",
+  backgroundmain: "#F0E6DD",
   color: { ...color },
 };
 
@@ -38,6 +39,7 @@ export const dark = {
   header:"#20212486",
   disableback:"#555555",
   modalbackground: "#ffffffe4",
+  backgroundmain: "#38393e",
   color: { ...color },
 };
 
