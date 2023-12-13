@@ -15,9 +15,12 @@ export const light = {
   KeyBg2: "#cfcbcf",
   boardBg: "white",
   boardBorder1: "#cfcbcf",
-  boardBorder2: "#202124", // 활성화시
-  button1: "#e3e1e3",
-  button2: "908790",
+  boardBorder2: "#cecece", // 활성화시
+  button1: "#f0f0f0",
+  button2: "#908790",
+  header:"rgba(255,255,255,0.5)",
+  disableback:"#999999",
+  modalbackground: "#14141499",
   color: { ...color },
 };
 
@@ -29,9 +32,12 @@ export const dark = {
   KeyBg2: "#766c76",
   boardBg: "#131213",
   boardBorder1: "#766c76",
-  boardBorder2: "#e3e1e3", // 활성화시
+  boardBorder2: "#5f5f5f", // 활성화시
   button1: "#5c565c",
   button2: "#908790",
+  header:"#20212486",
+  disableback:"#555555",
+  modalbackground: "#ffffffe4",
   color: { ...color },
 };
 

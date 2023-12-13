@@ -17,6 +17,8 @@ import LoadingScreen from '../components/loading-screen';
 import Modal from '../components/modal';
 import ModalPortal from '../components/portal';
 import Pagination from "react-js-pagination";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -50,9 +52,10 @@ const LeftMenu = styled.div`
     flex-direction: column;
     justify-content: center;
     border-radius: 10px;
-    border: 1px solid #99999922;
-    box-shadow: 5px 5px 5px 2px #99999944;
-    background-color: #ffffff;
+    border: 1px solid;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
   `;
 
 const Content = styled.div`
@@ -69,7 +72,10 @@ const HeaderBox = styled.div`
   max-width: 1200px;
   padding: 20px 30px;
   font-size: 24px;
-  background-color: #ffffff;
+  border: 1px solid;
+  border-bottom: none;
+  background: ${({ theme }) => theme.background1};
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const GraphBox = styled.div`
@@ -78,8 +84,10 @@ const GraphBox = styled.div`
   height: 600px;
   padding: 25px;
   margin-bottom: 50px;
-  border: 1px solid #99999922;
-  background-color: #ffffff;
+  border: 1px solid;
+  border-top:none;
+  background: ${({ theme }) => theme.background1};
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const UserBox = styled.div`
@@ -95,6 +103,7 @@ const UserImageBox = styled.div`
   border: 1px solid #99999944;
   overflow: hidden;
   position: relative;
+  background: ${({ theme }) => theme.text};
 `;
 
 const UserImage = styled.img`
@@ -192,8 +201,8 @@ const LeftMenuItem = styled.div`
     align-items: center;
     font-size: 18px;
     cursor: pointer;
-    color: ${(props) => (props.active ? '#ffffff' : '#000000')};
-    background-color: ${(props) => (props.active ? '#264653' : '#ffffff')};
+    color: ${(props) => (props.active ? '#ffffff' : props.theme.text)};
+    background-color: ${(props) => (props.active ? '#264653' : props.theme.background1)};
     &:hover {
       background: #F0BE4D;
       color: white;
@@ -237,7 +246,10 @@ const ProfileUpdateForm = styled.form`
   justify-content: center;
   flex-direction: column;
   padding: 100px;
-  background-color: #ffffff;
+  border: 1px solid;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background1};
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const ProfileUpdateBox = styled.div`
@@ -256,7 +268,7 @@ const ProfileUpdateTop = styled.div`
   padding: 20px 0px;  
   position: relative; 
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   &:last-child {
     border: none;
@@ -273,12 +285,13 @@ const ProfileUpdateLogo = styled.img`
 const ProfileUpdateInput = styled.input`
   border: none;
   border-bottom: 3px solid #D1D1D4;
+  color: ${({ theme }) => theme.text};
   background: none;
   padding: 10px;
   padding-left: 30px;
   font-weight: 700;
   font-size: 18px;
-  width: 75%;
+  width: 100%;
   max-width: 400px;
   transition: .2s;
   &:active,
@@ -288,7 +301,7 @@ const ProfileUpdateInput = styled.input`
     border-color: #00ae68;
   }
   &:focus {
-    color: #000000;
+    color: ${({ theme }) => theme.text};
   }
   &::placeholder {
     color: #bbbbbb;
@@ -315,11 +328,11 @@ const ProfileUpdateBtn = styled.button`
 const ProfileUpdateBoxTop = styled.div`
   width: 75%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 `;
 
 const ProfileBoxArea = styled.div`
-  width: 50%;
+  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -342,6 +355,7 @@ const ProfileImageBox = styled.div`
   border: 1px solid #99999944;
   overflow: hidden;
   position: relative;
+  background: ${({ theme }) => theme.text};
 `;
 
 const ProfileImage = styled.img`
@@ -357,7 +371,7 @@ const ProfileImgLabel = styled.label`
   background-color: #2A9D8F;
   text-align: center;
   padding: 10px 0;
-  width: 65%;
+  width: 160px;
   margin: auto;
   border-radius: 6px;
   cursor: pointer;
@@ -376,7 +390,7 @@ const ProfileImgInput = styled.input`
 const UserNewsBox = styled.div`
     width: 100%;
     height: 300px;
-    border: 1px solid #99999944;
+    border: 1px solid;
     padding: 30px;
     margin-bottom: 0px;
     position: relative;
@@ -384,7 +398,9 @@ const UserNewsBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
+    border-color: ${({ theme }) => theme.boardBorder2};
     overflow: hidden;
     &:hover .UserNewsBtn{
         opacity: 1;
@@ -408,7 +424,7 @@ const UserNewsImageBox = styled.div`
 
 const UserNewsImage = styled.img`
   position: absolute;
-  height: 100%;
+  height: 200%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -466,6 +482,17 @@ const UserNewsContent = styled.div`
     -webkit-box-orient: vertical;
 `;
 
+const BookMarkNon = styled.div`
+  width: 100%;
+  height: 300px;
+  margin-top: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.background1};
+`;
 
 // -- react-js-pagination component -- //
 
@@ -476,12 +503,15 @@ const PaginationBox = styled.div`
     display: inline-block;
     width: 40px;
     height: 40px;
-    border: 1px solid #e2e2e2;
+    border: 1px solid;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1rem; 
-    background-color: #ffffff;
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.button1};
+    border-color: ${({ theme }) => theme.boardBorder1};
+
   }
   ul.pagination li:first-child{ border-radius: 5px 0 0 5px; }
   ul.pagination li:last-child{ border-radius: 0 5px 5px 0; }
@@ -490,7 +520,7 @@ const PaginationBox = styled.div`
   ul.pagination li.active { background-color: #F0BE4D; }
   ul.pagination li:hover,
   ul.pagination li a:hover,
-  ul.pagination li a.active { color: black; }
+  ul.pagination li a.active { color: ${({ theme }) => theme.text}; }
 `;
 
 
@@ -506,24 +536,25 @@ export default function Profile() {
   const [modalOn, setModalOn] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [imageFile, setImageFile] = useState(null);
-
+  const [imageFileName, setImageFileName] = useState(null);
+  
   let userData;
   let userEmailData;
   let userNameData;
   const userDataString = sessionStorage.getItem('userData');
-
-
+  
+  
   if (userDataString) {
     userData = JSON.parse(userDataString);
     userEmailData = userData.userEmail;
     userNameData = userData.userName;
-  } else {
-    console.error('세션스토리지에 userData가 존재하지 않습니다.');
   }
-  console.log(userEmailData);
 
-
-
+  const [userEmail, setUserEmail] = useState(userData.userEmail);
+  const [userName, setUserName] = useState(userData.userName);
+  const [userPw, setUserPw] = useState(''); // 비밀번호 관련 상태
+  const [confirmUserPw, setConfirmUserPw] = useState('');
+  const [userPhone, setUserPhone] = useState(userData.userPhone);
   // 사이드메뉴 전환
   const handleContentClick = (contentClass) => {
     setOnMenu(contentClass);
@@ -601,58 +632,60 @@ export default function Profile() {
     </UserNewsBox>
   ));
 
+  
+
   // 개인정보 수정
   const handleImageChange = (event) => {
     const file = event.target.files[0];
+    console.log(file.name);
     setImageFile(file);
-
+    setImageFileName(file.name);
     // 선택한 이미지 파일의 미리보기 URL을 생성합니다.
     const previewUrl = URL.createObjectURL(file);
     // 미리보기를 표시하기 위해 ProfileImage 컴포넌트의 src 속성을 업데이트합니다.
     document.getElementById('profileImagePreview').src = previewUrl;
   };
 
+  const passwordCheck = () => {
+    const notify = () => toast.error('비밀번호를 확인해주세요');
+    if(userPw !== confirmUserPw){
+      notify();
+      return;
+    }
+  }
+
   const handleUpdate = async (e) => {
     e.preventDefault();
+    passwordCheck();
     try {
       const formData = new FormData();
       const jsonData = JSON.stringify({
-          bdContent : bdContent,
-          userEmail : userEmail
-      })
-      const jsonBlob = new Blob([jsonData], {type: "application/json"})
-      formData.append('BoardRequestDTO', jsonBlob);
-      if (uploadedImage) {
-          formData.append('boardPhoto', uploadedImage);
-      }
-
-      const config = {
+        userEmail: userEmail,
+        userName: userName,
+        userPw: userPw,
+        userPhone: userPhone
+      });
+      const jsonBlob = new Blob([jsonData], { type: "application/json" });
+      formData.append('userDTO', jsonBlob);
+      if (imageFileName) {
+        formData.append('newProfilePhoto', imageFile);
+        const request = await axios.patch(`/api/users/photo/${userEmail}`, formData, {
           headers: {
-              'Content-Type': 'multipart/form-data',  // 이 부분을 추가해보세요
+            'Content-Type': 'multipart/form-data',
           },
-      };
-      console.log('axios config:', config);
-      const response = await axios.post('/api/board/create', formData, config);
-
-      setBoardWriteData(response.data);
-      setBoardData((prevData) => [response.data, ...prevData]);
-      console.log('글 작성이 성공했습니다:', response.data);
-
-      setNewPostAdded(true);
-  } catch (error) {
-      console.error('글 작성 중 오류 발생:', error);
-      if (error.response) {
-          console.error('서버 응답 오류:', error.response.data);
-      } else if (error.request) {
-          console.error('서버 응답이 없음:', error.request);
+        });
+        console.log('회원정보가 성공적으로 수정되었습니다 :', request.data);
       } else {
-          console.error('요청 전 오류 발생:', error.message);
+        // 사진이 없는 경우
+        const request = await axios.patch(`/api/users/${userEmail}`, formData);
+        console.log('회원정보가 성공적으로 수정되었습니다 :', request.data);
       }
-  } finally {
-      setUploadedImage(null);
-      formRef.current.reset();
-  }
-  }
+    } catch (error) {
+      console.error('회원정보 수정 실패 :', error);
+      console.error('에러 상세 정보:', error.response); // 에러 객체의 response 속성을 출력
+    }
+  };
+  
 
 
   return (
@@ -716,7 +749,7 @@ export default function Profile() {
                       </PaginationBox>
                     </>
                   ) : (
-                    <p>북마크한 뉴스가 없습니다</p>
+                    <BookMarkNon>북마크한 뉴스가 없습니다</BookMarkNon>
                   )}
                 </>
               )}
@@ -734,10 +767,6 @@ export default function Profile() {
         <Content className={`content4 ${onMenu === 'content4' ? 'active' : ''}`} active={onMenu === 'content4'}>
           <ProfileUpdateForm action={`/api/user/profile/${userEmailData}`} onSubmit={handleUpdate} method='put'>
             <ProfileUpdateTop>
-              <ProfileUpdateBoxTop>
-                <ProfileBoxArea>
-                  <ProfileHeader>개인정보수정</ProfileHeader>
-                </ProfileBoxArea>
                 <ProfileBoxArea>
                   <ProfileImageBox>
                     <ProfileImage id="profileImagePreview" src={imageFile ? URL.createObjectURL(imageFile) : UserDefault} />
@@ -752,27 +781,26 @@ export default function Profile() {
                   <ProfileImgLabel class="file-label" for="chooseFile">Image Upload</ProfileImgLabel>
                   <ProfileImgInput class="file" id="chooseFile" type="file" multiple />
                 </ProfileBoxArea>
-              </ProfileUpdateBoxTop>
             </ProfileUpdateTop>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={EmailLogo} />
-              <ProfileUpdateInput type='email' value={userData.userEmail} disabled />
+              <ProfileUpdateInput type='email' value={userEmail} disabled />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={UserLogo} />
-              <ProfileUpdateInput type='text' value={userData.userName} />
+              <ProfileUpdateInput type='text' value={userName} onChange={(e) => setUserName(e.target.value)} />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={PasswordLogo} />
-              <ProfileUpdateInput type='password' placeholder="password" />
+              <ProfileUpdateInput type='password' placeholder="password" value={userPw} onChange={(e) => setUserPw(e.target.value)} />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={PasswordLogo} />
-              <ProfileUpdateInput type='password' placeholder="password" />
+              <ProfileUpdateInput type='password' placeholder="password" value={confirmUserPw} onChange={(e) => setConfirmUserPw(e.target.value)} />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={PhoneLogo} />
-              <ProfileUpdateInput value={userData.userPhone} />
+              <ProfileUpdateInput Value={userPhone} onChange={(e) => setUserPhone(e.target.value)} />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
               <ProfileUpdateBtn type='submit'>수정하기</ProfileUpdateBtn>

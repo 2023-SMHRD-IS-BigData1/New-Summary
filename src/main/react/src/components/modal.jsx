@@ -24,7 +24,7 @@ const BackgroundNews = styled.div`
   top: 0;
   text-align: center;
   z-index: 200;
-  background: #14141499;
+  background: ${({ theme }) => theme.modalbackground};
 `;
 
 const Background = styled.div`
@@ -38,7 +38,7 @@ const Background = styled.div`
   top: 0;
   text-align: center;
   z-index: 200;
-  background: #14141411;
+  background: ${({ theme }) => theme.modalbackground};
 `;
 
 const Content = styled.div`
@@ -48,7 +48,7 @@ const Content = styled.div`
   padding: 30px;
   position: relative;
   overflow-y: scroll;
-  background: #ffffff;
+  background: ${({ theme }) => theme.background1};
   border-radius: 50px;
 `;
 
@@ -64,7 +64,7 @@ const BoardContent = styled.div`
   padding: 30px;
   display: flex;
   position: relative;
-  background: #ffffff;
+  background: ${({ theme }) => theme.background1};
   border-radius: 50px;
 `;
 
@@ -74,7 +74,7 @@ const BookmarkButton = styled.button`
   position: absolute;
   top: 10px;
   left: 50px;
-  background-color: #fff;
+  background: ${({ theme }) => theme.background1};
   padding: 10px;
   border-radius: 50%;
   border: none;
@@ -94,8 +94,8 @@ const CloseButton = styled.button`
   height: 60px;
   position: absolute;
   top: 10px;
-  right: 10px;
-  background-color: #fff;
+  right: 30px;
+  background: ${({ theme }) => theme.background1};
   padding: 5px 10px;
   border-radius: 50%;
   border: none;
@@ -180,7 +180,7 @@ const NewsUrlBox = styled.div`
 
 const NewsUrl = styled.a`
   text-decoration: none;
-  color: #000000;
+  color: ${({ theme }) => theme.text};
 
   &:hover {
     text-decoration: underline;
@@ -225,6 +225,7 @@ const BoardImageBox = styled.div`
   width: 100%;
   display: flex;
   overflow: hidden;
+  background: ${({ theme }) => theme.text};
 `;
 
 const BoardTextBox = styled.div`
@@ -239,7 +240,8 @@ const BoardUrlBox = styled.div`
   width: 100%;
   height: auto;
   padding: 10px;
-  border: 1px solid #99999999;
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const BoardCommentBox = styled.div`
@@ -249,7 +251,8 @@ const BoardCommentBox = styled.div`
   display: flex;
   justify-content: right;
   align-items: center;
-  border-top: 1px solid #99999999;
+  border-top: 1px solid;
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const BoardUserImage = styled.img`
@@ -257,14 +260,15 @@ const BoardUserImage = styled.img`
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
-  border: 1px solid #99999944;
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const BoardUserName = styled.div``;
 
 const BoardImage = styled.img`
-      width:100%;
-    object-fit:cover;
+  width:100%;
+  object-fit:cover;
 `;
 
 const BoardCommentIcon = styled.img`
@@ -301,14 +305,16 @@ const CommentArea = styled.div`
 const CommentBox = styled.div`
   width: 100%;
   padding: 20px 20px;
-  border: 1px solid #99999999;
+  border: 1px solid;
   border-radius: 5px;
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const CommentForm = styled.div`
   width: 100%;
   padding: 0px 20px 20px 20px;
-  border: 1px solid #99999999;
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const CommentBoxNull = styled.div`
@@ -338,7 +344,7 @@ const ContentUpdate = styled.textarea`
     width: 100%;
     min-height: 120px;
     padding: 20px 0;
-    /* background-color: aqua; */
+    background: ${({ theme }) => theme.background1};
     font-size: 18px;
     line-height: 1.2;
     font-family: 'Malgun Gothic';
@@ -362,7 +368,8 @@ const ContentUpdateBoard = styled.textarea`
     width: 100%;
     min-height: 600px;
     padding: 20px 0;
-    /* background-color: aqua; */
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
     font-size: 18px;
     line-height: 1.2;
     font-family: 'Malgun Gothic';
@@ -459,7 +466,8 @@ const CommentTextArea = styled.textarea`
     width: 100%;
     min-height: 120px;
     padding: 20px 0;
-    /* background-color: aqua; */
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background1};
     font-size: 18px;
     line-height: 1.2;
     font-family: 'Malgun Gothic';
