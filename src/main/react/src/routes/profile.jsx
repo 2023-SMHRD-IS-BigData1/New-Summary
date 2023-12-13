@@ -234,7 +234,7 @@ const ProfileBack = styled.div`
   width: 100%;
   height: 300px;
   position: absolute;
-  background-color: #F4A261;
+  background: ${({ theme }) => theme.backgrounfix2};
 `;
 
 
@@ -537,13 +537,13 @@ export default function Profile() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileName, setImageFileName] = useState(null);
-  
+
   let userData;
   let userEmailData;
   let userNameData;
   const userDataString = sessionStorage.getItem('userData');
-  
-  
+
+
   if (userDataString) {
     userData = JSON.parse(userDataString);
     userEmailData = userData.userEmail;
@@ -555,6 +555,10 @@ export default function Profile() {
   const [userPw, setUserPw] = useState(''); // 비밀번호 관련 상태
   const [confirmUserPw, setConfirmUserPw] = useState('');
   const [userPhone, setUserPhone] = useState(userData.userPhone);
+  const [userProfile, setUserProfile] = useState(userData.userProfile);
+
+
+
   // 사이드메뉴 전환
   const handleContentClick = (contentClass) => {
     setOnMenu(contentClass);
@@ -632,7 +636,7 @@ export default function Profile() {
     </UserNewsBox>
   ));
 
-  
+
 
   // 개인정보 수정
   const handleImageChange = (event) => {
@@ -648,7 +652,7 @@ export default function Profile() {
 
   const passwordCheck = () => {
     const notify = () => toast.error('비밀번호를 확인해주세요');
-    if(userPw !== confirmUserPw){
+    if (userPw !== confirmUserPw) {
       notify();
       return;
     }
@@ -667,6 +671,7 @@ export default function Profile() {
       });
       const jsonBlob = new Blob([jsonData], { type: "application/json" });
       formData.append('UserDTO', jsonBlob);
+
       if (imageFileName) {
         formData.append('newProfilePhoto', imageFile);
         const request = await axios.patch(`/api/users/photo/${userEmail}`, formData, {
@@ -674,10 +679,41 @@ export default function Profile() {
             'Content-Type': 'multipart/form-data',
           },
         });
+        setUserEmail(userEmail);
+        setUserName(userName);
+        setUserPhone(userPhone);
+        setUserProfile(request.data.userProfile)
+        // 세션 스토리지 업데이트
+        const updatedUserData = {
+          userEmail: userEmail,
+          userName: userName,
+          userPhone: userPhone,
+          userProfile: userProfile
+        };
+
+        sessionStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+        const notify = () => toast.success('회원정보 수정완료!');
+        notify();
         console.log('회원정보가 성공적으로 수정되었습니다 :', request.data);
       } else {
-        // 사진이 없는 경우
+        // 이미지가 없는 경우
         const request = await axios.patch(`/api/users/${userEmail}`, formData);
+
+        setUserEmail(userEmail);
+        setUserName(userName);
+        setUserPhone(userPhone);
+        // 세션 스토리지 업데이트
+        const updatedUserData = {
+          userEmail: userEmail,
+          userName: userName,
+          userPhone: userPhone,
+        };
+
+        sessionStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+        const notify = () => toast.success('회원정보 수정완료!');
+        notify();
         console.log('회원정보가 성공적으로 수정되었습니다 :', request.data);
       }
     } catch (error) {
@@ -685,22 +721,22 @@ export default function Profile() {
       console.error('에러 상세 정보:', error.response); // 에러 객체의 response 속성을 출력
     }
   };
-  
+
 
 
   return (
     <Wrapper>
       <Header></Header>
-      {/* <ProfileBack></ProfileBack> */}
+      <ProfileBack></ProfileBack>
       <WrapperBox>
         <LeftMenu>
           <UserBox>
             <UserImageBox>
-              <UserImage src={userData.userProfile || UserDefault} />
+              <UserImage src={userProfile || UserDefault} />
             </UserImageBox>
             <UserNickname>{userData.userName}</UserNickname>
             <UserPoint>
-              <PointImage src={Coin} />2000 P
+              <PointImage src={Coin} />10 P
               <PointexplanationBox>
                 <Pointexplanation src={Exclamation} />
                 <ExplanationTip className="tip">
@@ -767,20 +803,20 @@ export default function Profile() {
         <Content className={`content4 ${onMenu === 'content4' ? 'active' : ''}`} active={onMenu === 'content4'}>
           <ProfileUpdateForm action={`/api/user/profile/${userEmailData}`} onSubmit={handleUpdate} method='put'>
             <ProfileUpdateTop>
-                <ProfileBoxArea>
-                  <ProfileImageBox>
-                    <ProfileImage id="profileImagePreview" src={imageFile ? URL.createObjectURL(imageFile) : UserDefault} />
-                    <ProfileImgInput
-                      className="file"
-                      id="chooseFile"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                    />
-                  </ProfileImageBox>
-                  <ProfileImgLabel class="file-label" for="chooseFile">Image Upload</ProfileImgLabel>
-                  <ProfileImgInput class="file" id="chooseFile" type="file" multiple />
-                </ProfileBoxArea>
+              <ProfileBoxArea>
+                <ProfileImageBox>
+                  <ProfileImage id="profileImagePreview" src={imageFile ? URL.createObjectURL(imageFile) : UserDefault} />
+                  <ProfileImgInput
+                    className="file"
+                    id="chooseFile"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </ProfileImageBox>
+                <ProfileImgLabel class="file-label" for="chooseFile">Image Upload</ProfileImgLabel>
+                <ProfileImgInput class="file" id="chooseFile" type="file" multiple />
+              </ProfileBoxArea>
             </ProfileUpdateTop>
             <ProfileUpdateBox>
               <ProfileUpdateLogo src={EmailLogo} />
@@ -803,7 +839,7 @@ export default function Profile() {
               <ProfileUpdateInput Value={userPhone} onChange={(e) => setUserPhone(e.target.value)} />
             </ProfileUpdateBox>
             <ProfileUpdateBox>
-              <ProfileUpdateBtn type='submit'>수정하기</ProfileUpdateBtn>
+              <ProfileUpdateBtn type='submit' onClick={() => window.scrollTo(0, 0)}>수정하기</ProfileUpdateBtn>
             </ProfileUpdateBox>
           </ProfileUpdateForm>
         </Content>

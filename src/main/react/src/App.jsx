@@ -92,7 +92,7 @@ const TopButton = styled.a`
   border-radius: 50%;
   position: fixed;
   bottom: 5%;
-  right: 3%;
+  right: 50px;
   font-size: 24px;
   font-weight: 600;
   border: 1px solid;

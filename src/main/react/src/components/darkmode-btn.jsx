@@ -6,7 +6,7 @@ const ToggleWrapper = styled.button`
   position: fixed;
   z-index: 999999;
   bottom: 5%;
-  right: 7%;
+  right: 120px;
   font-size: 20px;
   display: flex;
   justify-content: center;
