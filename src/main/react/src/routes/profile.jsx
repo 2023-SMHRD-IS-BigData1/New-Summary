@@ -666,7 +666,7 @@ export default function Profile() {
         userPhone: userPhone
       });
       const jsonBlob = new Blob([jsonData], { type: "application/json" });
-      formData.append('userDTO', jsonBlob);
+      formData.append('UserDTO', jsonBlob);
       if (imageFileName) {
         formData.append('newProfilePhoto', imageFile);
         const request = await axios.patch(`/api/users/photo/${userEmail}`, formData, {
