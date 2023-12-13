@@ -33,12 +33,16 @@ const ItemImage = styled.img`
     width:100%;
     height: calc(auto - 300px);
     object-fit:cover;
+        border: 1px solid;
+    border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const ItemImageMain = styled.img`
     width:100%;
     height: calc(100% - 300px);
     object-fit:cover;
+    border: 1px solid;
+    border-color: ${({ theme }) => theme.boardBorder2};
 `;
 
 const ItemTextBox = styled.div`
