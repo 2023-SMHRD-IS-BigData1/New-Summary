@@ -9,7 +9,7 @@
 <br>
 
 ## 📅 프로젝트 기간
-2023.11.03 ~ 2023.12.13 (5주)
+2023.11.16 ~ 2023.12.13 (4주)
 <br>
 <br>
 <br>
@@ -99,7 +99,7 @@
   </tr>
   <tr>
     <td align="center"><b>Main : Front-end<br>
-                          Sub : DB</b></td>
+                          Sub : PM</b></td>
     <td align="center"><b>Main : Back-end / DB<br>
                           Sub : Data Clawling</b></td>
     <td align="center"><b>Main : Back-end<br>
